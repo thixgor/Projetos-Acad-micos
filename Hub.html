@@ -53,6 +53,11 @@
             margin: 0 auto;
             padding: 20px;
         }
+		
+		.flag-img {
+			width: 30px; /* Ajuste o tamanho conforme necessário */
+			height: auto;
+		}
 
         header {
             text-align: center;
@@ -243,11 +248,15 @@
         </div>
     </div>
 
-    <div class="language-toggle">
-        <button class="flag-btn" onclick="toggleLanguage('pt')">🇧🇷</button>
-        <button class="flag-btn" onclick="toggleLanguage('en')">🇺🇸</button>
-    </div>
-
+	<div class="language-toggle">
+		<button class="flag-btn" onclick="toggleLanguage('pt')">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Portuguese" class="flag-img">
+		</button>
+		<button class="flag-btn" onclick="toggleLanguage('en')">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English" class="flag-img">
+		</button>
+	</div>
+	
     <div class="container">
         <header>
             <img src="https://i.imgur.com/DmX2q9W.png" alt="Thiago Rodrigues" class="profile">
@@ -256,17 +265,27 @@
         </header>
 
         <div class="bio" id="bio-pt">
-            ❭ Estudante de Medicina na UNIGRANRIO (RJ), com foco em educação em saúde e medicina preventiva. 
-            Desenvolve projetos científicos usando metodologias ativas, integrando conhecimentos em HTML 
-            com sistematização de patologias. Domínio avançado de Inglês (7 anos/722h + certificação) e 
-            Espanhol básico (1 ano/82h). Habilidades em comunicação acadêmica e trabalho em equipe.
+            Bem-vindo ao hub acadêmico de Thiago Ferreira Rodrigues. Este espaço é dedicado a apresentar
+            os projetos e pesquisas desenvolvidos no âmbito acadêmico e científico, com ênfase em saúde,
+            medicina preventiva e educação. O objetivo deste hub é compartilhar as iniciativas, descobertas e
+            desenvolvimentos que contribuem para a disseminação do conhecimento médico e o avanço da prática
+			profissional. Explore as diversas áreas de interesse e acompanhe o progresso das pesquisas e soluções
+			inovadoras.
+			Focado em integrar tecnologia e saúde em projetos acadêmicos.
+			Detentor de 7 anos de experiência em Inglês (722h) e 1 ano de imersão em Espanhol (82h).
+			Concluiu com A+ o curso "HTML Mastery & Beyond" na Web Forge Institute (Fayetteville, Arkansas, EUA)
         </div>
 
         <div class="bio" id="bio-en" style="display: none;">
-            ▪︎ Medical student at UNIGRANRIO (Rio de Janeiro), focused on health education and preventive medicine. 
-            Develops scientific projects using active methodologies, integrating HTML knowledge with pathology 
-            systematization. Advanced English proficiency (7 years/722h + certification) and basic Spanish 
-            (1 year/82h). Skilled in academic communication and teamwork.
+            Welcome to the academic hub of Thiago Ferreira Rodrigues. This space is dedicated to showcasing
+            the projects and research developed in the academic and scientific fields, with a focus on health,
+            preventive medicine, and education. The purpose of this hub is to share initiatives, findings, and
+            developments that contribute to the dissemination of medical knowledge and the advancement of
+			professional practice. Explore the various areas of interest and follow the progress of research and
+			innovative solutions.
+			Focused on integrating technology and healthcare in academic projects.
+			Holder of 7 years of experience in English (722h) and 1 year of immersion in Spanish (82h).
+			Graduated with A+ in "HTML Mastery & Beyond" - Web Forge Institute (Fayetteville, Arkansas, US)
         </div>
 
         <div class="buttons-container">
