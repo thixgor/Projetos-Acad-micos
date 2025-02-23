@@ -46,8 +46,6 @@
             --bg-rgb: 26, 26, 26;
         }
 		
-		
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -151,6 +149,16 @@
             margin-top: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+		
+		/* Usado também para a seção de avaliações */
+		.avaliacoes-container {
+            display: none;
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
         .project-link {
             display: block;
@@ -163,7 +171,6 @@
             transition: background 0.3s;
         }
 		
-		/* PopUp */
 		.signature-overlay {
             position: fixed;
             top: 0;
@@ -250,7 +257,7 @@
 
 	<div class="language-toggle">
 		<button class="flag-btn" onclick="toggleLanguage('pt')">
-			<img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Portuguese" class="flag-img">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Português" class="flag-img">
 		</button>
 		<button class="flag-btn" onclick="toggleLanguage('en')">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English" class="flag-img">
@@ -301,11 +308,21 @@
                 <i class="fas fa-folder-open"></i>
                 Projetos Acadêmicos
             </button>
+            <!-- Novo botão para Avaliações -->
+            <button class="btn" onclick="toggleAvaliacoes()">
+                <i class="fas fa-star"></i>
+                Avaliações
+            </button>
         </div>
 
         <div class="projects-container" id="projects">
-            <a href="CIV.html" class="project-link">Projeto de CIV 2025</a>
-            <a href="Tremor.html" class="project-link">Projeto Fisiopatologia do Tremor Essencial 2025</a>
+            <a href="CIV.html" class="project-link">Projeto - Simulação Multissensorial da Fisiologia e Patologia Cardíaca: Análise do Comportamento Hemodinâmico e Eletrofisiológico do Coração com Ênfase em Sinais Acústicos (S1, S2 e S4) em Condições de CIV, Hipertrofia e Alterações do ECG</a>
+            <a href="Tremor.html" class="project-link">Projeto - Análise Fisiopatológica do Tremor Essencial: O Vínculo da Interação Iônica na Regulação Circulatória</a>
+        </div>
+		
+		<!-- Seção para Avaliações -->
+        <div class="avaliacoes-container" id="avaliacoes">
+            <a href="avaliacoes.html" class="project-link">Feedback Acadêmico</a>
         </div>
     </div>
 
@@ -345,6 +362,12 @@
         function toggleProjects() {
             const projects = document.getElementById('projects');
             projects.style.display = projects.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Toggle de Avaliações
+        function toggleAvaliacoes() {
+            const avaliacoes = document.getElementById('avaliacoes');
+            avaliacoes.style.display = avaliacoes.style.display === 'block' ? 'none' : 'block';
         }
 
         // Toggle de Idioma

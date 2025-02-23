@@ -1,705 +1,243 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulação CIV, Hipertrofia, Hematose, ECG e Sons Cardíacos</title>
-  <style>
-    /* Reset e layout básico */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f0f8;
-      color: #333;
-      overflow-x: hidden;
-    }
-    /* Container geral – layout para desktop */
-    #simulation-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-    }
-	
-    /* Área do coração */
-    #heart-container {
-      position: relative;
-      width: 55%;
-      height: 90%;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background: #fff;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    }
-    /* Área do bebê */
-    #baby-container {
-      position: relative;
-      width: 35%;
-      height: 90%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background: #fff;
-      padding: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    }
-    /* SVG do coração – design aprimorado com drop-shadow */
-    svg#heart-svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
-      transform-origin: center;
-      transition: transform 0.2s ease-in-out;
-    }
-    /* Estilo para setas e textos */
-    .arrow-label {
-      font-size: 14px;
-      font-weight: bold;
-      fill: #222;
-    }
-    /* Botões de controle */
-    #controls {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-    }
-    #controls button {
-      margin: 5px;
-      padding: 8px 12px;
-      font-size: 14px;
-      border: none;
-      border-radius: 5px;
-      background: #0066cc;
-      color: #fff;
-      cursor: pointer;
-    }
-    #controls button:hover { background: #0055aa; }
-    /* Botão de informação */
-    #info-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-weight: bold;
-      padding: 0;
-    }
-    /* Legenda dinâmica – canto inferior direito */
-    #legend {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      z-index: 10;
-      background: rgba(255,255,255,0.9);
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      line-height: 1.4;
-      max-width: 350px;
-    }
-    #legend p { margin-bottom: 5px; }
-    /* Legenda com o intuito do projeto */
-    #project-intent {
-      font-style: italic;
-      color: #555;
-    }
-    /* Legenda do projeto */
-    #projeto-legenda {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      background: rgba(255,255,255,0.9);
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-	/* Estilo do Botão Hub */
-	.hub-button {
-	  position: fixed; /* Alterado de absolute para fixed */
-	  top: 20px;
-	  left: 50%; /* Posiciona no centro horizontal */
-	  transform: translateX(-50%); /* Centraliza precisamente */
-	  z-index: 1000;
-	  display: flex;
-	  align-items: center;
-	  padding: 12px 20px;
-	  background: linear-gradient(145deg, #2b5876, #4e4376);
-	  color: white;
-	  border: none;
-	  border-radius: 30px;
-	  text-decoration: none;
-	  font-weight: bold;
-	  font-size: 16px;
-	  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-	  transition: all 0.3s ease;
-	  cursor: pointer;
-	}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto - Simulação Multissensorial da Fisiologia e Patologia Cardíaca: Análise do Comportamento Hemodinâmico e Eletrofisiológico do Coração com Ênfase em Sinais Acústicos (S1, S2 e S4) em Condições de CIV, Hipertrofia e Alterações do ECG</title>
+    
+    <!-- Ícones Acadêmicos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Fontes Acadêmicas -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2A5C82;
+            --secondary-color: #8B0000;
+            --background-color: #121212;
+            --text-color: #E8EAED;
+        }
 
-	.hub-button:hover {
-	  transform: translateY(-2px);
-	  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-	  background: linear-gradient(145deg, #4e4376, #2b5876);
-	}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-	.hub-button:active {
-	  transform: translateY(1px);
-	  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-	}
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
 
-	.hub-icon {
-	  margin-right: 10px;
-	  font-size: 20px;
-	  filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
-	}
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-	.hub-text {
-	  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-	}
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-	/* Ajuste para mobile */
-	@media only screen and (max-width: 768px) {
-	  .hub-button {
-		top: 15px;
-		left: 50%; /* Mantém centralizado */
-		transform: translateX(-50%); /* Centraliza mesmo em mobile */
-		padding: 10px 15px;
-		font-size: 14px;
-	  }
-	  .hub-icon {
-		font-size: 18px;
-	  }
-	}
-	
-	
-    /* Modal de informação */
-    #modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-    #modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      text-align: center;
-      position: relative;
-    }
-    #modal-content button {
-      margin: 5px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 3px;
-      background: #0066cc;
-      color: #fff;
-      cursor: pointer;
-    }
-    #modal-content button:hover { background: #0055aa; }
-    #close-modal {
-      position: absolute;
-      top: 5px;
-      right: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    /* ECG canvas */
-    #ecg-canvas {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: #000;
-      border: 1px solid #333;
-      border-radius: 5px;
-      z-index: 5;
-      width: 300px;
-      height: 150px;
-    }
-    /* Animações no bebê */
-    #baby-svg path, #baby-svg circle, #baby-svg ellipse {
-      transition: fill 1s ease;
-    }
-    /* ================================
-       Estilos responsivos para dispositivos móveis
-    ================================= */
-    @media only screen and (max-width: 768px) {
-      /* Layout em coluna */
-      #simulation-container {
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        height: auto;
-        padding: 10px;
-      }
-      /* Áreas ocupam maior largura */
-      #heart-container, #baby-container {
-        width: 90%;
-        height: 40vh;
-        margin-bottom: 10px;
-      }
-      /* ECG redimensionado */
-      #ecg-canvas {
-        width: 90%;
-        height: 100px;
-        left: 5%;
-        bottom: 5px;
-      }
-      /* Botões e legenda adaptados */
-      #controls { top: 10px; right: 10px; }
-      #legend { bottom: 10px; right: 5%; max-width: 90%; }
-      .arrow-label { font-size: 12px; }
-      #projeto-legenda { font-size: 14px; padding: 3px 6px; }
-    }
-  </style>
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin: 1rem 0;
+            line-height: 1.3;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .details-card {
+            background: #2D2D2D;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .hub-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .hub-button i {
+            font-size: 1.2rem;
+        }
+
+        .hub-button:hover {
+            background-color: #1B435E;
+            transform: translateY(-2px);
+        }
+
+        .warning-banner {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-size: 0.9rem;
+        }
+
+        .institution-logo {
+            width: 200px;
+            margin: 1rem auto;
+            display: block;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .hub-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .academic-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #9E9E9E;
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
 </head>
 <body>
-  <!-- Legenda do projeto -->
-  <div id="projeto-legenda">Thiago Rodrigues - Projeto de Medicina</div>
-  
-	  <a href="Hub.html" class="hub-button">
-	  <span class="hub-icon">🏠</span>
-	  <span class="hub-text">Hub</span>
-	</a>
-  <!-- Contêiner geral -->
-  <div id="simulation-container">
-    <!-- Área do coração -->
-    <div id="heart-container">
-      <!-- SVG com desenho do coração, vasos, fluxo sanguíneo, hematose, hipertrofia e valvas animadas -->
-      <svg id="heart-svg" viewBox="0 0 800 600">
-        <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
-          </marker>
-        </defs>
-        <!-- Câmaras do coração -->
-        <g id="camaras">
-          <!-- Átrio direito (desoxigenado: tons de azul) -->
-          <ellipse id="atrio-direito" cx="350" cy="200" rx="50" ry="40" fill="#99ccff" stroke="#0044cc" stroke-width="2"/>
-          <text x="310" y="200" class="arrow-label" fill="#0044cc">AD</text>
-          <!-- Grupo para o Ventrículo Direito para demonstrar hipertrofia -->
-          <g id="vd-group">
-            <ellipse id="ventriculo-direito" cx="350" cy="320" rx="60" ry="50" fill="#6699ff" stroke="#0044cc" stroke-width="2"/>
-            <text x="310" y="320" class="arrow-label" fill="#0044cc">VD</text>
-          </g>
-          <!-- Átrio esquerdo (oxigenado: tons de vermelho) -->
-          <ellipse id="atrio-esquerdo" cx="450" cy="200" rx="50" ry="40" fill="#ff9999" stroke="#cc0000" stroke-width="2"/>
-          <text x="410" y="200" class="arrow-label" fill="#cc0000">AE</text>
-          <!-- Ventrículo esquerdo (oxigenado) -->
-          <ellipse id="ventriculo-esquerdo" cx="450" cy="320" rx="60" ry="50" fill="#ff6666" stroke="#cc0000" stroke-width="2"/>
-          <text x="410" y="320" class="arrow-label" fill="#cc0000">VE</text>
-          <!-- Septo interventricular -->
-          <rect id="septo" x="395" y="250" width="10" height="70" fill="#eee" stroke="#999" stroke-width="1"/>
-          <!-- Defeito da CIV -->
-          <line id="civ" x1="395" y1="285" x2="405" y2="285" stroke="#ff0000" stroke-width="4" stroke-dasharray="5,5"/>
-          <text x="410" y="290" class="arrow-label" fill="#ff0000">CIV</text>
-        </g>
-        <!-- Pulmão -->
-        <g id="pulmao">
-          <path d="M600,80 C630,60 680,60 710,80 C690,120 670,150 600,170 Z" fill="#ccffff" stroke="#00aaaa" stroke-width="2"/>
-          <text x="700" y="75" class="arrow-label" fill="#00aaaa">Pulm</text>
-        </g>
-        <!-- Vasos, artérias, veias e valvas -->
-        <g id="arteries_veins_valves">
-          <!-- Aorta -->
-          <path id="aorta" d="M460,320 Q500,280 540,240" stroke="red" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="545" y="235" class="arrow-label" fill="red">Aorta (Ox)</text>
-          <!-- Artéria Pulmonar -->
-          <path id="pulmonary-artery" d="M340,320 Q300,280 260,240" stroke="blue" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="245" y="235" class="arrow-label" fill="blue">Pulm. Art. (Desox)</text>
-          <!-- Veia Cava -->
-          <path id="vena-cava" d="M350,50 L350,160" stroke="blue" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="355" y="55" class="arrow-label" fill="blue">V. Cava (Desox)</text>
-          <!-- Veia Pulmonar -->
-          <path id="pulmonary-vein" d="M450,50 L450,160" stroke="red" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="455" y="55" class="arrow-label" fill="red">V. Pulm. (Ox)</text>
-          <!-- Valvas com movimento -->
-          <g id="tricuspid-valve-group" transform="rotate(0 350 240)">
-            <circle id="tricuspid-valve" cx="350" cy="240" r="8" fill="blue" stroke="darkblue" stroke-width="2"/>
-            <text x="360" y="245" class="arrow-label" fill="blue">TV</text>
-          </g>
-          <g id="mitral-valve-group" transform="rotate(0 450 240)">
-            <circle id="mitral-valve" cx="450" cy="240" r="8" fill="red" stroke="darkred" stroke-width="2"/>
-            <text x="460" y="245" class="arrow-label" fill="red">MV</text>
-          </g>
-          <!-- Válvula Aórtica -->
-          <circle id="aortic-valve" cx="465" cy="310" r="6" fill="red" stroke="darkred" stroke-width="2"/>
-          <text x="470" y="305" class="arrow-label" fill="red">AV</text>
-          <!-- Válvula Pulmonar -->
-          <circle id="pulmonar-valve" cx="335" cy="310" r="6" fill="blue" stroke="darkblue" stroke-width="2"/>
-          <text x="340" y="305" class="arrow-label" fill="blue">PV</text>
-        </g>
-        <!-- Fluxo sanguíneo -->
-        <g id="fluxo">
-          <!-- Fluxo nas câmaras -->
-          <circle id="cell-right" cx="350" cy="200" r="5" fill="blue">
-            <animateMotion dur="2s" repeatCount="indefinite" path="M350,200 L350,320" />
-          </circle>
-          <circle id="cell-left" cx="450" cy="200" r="5" fill="red">
-            <animateMotion dur="2s" repeatCount="indefinite" path="M450,200 L450,320" />
-          </circle>
-          <!-- Fluxo na Aorta -->
-          <circle id="cell-aorta" cx="460" cy="320" r="4" fill="red">
-            <animateMotion dur="3s" repeatCount="indefinite" path="M460,320 Q500,280 540,240" />
-          </circle>
-          <!-- Fluxo na Veia Cava -->
-          <circle id="cell-cava" cx="350" cy="50" r="4" fill="blue">
-            <animateMotion dur="3s" repeatCount="indefinite" path="M350,50 L350,160" />
-          </circle>
-          <!-- Fluxo da Hematose: do VD → Pulmão → AE -->
-          <circle id="cell-hematose" cx="350" cy="320" r="4" fill="blue">
-            <animateMotion dur="4s" repeatCount="indefinite" calcMode="linear" keyTimes="0;0.5;1" values="350,320; 680,120; 450,200" />
-            <animate attributeName="fill" dur="4s" repeatCount="indefinite" values="blue; blue; red" keyTimes="0;0.5;1" />
-          </circle>
-        </g>
-      </svg>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-university academic-icon"></i>
+            <h1>Simulação Multissensorial da Fisiologia e Patologia Cardíaca:<br>Análise do Comportamento Hemodinâmico e Eletrofisiológico do Coração com Ênfase em Sinais Acústicos (S1, S2 e S4) em Condições de CIV, Hipertrofia e Alterações do ECG</h1>
+            <div class="badge">ESTUDO CONCLUÍDO - 02/2025</div>
+        </div>
+
+        <div class="content">
+            <div class="details-card">
+                <h2><i class="fas fa-user-graduate"></i> Pesquisador Responsável</h2>
+                <p>Thiago Ferreira Rodrigues</p>
+                <p>Curso de Medicina - Campus Barra da Tijuca</p>
+            </div>
+
+            <div class="details-card">
+                <h2><i class="fas fa-school"></i> Instituição</h2>
+                <p>Universidade do Grande Rio<br>Professor José de Souza Herdy</p>
+                <p>Escola de Ciências da Saúde</p>
+            </div>
+        </div>
+        
+        <!-- Novo setor para exibir o objetivo da pesquisa -->
+        <div class="details-card">
+            <h2><i class="fas fa-lightbulb"></i> Objetivo da Pesquisa</h2>
+            <p>
+                Na busca de elucidar os intricados mecanismos que regem o funcionamento cardíaco, esta investigação ambiciona simular, de forma integrada e transversal, tanto os aspectos fisiológicos quanto os patológicos do coração. Em seu âmago, o estudo envereda pela análise da comunicação interventricular (CIV), da hipertrofia, dos processos de hematose, do movimento sincrônico das valvas e das sutis alterações eletrocardiográficas, materializadas pelos sons S1, S2 e S4. Complementarmente, o trabalho se debruça sobre os processos subcelulares da contração muscular, destacando a dança molecular entre actina e miosina, que orquestra a reabsorção e a liberação de cálcio. Ademais, a figura emblemática de um infante, que sofre cianose decorrente da perda de saturação sanguínea atribuída à CIV, simboliza a confluência de determinantes fisiológicos e desafios patológicos, conferindo ao estudo uma dimensão quase poética e transcendente.
+            </p>
+        </div>
+
+        <!-- Botões para navegação -->
+        <a href="CIVInside.html" class="hub-button">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+            ENTRAR NO PROJETO
+        </a>
+
+        <a href="Hub.html" class="hub-button">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+            VOLTAR AO HUB ACADÊMICO
+        </a>
+
+        <div class="disclaimer">
+            <p>Este é um projeto acadêmico concluído em 02/2025. Todas as informações estão sujeitas a revisão e validação científica.</p>
+        </div>
     </div>
-    <!-- Área do bebê -->
-    <div id="baby-container">
-      <svg id="baby-svg" viewBox="0 0 200 300" width="200" height="300">
-        <!-- Cabeça -->
-        <circle cx="100" cy="60" r="40" fill="#FAD7B5" stroke="#D35400" stroke-width="2"/>
-        <!-- Corpo -->
-        <rect x="70" y="110" width="60" height="120" fill="#FAD7B5" stroke="#D35400" stroke-width="2"/>
-        <!-- Boca -->
-        <ellipse id="baby-mouth" cx="100" cy="80" rx="15" ry="5" fill="#fff" stroke="#000" stroke-width="1"/>
-        <!-- Texto de saturação -->
-        <text x="50" y="290" fill="#333" font-size="14">Saturação: 98%</text>
-      </svg>
+
+    <div class="warning-banner">
+        DESENVOLVIDO E IDEALIZADO POR THIAGO F. RODRIGUES
     </div>
-    <!-- ECG canvas -->
-    <canvas id="ecg-canvas" width="300" height="150"></canvas>
-  </div>
-  
-  <!-- Legendas dinâmicas -->
-  <div id="legend">
-    <p id="phase-legend">Estado: Aguardando simulação...</p>
-    <p id="ion-legend">Ca²⁺: -</p>
-    <p id="contract-legend">Contração: -</p>
-    <p id="hypertrophy-legend">Hipertrofia: 100%</p>
-    <p id="project-intent">Intuito: Simular de forma integrada a fisiologia e patologia do coração (CIV, hipertrofia, hematose, movimento das valvas e alterações do ECG) com sons S1, S4 e S2.</p>
-  </div>
-  
-  <!-- Botões de controle -->
-  <div id="controls">
-    <button id="start-btn">Iniciar Simulação</button>
-    <button id="reset-btn">Reiniciar Simulação</button>
-    <button id="info-btn">I</button>
-  </div>
-  
-  <!-- Modal de informação -->
-  <div id="modal">
-    <div id="modal-content">
-      <span id="close-modal">&times;</span>
-      <p>Thiago Rodrigues<br>Medicina, UNIGRANRIO 2025<br>Todos os direitos reservados</p>
-      <button onclick="window.open('http://lattes.cnpq.br/1705964525727994','_blank')">Currículo Lattes</button>
-      <button onclick="window.open('https://orcid.org/0009-0008-3351-766X','_blank')">ORCID</button>
-    </div>
-  </div>
-  
-  <script>
-    // Variáveis de controle da simulação
-    let simulationInterval, heartbeatPhase = 'diastole', saturation = 98;
-    let hypertrophyFactor = 1.0; // Inicia em 1.0 (100%)
-    const heartSvg = document.getElementById('heart-svg');
-    const phaseLegend = document.getElementById('phase-legend');
-    const ionLegend = document.getElementById('ion-legend');
-    const contractLegend = document.getElementById('contract-legend');
-    const hypertrophyLegend = document.getElementById('hypertrophy-legend');
-    const babySvg = document.getElementById('baby-svg');
-    const babyText = babySvg.querySelector('text');
-    
-    // --- ECG via requestAnimationFrame ---
-    const ecgCanvas = document.getElementById('ecg-canvas');
-    const ecgCtx = ecgCanvas.getContext('2d');
-    let ecgAnimationId;
-    let ecgLastTime = null;
-    let ecgOffset = 0;
-    const beatSamples = 300;  // Número de amostras por batimento
-    const s1Index = Math.floor(0.31 * beatSamples);
-    const s2Index = Math.floor(0.5 * beatSamples);
-    const s4Index = Math.floor(0.6 * beatSamples);
-    const ecgSpeed = 300; // pixels por segundo
-    
-    function computeECGValue(t) {
-      const baseline = ecgCanvas.height / 2;
-      if(t < 0.1) {
-        return baseline;
-      } else if(t < 0.2) {
-        let phase = (t - 0.1) / 0.1;
-        return baseline - 5 * Math.sin(Math.PI * phase);
-      } else if(t < 0.25) {
-        let phase = (t - 0.2) / 0.05;
-        return baseline - 5 * (1 - phase);
-      } else if(t < 0.3) {
-        let phase = (t - 0.25) / 0.05;
-        return baseline + 10 * phase;
-      } else if(t < 0.32) {
-        let phase = (t - 0.3) / 0.02;
-        return baseline - 25 * phase;
-      } else if(t < 0.35) {
-        let phase = (t - 0.32) / 0.03;
-        return baseline + 15 * phase;
-      } else if(t < 0.45) {
-        return baseline - 3;
-      } else if(t < 0.55) {
-        let phase = (t - 0.45) / 0.1;
-        return baseline - 10 * Math.sin(Math.PI * phase);
-      } else if(t < 0.65) {
-        let phase = (t - 0.55) / 0.1;
-        return baseline - 5 * Math.sin(Math.PI * phase);
-      } else {
-        return baseline;
-      }
-    }
-    
-    let ecgBeat = new Array(beatSamples);
-    function initECGBeat() {
-      for(let i = 0; i < beatSamples; i++){
-        let t = i / beatSamples;
-        ecgBeat[i] = computeECGValue(t);
-      }
-    }
-    
-    function updateECG(timestamp) {
-      if(!ecgLastTime) ecgLastTime = timestamp;
-      const deltaTime = (timestamp - ecgLastTime) / 1000;
-      ecgLastTime = timestamp;
-      ecgOffset = (ecgOffset + ecgSpeed * deltaTime) % beatSamples;
-      
-      ecgCtx.fillStyle = "#000";
-      ecgCtx.fillRect(0, 0, ecgCanvas.width, ecgCanvas.height);
-      
-      ecgCtx.strokeStyle = "#0f0";
-      ecgCtx.lineWidth = 2;
-      ecgCtx.beginPath();
-      for(let x = 0; x < ecgCanvas.width; x++){
-        let sampleIndex = Math.floor((ecgOffset + x) % beatSamples);
-        let y = ecgBeat[sampleIndex];
-        if(x === 0) {
-          ecgCtx.moveTo(x, y);
-        } else {
-          ecgCtx.lineTo(x, y);
-        }
-      }
-      ecgCtx.stroke();
-      
-      // Marcação dos pontos S1, S2 e S4
-      for(let i = 0; i < ecgCanvas.width; i++){
-        let sampleIndex = Math.floor((ecgOffset + i) % beatSamples);
-        if(Math.abs(sampleIndex - s1Index) < 2) {
-          ecgCtx.fillStyle = "white";
-          ecgCtx.font = "12px Arial";
-          ecgCtx.fillText("S1", i, ecgBeat[s1Index] - 10);
-        }
-        if(Math.abs(sampleIndex - s2Index) < 2) {
-          ecgCtx.fillStyle = "white";
-          ecgCtx.font = "12px Arial";
-          ecgCtx.fillText("S2", i, ecgBeat[s2Index] - 10);
-        }
-        if(Math.abs(sampleIndex - s4Index) < 2) {
-          ecgCtx.fillStyle = "yellow";
-          ecgCtx.font = "12px Arial";
-          ecgCtx.fillText("S4", i, ecgBeat[s4Index] - 10);
-        }
-      }
-      
-      ecgAnimationId = requestAnimationFrame(updateECG);
-    }
-    
-    function startECGAnimation() {
-      if(!ecgAnimationId) {
-        ecgLastTime = null;
-        ecgAnimationId = requestAnimationFrame(updateECG);
-      }
-    }
-    
-    function stopECGAnimation() {
-      if(ecgAnimationId) {
-        cancelAnimationFrame(ecgAnimationId);
-        ecgAnimationId = null;
-      }
-    }
-    // --- Fim do ECG ---
-    
-    // Função para tocar o som do S4
-    function playS4() {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(30, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime + 0.3);
-    }
-    
-    // Função para tocar o som do S2
-    function playS2() {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(70, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime + 0.2);
-    }
-    
-    // Atualiza a animação do coração, sons e movimento das valvas, e mostra a hipertrofia do VD de forma didática
-    function animateHeart() {
-      if(heartbeatPhase === 'diastole') {
-        if(hypertrophyFactor > 1.05) {
-          playS4();
-          setTimeout(() => {
-            heartbeatPhase = 'systole';
-            phaseLegend.textContent = "Estado: Sístole";
-            ionLegend.textContent = "Ca²⁺: Entrada elevada";
-            contractLegend.textContent = "Contração: Ativação actina/miosina";
-            heartSvg.style.transform = "scale(0.95)";
-            playHeartbeat(); // S1
-            // Fecha as valvas (rotaciona 20°)
-            document.getElementById('tricuspid-valve-group').setAttribute('transform', 'rotate(20 350 240)');
-            document.getElementById('mitral-valve-group').setAttribute('transform', 'rotate(20 450 240)');
-            // Após 300ms, toca S2
-            setTimeout(() => { playS2(); }, 300);
-          }, 100);
-        } else {
-          heartbeatPhase = 'systole';
-          phaseLegend.textContent = "Estado: Sístole";
-          ionLegend.textContent = "Ca²⁺: Entrada elevada";
-          contractLegend.textContent = "Contração: Ativação actina/miosina";
-          heartSvg.style.transform = "scale(0.95)";
-          playHeartbeat(); // S1
-          document.getElementById('tricuspid-valve-group').setAttribute('transform', 'rotate(20 350 240)');
-          document.getElementById('mitral-valve-group').setAttribute('transform', 'rotate(20 450 240)');
-          setTimeout(() => { playS2(); }, 300);
-        }
-      } else {
-        heartbeatPhase = 'diastole';
-        phaseLegend.textContent = "Estado: Diástole";
-        ionLegend.textContent = "Ca²⁺: Reabsorção";
-        contractLegend.textContent = "Relaxamento: Redução da tensão";
-        heartSvg.style.transform = "scale(1)";
-        // Abre as valvas (rotaciona para 0°)
-        document.getElementById('tricuspid-valve-group').setAttribute('transform', 'rotate(0 350 240)');
-        document.getElementById('mitral-valve-group').setAttribute('transform', 'rotate(0 450 240)');
-      }
-      // Atualiza a hipertrofia do VD de forma didática (aumenta o "inchaço")
-      hypertrophyFactor += 0.005;  // Incremento mais perceptível
-      if(hypertrophyFactor > 1.5) hypertrophyFactor = 1.5;
-      // Atualiza o grupo do VD com transformação de escala
-      const vdGroup = document.getElementById('vd-group');
-      vdGroup.setAttribute("transform", "translate(350,320) scale(" + hypertrophyFactor + ") translate(-350,-320)");
-      hypertrophyLegend.textContent = "Hipertrofia: " + (hypertrophyFactor * 100).toFixed(0) + "%";
-    }
-    
-    // Atualiza a saturação do bebê e altera cores
-    function updateBaby() {
-      saturation = Math.max(saturation - 0.2, 70);
-      babyText.textContent = "Saturação: " + saturation.toFixed(0) + "%";
-      let blueTone = Math.floor((100 - saturation) * 2.5);
-      let newColor = `rgb(250, ${215 - blueTone}, ${181 - blueTone})`;
-      let face = babySvg.querySelector('circle');
-      face.setAttribute('fill', newColor);
-      let mouth = document.getElementById('baby-mouth');
-      if(saturation < 90) {
-        mouth.setAttribute('fill', 'blue');
-      } else {
-        mouth.setAttribute('fill', '#fff');
-      }
-    }
-    
-    // Configuração do áudio para o S1
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playHeartbeat() {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(50, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime + 0.2);
-    }
-    
-    // Inicia a simulação
-    function startSimulation() {
-      if(simulationInterval) return;
-      initECGBeat();
-      startECGAnimation();
-      simulationInterval = setInterval(() => {
-        animateHeart();
-        updateBaby();
-      }, 800);
-    }
-    
-    // Reinicia a simulação
-    function resetSimulation() {
-      clearInterval(simulationInterval);
-      simulationInterval = null;
-      heartbeatPhase = 'diastole';
-      phaseLegend.textContent = "Estado: Aguardando simulação...";
-      ionLegend.textContent = "Ca²⁺: -";
-      contractLegend.textContent = "Contração: -";
-      heartSvg.style.transform = "scale(1)";
-      saturation = 98;
-      hypertrophyFactor = 1.0;
-      hypertrophyLegend.textContent = "Hipertrofia do VD: 100%";
-      babyText.textContent = "Saturação: " + saturation.toFixed(0) + "%";
-      const vdGroup = document.getElementById('vd-group');
-      vdGroup.setAttribute("transform", "translate(350,320) scale(1) translate(-350,-320)");
-      let face = babySvg.querySelector('circle');
-      face.setAttribute('fill', "#FAD7B5");
-      let mouth = document.getElementById('baby-mouth');
-      mouth.setAttribute('fill', '#fff');
-      stopECGAnimation();
-      ecgCtx.fillStyle = "#000";
-      ecgCtx.fillRect(0, 0, ecgCanvas.width, ecgCanvas.height);
-      ecgOffset = 0;
-      ecgLastTime = null;
-      startECGAnimation();
-    }
-    
-    // Eventos dos botões
-    document.getElementById('start-btn').addEventListener('click', startSimulation);
-    document.getElementById('reset-btn').addEventListener('click', resetSimulation);
-    
-    // Modal de informação
-    const modal = document.getElementById('modal');
-    document.getElementById('info-btn').addEventListener('click', () => {
-      modal.style.display = "flex";
-    });
-    document.getElementById('close-modal').addEventListener('click', () => {
-      modal.style.display = "none";
-    });
-    window.addEventListener('click', (e) => {
-      if(e.target === modal) { modal.style.display = "none"; }
-    });
-    
-    // Inicializa o ECG ao carregar
-    initECGBeat();
-    ecgCtx.fillStyle = "#000";
-    ecgCtx.fillRect(0, 0, ecgCanvas.width, ecgCanvas.height);
-  </script>
+
+    <script>
+        // Controle de interações
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animação suave de entrada
+            const elements = document.querySelectorAll('.container > *');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = 1;
+                    el.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+
+            // Efeito de hover profissional
+            const cards = document.querySelectorAll('.details-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
