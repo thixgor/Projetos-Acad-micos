@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avaliação - Thiago F. Rodrigues - Medicina</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome para ícones de estrela -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      color: #212529;
+      transition: background-color 0.3s, color 0.3s;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+    .dark-mode {
+      background-color: #212529;
+      color: #f8f9fa;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+    }
+    .dark-mode .card {
+      background-color: #343a40;
+      border: 1px solid #454d55;
+    }
+    .rating input {
+      display: none;
+    }
+    .rating label {
+      font-size: 1.5rem;
+      color: #ccc;
+      cursor: pointer;
+    }
+    /* Efeito hover e seleção para as estrelas */
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+      color: #ffc107;
+    }
+    /* Responsividade para dispositivos menores */
+    @media (max-width: 576px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      .rating label {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Cabeçalho com título e botão de tema -->
+    <header class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Avaliações - Thiago F. Rodrigues - Medicina</h1>
+      <button id="toggleTheme" class="btn btn-secondary">Modo Escuro</button>
+    </header>
+
+    <!-- Seção para exibir avaliações já registradas -->
+    <section id="evaluations">
+      <h2>Avaliações</h2>
+      <p>Nenhuma avaliação registrada.</p>
+    </section>
+
+    <!-- Botão para exibir o formulário de avaliação -->
+    <button id="showFormBtn" class="btn btn-primary btn-block my-4">Avaliar</button>
+
+    <!-- Seção do formulário de avaliação (inicialmente oculta) -->
+    <section id="evaluationFormSection" style="display: none;">
+      <h2>Nova Avaliação</h2>
+      <form id="evaluationForm">
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input type="text" id="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" class="form-control" required>
+        </div>
+
+        <!-- Questão 1 -->
+        <div class="form-group">
+          <label>É comprometido com a absorção de aprendizagem e inovação médica?</label>
+          <div class="rating">
+            <input type="radio" id="q1-1" name="q1" value="1" required>
+            <label for="q1-1"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q1-2" name="q1" value="2">
+            <label for="q1-2"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q1-3" name="q1" value="3">
+            <label for="q1-3"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q1-4" name="q1" value="4">
+            <label for="q1-4"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q1-5" name="q1" value="5">
+            <label for="q1-5"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+
+        <!-- Questão 2 -->
+        <div class="form-group">
+          <label>Possui uma boa habilidade de comunicação acadêmica?</label>
+          <div class="rating">
+            <input type="radio" id="q2-1" name="q2" value="1" required>
+            <label for="q2-1"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q2-2" name="q2" value="2">
+            <label for="q2-2"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q2-3" name="q2" value="3">
+            <label for="q2-3"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q2-4" name="q2" value="4">
+            <label for="q2-4"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q2-5" name="q2" value="5">
+            <label for="q2-5"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+
+        <!-- Questão 3 -->
+        <div class="form-group">
+          <label>Os projetos são interessantes, inovadores e alinhados com a área médica?</label>
+          <div class="rating">
+            <input type="radio" id="q3-1" name="q3" value="1" required>
+            <label for="q3-1"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q3-2" name="q3" value="2">
+            <label for="q3-2"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q3-3" name="q3" value="3">
+            <label for="q3-3"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q3-4" name="q3" value="4">
+            <label for="q3-4"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q3-5" name="q3" value="5">
+            <label for="q3-5"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+
+        <!-- Questão 4 (Adicional) -->
+        <div class="form-group">
+          <label>Demonstra habilidades clínicas e de pesquisa?</label>
+          <div class="rating">
+            <input type="radio" id="q4-1" name="q4" value="1" required>
+            <label for="q4-1"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q4-2" name="q4" value="2">
+            <label for="q4-2"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q4-3" name="q4" value="3">
+            <label for="q4-3"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q4-4" name="q4" value="4">
+            <label for="q4-4"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q4-5" name="q4" value="5">
+            <label for="q4-5"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+
+        <!-- Questão 5 (Adicional) -->
+        <div class="form-group">
+          <label>Contribui para a inovação e desenvolvimento na área médica?</label>
+          <div class="rating">
+            <input type="radio" id="q5-1" name="q5" value="1" required>
+            <label for="q5-1"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q5-2" name="q5" value="2">
+            <label for="q5-2"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q5-3" name="q5" value="3">
+            <label for="q5-3"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q5-4" name="q5" value="4">
+            <label for="q5-4"><i class="fas fa-star"></i></label>
+            <input type="radio" id="q5-5" name="q5" value="5">
+            <label for="q5-5"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+
+        <!-- Campo opcional para elogios -->
+        <div class="form-group">
+          <label for="message">Mensagem opcional de elogio</label>
+          <textarea id="message" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Enviar Avaliação</button>
+        <button type="button" id="cancelBtn" class="btn btn-secondary">Cancelar</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- JavaScript para interatividade -->
+  <script>
+    // Alternar tema claro/escuro
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    toggleThemeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleThemeBtn.textContent = document.body.classList.contains('dark-mode')
+        ? 'Modo Claro'
+        : 'Modo Escuro';
+    });
+
+    // Mostrar/ocultar formulário de avaliação
+    const showFormBtn = document.getElementById('showFormBtn');
+    const evaluationFormSection = document.getElementById('evaluationFormSection');
+    const cancelBtn = document.getElementById('cancelBtn');
+    showFormBtn.addEventListener('click', () => {
+      evaluationFormSection.style.display = 'block';
+      showFormBtn.style.display = 'none';
+    });
+    cancelBtn.addEventListener('click', () => {
+      evaluationFormSection.style.display = 'none';
+      showFormBtn.style.display = 'block';
+    });
+
+    // Carregar avaliações do localStorage e exibir na página
+    function loadEvaluations() {
+      const evaluationsContainer = document.getElementById('evaluations');
+      evaluationsContainer.innerHTML = '<h2>Avaliações</h2>';
+      let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+      if (evaluations.length === 0) {
+        evaluationsContainer.innerHTML += '<p>Nenhuma avaliação registrada.</p>';
+      } else {
+        evaluations.forEach((evalItem) => {
+          const card = document.createElement('div');
+          card.classList.add('card', 'my-3');
+          const cardBody = document.createElement('div');
+          cardBody.classList.add('card-body');
+
+          // Exibe as notas de cada pergunta com estrelas preenchidas e vazias
+          let ratingsHtml = '';
+          for (let i = 1; i <= 5; i++) {
+            let stars = '★'.repeat(evalItem['q' + i]) + '☆'.repeat(5 - evalItem['q' + i]);
+            ratingsHtml += `<p><strong>Q${i}:</strong> ${stars}</p>`;
+          }
+
+          cardBody.innerHTML = `
+            <h5 class="card-title">${evalItem.name} <small>(${evalItem.email})</small></h5>
+            ${ratingsHtml}
+            ${ evalItem.message ? `<p><strong>Elogio:</strong> ${evalItem.message}</p>` : ''}
+          `;
+          card.appendChild(cardBody);
+          evaluationsContainer.appendChild(card);
+        });
+      }
+    }
+    loadEvaluations();
+
+    // Envio do formulário: armazena a avaliação e atualiza a lista
+    const evaluationForm = document.getElementById('evaluationForm');
+    evaluationForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        q1: parseInt(document.querySelector('input[name="q1"]:checked').value),
+        q2: parseInt(document.querySelector('input[name="q2"]:checked').value),
+        q3: parseInt(document.querySelector('input[name="q3"]:checked').value),
+        q4: parseInt(document.querySelector('input[name="q4"]:checked').value),
+        q5: parseInt(document.querySelector('input[name="q5"]:checked').value),
+        message: document.getElementById('message').value.trim()
+      };
+      let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+      evaluations.push(formData);
+      localStorage.setItem('evaluations', JSON.stringify(evaluations));
+      evaluationForm.reset();
+      evaluationFormSection.style.display = 'none';
+      showFormBtn.style.display = 'block';
+      loadEvaluations();
+    });
+  </script>
+
+  <!-- Bootstrap JS, jQuery e Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
