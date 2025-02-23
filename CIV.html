@@ -216,16 +216,35 @@
     </style>
 </head>
 <!-- Modal de Senha -->
-	<div id="passwordModal" class="password-modal">
+		<div id="passwordModal" class="password-modal">
 		<div class="modal-content">
 			<span class="modal-close" onclick="closeModal()">&times;</span>
-			<h2><i class="fas fa-lock"></i> Acesso Restrito</h2>
-			<p>Por favor, insira a senha para acessar o projeto:</p>
-			<input type="password" class="password-input" id="passwordInput" placeholder="Digite a senha">
-			<p class="error-message" id="errorMessage">Senha incorreta! Tente novamente.</p>
-			<button class="hub-button" onclick="checkPassword()">
-				<i class="fas fa-unlock"></i>
-				ACESSAR
+			<h2><i class="fas fa-user-shield"></i> Verificação de Acesso</h2>
+			
+			<!-- Pergunta anti-robô -->
+			<div class="robot-check">
+				<p id="mathQuestion" style="margin: 1rem 0">Quanto é <span id="num1"></span> + <span id="num2"></span>?</p>
+				<input type="number" class="password-input" id="mathAnswer" placeholder="Digite a resposta">
+			</div>
+
+			<!-- Termos de uso -->
+			<div class="terms-box">
+				<label class="terms-label">
+					<input type="checkbox" id="termsCheckbox">
+					Confirmo que:
+					<ul style="margin: 0.5rem 0 0 1.5rem; text-align: left">
+						<li>Não sou um robô/script automatizado</li>
+						<li>Reconheço os direitos autorais de Thiago F. Rodrigues</li>
+						<li>Concordo com os termos de uso desta plataforma</li>
+					</ul>
+				</label>
+			</div>
+
+			<p class="error-message" id="errorMessage"></p>
+			
+			<button class="hub-button" onclick="checkVerification()">
+				<i class="fas fa-check-double"></i>
+				VERIFICAR E ACESSAR
 			</button>
 		</div>
 	</div>
@@ -303,41 +322,49 @@
             });
         });
 		
-		// Funções do Modal
-		function showModal() {
-			event.preventDefault();
-			document.getElementById('passwordModal').style.display = 'flex';
-		}
+		let currentSolution = 0;
 
-		function closeModal() {
-			document.getElementById('passwordModal').style.display = 'none';
-			document.getElementById('passwordInput').value = '';
-			document.getElementById('errorMessage').style.display = 'none';
-		}
+    function generateMathQuestion() {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        currentSolution = num1 + num2;
+        
+        document.getElementById('num1').textContent = num1;
+        document.getElementById('num2').textContent = num2;
+        document.getElementById('mathAnswer').value = '';
+    }
 
-		function checkPassword() {
-			const password = document.getElementById('passwordInput').value;
-			const correctPassword = 'thiago123456'; // Senha definida aqui
-			const errorMessage = document.getElementById('errorMessage');
+    function checkVerification() {
+        const answer = parseInt(document.getElementById('mathAnswer').value);
+        const termsAccepted = document.getElementById('termsCheckbox').checked;
+        const errorMessage = document.getElementById('errorMessage');
 
-			if (password === correctPassword) {
-				window.location.href = 'CIVInside.html';
-			} else {
-				errorMessage.style.display = 'block';
-				document.getElementById('passwordInput').value = '';
-				setTimeout(() => {
-					errorMessage.style.display = 'none';
-				}, 3000);
-			}
-		}
+        if (!termsAccepted || answer !== currentSolution) {
+            let errors = [];
+            if (!termsAccepted) errors.push("Aceite os termos para continuar");
+            if (answer !== currentSolution) errors.push("Resposta matemática incorreta");
+            
+            errorMessage.innerHTML = errors.join(" e ").toUpperCase() + "!";
+            errorMessage.style.display = 'block';
+            
+            // Recarrega nova pergunta
+            generateMathQuestion();
+            
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+            return;
+        }
 
-		// Fechar modal ao clicar fora
-		window.onclick = function(event) {
-			const modal = document.getElementById('passwordModal');
-			if (event.target === modal) {
-				closeModal();
-			}
-		}
+        window.location.href = 'CIVInside.html';
+    }
+
+    // Modifique a função showModal
+    function showModal() {
+        event.preventDefault();
+        generateMathQuestion();
+        document.getElementById('passwordModal').style.display = 'flex';
+    }
     </script>
 </body>
 </html>
