@@ -45,6 +45,8 @@
             --text-color: var(--dark-text);
             --bg-rgb: 26, 26, 26;
         }
+		
+		
 
         .container {
             max-width: 1200px;
@@ -155,6 +157,53 @@
             color: var(--text-color);
             transition: background 0.3s;
         }
+		
+		/* PopUp */
+		.signature-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .signature-modal {
+            background: var(--light-bg);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+            position: relative;
+            max-width: 400px;
+        }
+
+        .signature-logo {
+            width: 150px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        .signature-text {
+            font-size: 1.1em;
+            color: var(--light-text);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .signature-text strong {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: block;
+            margin-top: 10px;
+        }
 
         .project-link:hover {
             background: rgba(var(--bg-rgb), 0.2);
@@ -182,6 +231,17 @@
     <button class="theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
     </button>
+	
+	<div class="signature-overlay" id="signaturePopup">
+        <div class="signature-modal">
+            <img src="https://i.imgur.com/9mNyRb1.jpeg" alt="Logo Acadêmica" class="signature-logo">
+            <div class="signature-text">
+                Acima assinatura de
+                <strong>Thiago Ferreira Rodrigues</strong>
+                Criador deste Hub Acadêmico
+            </div>
+        </div>
+    </div>
 
     <div class="language-toggle">
         <button class="flag-btn" onclick="toggleLanguage('pt')">🇧🇷</button>
@@ -246,6 +306,21 @@
             document.body.classList.add('dark-mode');
             document.querySelector('.theme-toggle i').classList.add('fa-sun');
         }
+		
+	    window.addEventListener('DOMContentLoaded', (event) => {
+            const popup = document.getElementById('signaturePopup');
+            
+            // Mostrar o popup imediatamente
+            popup.style.display = 'flex';
+            
+            // Esconder após 3 segundos
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 500);
+            }, 2000);
+        });
 
         // Toggle de Projetos
         function toggleProjects() {
