@@ -7,9 +7,11 @@
     
     <!-- Ícones Acadêmicos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	
     
     <!-- Fontes Acadêmicas -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+	
     
     <style>
         :root {
@@ -279,9 +281,14 @@
         </div>
 
         <!-- Botões para navegação -->
-		<a href="#" onclick="showModal()" class="hub-button">
+		<a href="#" onclick="showModal('CIVInside.html')" class="hub-button">
 			<i class="fas fa-arrow-right-to-bracket"></i>
 			ENTRAR NO PROJETO
+		</a>
+		
+		<a href="#" onclick="showModal('https://www.calameo.com/read/007881016128e6b333afc')" class="hub-button">
+			<i class="fas fa-file-pdf"></i>
+			VISUALIZAR DOCUMENTO DO PROJETO
 		</a>
 
         <a href="Hub.html" class="hub-button">
@@ -322,7 +329,16 @@
             });
         });
 		
-		let currentSolution = 0;
+	let currentSolution = 0;
+    let targetLink = ''; // Variável para armazenar o link destino
+		
+		function showModal(type = 'project') {
+        event.preventDefault();
+        generateMathQuestion();
+        targetLink = type === 'pdf' ? 'projeto.pdf' : 'CIVInside.html';
+        document.getElementById('passwordModal').style.display = 'flex';
+    }
+
 
     function generateMathQuestion() {
         const num1 = Math.floor(Math.random() * 10) + 1;
@@ -334,36 +350,41 @@
         document.getElementById('mathAnswer').value = '';
     }
 
-    function checkVerification() {
-        const answer = parseInt(document.getElementById('mathAnswer').value);
-        const termsAccepted = document.getElementById('termsCheckbox').checked;
-        const errorMessage = document.getElementById('errorMessage');
+	function checkVerification() {
+			const answer = parseInt(document.getElementById('mathAnswer').value);
+			const termsAccepted = document.getElementById('termsCheckbox').checked;
+			const errorMessage = document.getElementById('errorMessage');
 
-        if (!termsAccepted || answer !== currentSolution) {
-            let errors = [];
-            if (!termsAccepted) errors.push("Aceite os termos para continuar");
-            if (answer !== currentSolution) errors.push("Resposta matemática incorreta");
-            
-            errorMessage.innerHTML = errors.join(" e ").toUpperCase() + "!";
-            errorMessage.style.display = 'block';
-            
-            // Recarrega nova pergunta
-            generateMathQuestion();
-            
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 3000);
-            return;
-        }
+			if (!termsAccepted || answer !== currentSolution) {
+				let errors = [];
+				if (!termsAccepted) errors.push("Aceite os termos para continuar");
+				if (answer !== currentSolution) errors.push("Resposta matemática incorreta");
+				
+				errorMessage.innerHTML = errors.join(" e ").toUpperCase() + "!";
+				errorMessage.style.display = 'block';
+				
+				generateMathQuestion();
+				
+				setTimeout(() => {
+					errorMessage.style.display = 'none';
+				}, 3000);
+				return;
+			}
 
-        window.location.href = 'CIVInside.html';
+
+        window.location.href = targetLink;
     }
 
     // Modifique a função showModal
-    function showModal() {
+    function showModal(destination) {
         event.preventDefault();
         generateMathQuestion();
+        targetLink = destination; // Define o link alvo
         document.getElementById('passwordModal').style.display = 'flex';
+    }
+	
+	function closeModal() {
+        document.getElementById('passwordModal').style.display = 'none';
     }
     </script>
 </body>
