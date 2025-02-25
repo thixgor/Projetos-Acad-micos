@@ -3,307 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliações - Thiago F. Rodrigues</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <title>Feedbacks Acadêmicos</title>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        header {
-            background-color: #007BFF;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            position: relative;
-        }
-
-        #toggle-theme {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background-color: #fff;
-            color: #007BFF;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        main {
-            padding: 2rem;
-        }
-
-        h2 {
-            color: #007BFF;
-        }
-
-        #lista-avaliacoes {
-            margin-bottom: 2rem;
-        }
-
-        .avaliacao {
-            background-color: white;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        #formulario {
-            display: none;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        #botao-avaliar {
-            display: block;
-            margin: 0 auto;
-            background-color: #007BFF;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #botao-avaliar:hover, button:hover {
-            background-color: #0056b3;
-        }
-
-        .estrelas {
-            display: flex;
-            justify-content: start;
-            margin-bottom: 1rem;
-        }
-
-        .estrelas span {
-            font-size: 2rem;
-            color: #ccc;
-            cursor: pointer;
-        }
-
-        .estrelas span.ativo {
-            color: #FFD700;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #cccccc;
+            font-weight: normal;
+        }
+
+        .mensagem {
+            background-color: #1e1e1e;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 2rem 0;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #a0a0a0;
+        }
+
+        .btn-voltar {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #404040;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
         }
 
-        /* Tema Escuro */
-        body.escuro {
-            background-color: #333;
-            color: #f4f4f4;
-        }
-
-        body.escuro header {
-            background-color: #0056b3;
-        }
-
-        body.escuro #toggle-theme {
-            background-color: #f4f4f4;
-            color: #0056b3;
-        }
-
-        body.escuro .avaliacao, body.escuro #formulario {
-            background-color: #444;
-            color: #f4f4f4;
-        }
-
-        body.escuro .estrelas span {
-            color: #666;
-        }
-
-        body.escuro .estrelas span.ativo {
-            color: #FFD700;
-        }
-
-        /* Responsividade */
-        @media (max-width: 600px) {
-            main {
-                padding: 1rem;
-            }
-
-            #formulario {
-                padding: 1rem;
-            }
-
-            .estrelas span {
-                font-size: 1.5rem;
-            }
+        .btn-voltar:hover {
+            background-color: #3d3d3d;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Avaliações - Thiago F. Rodrigues - Medicina</h1>
-        <button id="toggle-theme">Alternar Tema</button>
-    </header>
-    <main>
-        <section id="avaliacoes">
-            <h2>Avaliações</h2>
-            <div id="lista-avaliacoes"></div>
-            <button id="botao-avaliar">Avaliar</button>
-        </section>
-        <section id="formulario">
-            <h2>Deixe sua Avaliação</h2>
-            <form id="form-avaliacao">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" required>
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" required>
-                <label>É comprometido com a absorção de aprendizagem e inovação médica?</label>
-                <div class="estrelas" data-pergunta="comprometimento"></div>
-                <label>Possui uma boa habilidade de comunicação acadêmica?</label>
-                <div class="estrelas" data-pergunta="comunicacao"></div>
-                <label>Os projetos são interessantes, inovadores e simpatizantes com a área de conhecimento médico?</label>
-                <div class="estrelas" data-pergunta="projetos"></div>
-                <label>Demonstra empatia e habilidades interpessoais com pacientes e colegas?</label>
-                <div class="estrelas" data-pergunta="empatia"></div>
-                <label>Contribui para o avanço do conhecimento médico com ideias criativas?</label>
-                <div class="estrelas" data-pergunta="criatividade"></div>
-                <label for="mensagem">Mensagem (opcional):</label>
-                <textarea id="mensagem"></textarea>
-                <button type="submit">Enviar Avaliação</button>
-            </form>
-        </section>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('form-avaliacao');
-            const listaAvaliacoes = document.getElementById('lista-avaliacoes');
-            const toggleTheme = document.getElementById('toggle-theme');
-            const body = document.body;
-            const botaoAvaliar = document.getElementById('botao-avaliar');
-            const formulario = document.getElementById('formulario');
+    <div class="container">
+        <h1>Seção de Feedbacks Acadêmicas</h1>
+        
+        <div class="mensagem">
+            <p>Informamos que esta seção encontra-se em fase de desenvolvimento.</p>
+            <p>A equipe técnica está trabalhando para implementar os recursos necessários para o pleno funcionamento do sistema de avaliações. Agradecemos sua compreensão e pedimos que verifique novamente em breve.</p>
+        </div>
 
-            // Carregar tema
-            if (localStorage.getItem('tema') === 'escuro') {
-                body.classList.add('escuro');
-            }
-
-            // Alternar tema
-            toggleTheme.addEventListener('click', () => {
-                body.classList.toggle('escuro');
-                localStorage.setItem('tema', body.classList.contains('escuro') ? 'escuro' : 'claro');
-            });
-
-            // Carregar avaliações
-            let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-
-            // Função para exibir avaliações
-            function exibirAvaliacoes() {
-                listaAvaliacoes.innerHTML = '';
-                avaliacoes.forEach(avaliacao => {
-                    const div = document.createElement('div');
-                    div.classList.add('avaliacao');
-                    div.innerHTML = `
-                        <p><strong>Nome:</strong> ${avaliacao.nome}</p>
-                        <p><strong>E-mail:</strong> ${avaliacao.email}</p>
-                        <p><strong>Comprometimento:</strong> ${'★'.repeat(avaliacao.comprometimento)}${'☆'.repeat(5 - avaliacao.comprometimento)}</p>
-                        <p><strong>Comunicação:</strong> ${'★'.repeat(avaliacao.comunicacao)}${'☆'.repeat(5 - avaliacao.comunicacao)}</p>
-                        <p><strong>Projetos:</strong> ${'★'.repeat(avaliacao.projetos)}${'☆'.repeat(5 - avaliacao.projetos)}</p>
-                        <p><strong>Empatia:</strong> ${'★'.repeat(avaliacao.empatia)}${'☆'.repeat(5 - avaliacao.empatia)}</p>
-                        <p><strong>Criatividade:</strong> ${'★'.repeat(avaliacao.criatividade)}${'☆'.repeat(5 - avaliacao.criatividade)}</p>
-                        ${avaliacao.mensagem ? `<p><strong>Mensagem:</strong> ${avaliacao.mensagem}</p>` : ''}
-                    `;
-                    listaAvaliacoes.appendChild(div);
-                });
-            }
-
-            exibirAvaliacoes();
-
-            // Mostrar formulário ao clicar em "Avaliar"
-            botaoAvaliar.addEventListener('click', () => {
-                formulario.style.display = 'block';
-                botaoAvaliar.style.display = 'none';
-            });
-
-            // Adicionar estrelas interativas
-            const estrelas = document.querySelectorAll('.estrelas');
-            estrelas.forEach(estrela => {
-                for (let i = 1; i <= 5; i++) {
-                    const span = document.createElement('span');
-                    span.textContent = '☆';
-                    span.addEventListener('click', () => {
-                        const pergunta = estrela.dataset.pergunta;
-                        estrela.dataset.valor = i;
-                        estrela.querySelectorAll('span').forEach((s, index) => {
-                            s.textContent = index < i ? '★' : '☆';
-                            s.classList.toggle('ativo', index < i);
-                        });
-                    });
-                    estrela.appendChild(span);
-                }
-            });
-
-            // Enviar avaliação
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const nome = document.getElementById('nome').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const mensagem = document.getElementById('mensagem').value.trim();
-
-                // Verificar se nome ou email já existem
-                if (avaliacoes.some(av => av.nome === nome || av.email === email)) {
-                    alert('Nome ou e-mail já utilizados em uma avaliação.');
-                    return;
-                }
-
-                const comprometimento = parseInt(document.querySelector('.estrelas[data-pergunta="comprometimento"]').dataset.valor || 0);
-                const comunicacao = parseInt(document.querySelector('.estrelas[data-pergunta="comunicacao"]').dataset.valor || 0);
-                const projetos = parseInt(document.querySelector('.estrelas[data-pergunta="projetos"]').dataset.valor || 0);
-                const empatia = parseInt(document.querySelector('.estrelas[data-pergunta="empatia"]').dataset.valor || 0);
-                const criatividade = parseInt(document.querySelector('.estrelas[data-pergunta="criatividade"]').dataset.valor || 0);
-
-                if (!comprometimento || !comunicacao || !projetos || !empatia || !criatividade) {
-                    alert('Por favor, avalie todas as perguntas.');
-                    return;
-                }
-
-                const novaAvaliacao = { nome, email, comprometimento, comunicacao, projetos, empatia, criatividade, mensagem };
-                avaliacoes.push(novaAvaliacao);
-                localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
-                exibirAvaliacoes();
-                form.reset();
-                formulario.style.display = 'none';
-                botaoAvaliar.style.display = 'block';
-                estrelas.forEach(estrela => {
-                    estrela.querySelectorAll('span').forEach(s => {
-                        s.textContent = '☆';
-                        s.classList.remove('ativo');
-                    });
-                    delete estrela.dataset.valor;
-                });
-            });
-        });
-    </script>
+        <button class="btn-voltar" onclick="window.location.href='Hub.html'">Voltar ao Hub Acadêmico</button>
+    </div>
 </body>
 </html>
