@@ -303,28 +303,36 @@
   </div>
 
   <!-- Modal de Changelogs -->
-  <div class="modal fade" id="changelogModal" tabindex="-1" aria-labelledby="changelogModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changelogModalLabel">Changelogs</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div id="changelogContent">
-            Carregando...
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="modal fade" id="changelogModal" tabindex="-1" aria-labelledby="changelogModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="changelogModalLabel">Changelogs</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+		  </div>
+		  <div class="modal-body">
+			<div id="changelogContent">
+			  <!-- Conteúdo do changelog estático -->
+			  <h5>Change Log (26/02/2025)</h5>
+			  <ul>
+				<li>Instruções de um relatório de campo foram incrementadas à área de Criação de Diário de Campo.</li>
+				<li>Melhorias no processo de criação de relatório de campo.</li>
+			  </ul>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
 
   <!-- Bibliotecas Externas -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   <script>
     let selectedImages = [];
 
@@ -620,36 +628,7 @@
     fetchLastUpdate();
 
 
-	var changelogModal = document.getElementById('changelogModal');
-
-
-	changelogModal.addEventListener('show.bs.modal', async function () {
-	  const changelogContent = document.getElementById('changelogContent');
-	  changelogContent.textContent = 'Carregando...';
-
-	  try {
-		// Usando o caminho relativo para pegar o changelogs.json na mesma pasta
-		const response = await fetch('changelogs.json');
-		
-		if (!response.ok) {
-		  changelogContent.textContent = 'Erro ao carregar os changelogs.';
-		  return;
-		}
-
-		const data = await response.json(); // Processa como JSON
-
-		// Atualiza o título do modal com o título vindo do JSON
-		document.getElementById('changelogModalLabel').textContent = data.title || 'Changelog';
-
-		// Converte as entradas do changelog em HTML
-		const changelogHTML = data.changes.map(change => `<p>${change}</p>`).join('');
-		changelogContent.innerHTML = changelogHTML;
-
-	  } catch (error) {
-		changelogContent.textContent = 'Erro ao carregar os changelogs.';
-		console.error(error);
-	  }
-	});
+  </script>
 
 
 
