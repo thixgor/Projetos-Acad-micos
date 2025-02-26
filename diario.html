@@ -351,7 +351,6 @@
             if (!local) erros.push("Local de Prática");
             if (!professor) erros.push("Professor");
             if (!relatorio) erros.push("Relatório de Campo");
-            if (selectedImages.length === 0) erros.push("Pelo menos uma imagem");
 
             if (erros.length > 0) {
                 alert("Por favor, preencha todos os campos obrigatórios: " + erros.join(", "));
@@ -464,18 +463,20 @@
             doc.text("Fotografias produzidas durante a atividade:", 20, 155);
             let x = 20;
             const y = 165;
-            try {
-                for (let file of selectedImages.slice(0, 6)) {
-                    const imgData = await readFileAsDataURL(file);
-                    doc.addImage(imgData, 'JPEG', x, y, 30, 30);
-                    x += 35;
-                    if (x > 170) break;
-                }
-            } catch (e) {
-                alert("Erro ao processar as imagens. Certifique-se de que as imagens são válidas.");
-                console.error(e);
-                return;
-            }
+			if (selectedImages.length > 0) {
+				try {
+					for (let file of selectedImages.slice(0, 6)) {
+						const imgData = await readFileAsDataURL(file);
+						doc.addImage(imgData, 'JPEG', x, y, 30, 30);
+						x += 35;
+						if (x > 170) break;
+					}
+				} catch (e) {
+					alert("Erro ao processar as imagens. Certifique-se de que as imagens são válidas.");
+					console.error(e);
+					return;
+				}
+			}
 
             doc.setFontSize(10);
             doc.text("Página 02 (dois)", 105, 290, { align: "center" });
