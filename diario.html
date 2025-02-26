@@ -383,7 +383,7 @@
             const doc = new jsPDF();
 
             // Formatar data para DD/MM/AAAA
-            const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+            const dataFormatada = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
 
             // Página 1
             doc.setFontSize(22);
