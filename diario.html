@@ -271,6 +271,7 @@
         function showCreatePage() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('create').classList.remove('hidden');
+			document.getElementById('footer').style.display = 'none'; // Oculta o rodapé
         }
 
         function handleImageUpload(event) {
@@ -530,7 +531,7 @@
 		}
 		fetchLastUpdate();
     </script>
-	<footer>
+	<footer id="footer">
 		<p>Última atualização: <span id="last-update">carregando...</span></p>
 	</footer>
 </body>
