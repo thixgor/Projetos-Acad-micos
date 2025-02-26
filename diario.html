@@ -213,7 +213,7 @@
                 <option value="RONALD TEIXEIRA PECANHA FERNANDES">RONALD TEIXEIRA PECANHA FERNANDES</option>
             </select>
 
-            <label for="relatorio">Relatório de Campo (máx. 12 linhas em Arial 12):</label>
+            <label for="relatorio">Relatório de Campo:</label>
             <textarea id="relatorio" name="relatorio" required></textarea>
 
             <label for="fotos">Anexar Fotos (máx. 6, atualmente <span id="imageCount">0</span>/6):</label>
@@ -452,18 +452,20 @@
 
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
-            doc.text("TEXTO RELATORIAL (no máximo 12 linhas)", 105, 70, { align: "center" });
+            doc.text("TEXTO RELATORIAL", 105, 70, { align: "center" });
             doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
             const relatorioLinhas = doc.splitTextToSize(relatorio, 170);
             doc.text(relatorioLinhas.slice(0, 12), 20, 80);
-            doc.rect(20, 75, 170, 70);
+            doc.rect(20, 75, 170, 130);
 
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
-            doc.text("Fotografias produzidas durante a atividade:", 20, 155);
+			if (selectedImages.length > 0) {
+				doc.text("Fotografias produzidas durante a atividade:", 20, 215);
+			}
             let x = 20;
-            const y = 165;
+            const y = 225;
 			if (selectedImages.length > 0) {
 				try {
 					for (let file of selectedImages.slice(0, 6)) {
