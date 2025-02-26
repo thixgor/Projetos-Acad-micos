@@ -341,7 +341,8 @@
             const data = document.getElementById('data').value;
             const local = document.getElementById('local').value.trim();
             const professor = document.getElementById('professor').value;
-            const relatorio = tinymce.get('relatorio').getContent();
+            const relatorio = tinymce.get('relatorio').getContent({ format: 'text' });
+
 
             // Validação dos campos
             let erros = [];
