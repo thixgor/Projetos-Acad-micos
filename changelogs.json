@@ -1,2 +1,7 @@
-Change Log (26/02/2025 15:42)
-- Instruções de um relatório de campo foram incrementadas à área de Criação de Diário de Campo.
+{
+  "title": "Últimas Atualizações",
+  "changes": [
+    "- Instruções de relatório de campo foram incrementadas à área de Criação de Diário de Campo.",
+    "- Melhoria na funcionalidade de PDF",
+  ]
+}
