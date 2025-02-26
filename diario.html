@@ -622,12 +622,14 @@
 
 	var changelogModal = document.getElementById('changelogModal');
 
+
 	changelogModal.addEventListener('show.bs.modal', async function () {
 	  const changelogContent = document.getElementById('changelogContent');
 	  changelogContent.textContent = 'Carregando...';
 
 	  try {
-		const response = await fetch('https://raw.githubusercontent.com/thixgor/Projetos-Acad-micos/main/changelogs.json');
+		// Usando o caminho relativo para pegar o changelogs.json na mesma pasta
+		const response = await fetch('changelogs.json');
 		
 		if (!response.ok) {
 		  changelogContent.textContent = 'Erro ao carregar os changelogs.';
@@ -648,6 +650,7 @@
 		console.error(error);
 	  }
 	});
+
 
 
   </script>
