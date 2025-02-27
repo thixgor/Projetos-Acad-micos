@@ -313,10 +313,10 @@
 		  <div class="modal-body">
 			<div id="changelogContent">
 			  <!-- Conteúdo do changelog estático -->
-			  <h5>Change Log (26/02/2025)</h5>
+			  <h5>Atualizações (26/02/2025)</h5>
 			  <ul>
-				<li>Instruções de um relatório de campo foram incrementadas à área de Criação de Diário de Campo.</li>
-				<li>Melhorias no processo de criação de relatório de campo.</li>
+				<li>Melhorias do relatório de campo gerado, adicionando automaticamente data ao documento.</li>
+				<li>Adicionadas instruções.</li>
 			  </ul>
 			</div>
 		  </div>
@@ -508,10 +508,10 @@
       doc.setFont("helvetica", "bold");
       doc.text("INSTITUIÇÃO", 20, 60);
       const logoUrl = "https://i.imgur.com/c5JnMVK.png";
-      const logoWidth = 60;
+      const logoWidth = 80;
       const logoHeight = logoWidth / 5.33;
       try {
-        doc.addImage(logoUrl, 'PNG', 20, 65, logoWidth, logoHeight);
+        doc.addImage(logoUrl, 'PNG', 17, 63, logoWidth, logoHeight);
       } catch (e) {
         console.error("Erro ao carregar a logo:", e);
         doc.text("(Logo não carregada)", 20, 70);
@@ -600,8 +600,13 @@
 
       doc.setFontSize(10);
       doc.text("Página 02 (dois)", 105, 290, { align: "center" });
+		const dataInput2 = document.getElementById('data').value;
+		const [ano2, mes2, dia2] = dataInput2.split('-');
+		const dataFormatada2 = `${dia2}-${mes2}-${ano2}`; // Usa '-' ao invés de '/'
 
-      doc.save('diario_de_campo.pdf');
+		doc.save(`Diário de Campo - ${dataFormatada2}.pdf`);
+
+
     }
 
     function readFileAsDataURL(file) {
