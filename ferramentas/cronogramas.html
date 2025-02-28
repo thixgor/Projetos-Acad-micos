@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronogramas para Medicina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn {
+            background: #00e676;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 2rem;
+        }
+
+        .btn:hover {
+            background: #00c853;
+            box-shadow: 0 5px 15px rgba(0,230,118,0.3);
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            color: #333;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+		
+		.btn-comprar {
+            display: none !important; /* Oculta inicialmente */
+        }
+
+        #qrcode {
+            margin: 1rem auto;
+            text-align: center;
+        }
+
+        #qrcode img {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+        }
+		
+		.anuncio-rodape {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #d32f2f;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+
+        .pix-info {
+            margin: 1rem 0;
+            text-align: left;
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .copy-btn {
+            background: #1a237e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+
+        .creator {
+            margin-top: 3rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cronogramas Dinâmicos</h1>
+        
+        <div class="grid">
+            <div class="card" onclick="window.location.href='ferramentas/cronogramas/med.html'">
+                <h2><i class="fas fa-book-medical"></i> Cronograma Medicina</h2>
+                <p>Acesso ao planejamento completo</p>
+            </div>
+        </div>
+		
+	<div class="anuncio-rodape" id="anuncio">
+		Atenção! A Plataforma está gratuita até 04/03 às 00:00. Após esta data a ferramenta será paga. <br><br>
+		Usuário para acesso: <strong>GRATIS</strong> <br>
+		Senha para acesso: <strong>GRATIS</strong>
+	</div>
+
+        <button class="btn btn-comprar" onclick="showPopup()">Adquirir Criador de Cronogramas</button>
+
+        <div class="popup" id="popup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup()">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas</h3>
+                <p>Valor: R$ 60,00 (Vitalício)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+                
+                <input type="text" id="nome" placeholder="Seu nome completo">
+                <select id="pagamento" onchange="paymentChanged()">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSection" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/Gh3eNUH.png" alt="QR Code PIX">
+                    </div>
+                    
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$60,00</p>
+                    </div>
+
+                    <button class="copy-btn" onclick="copiarPix()">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+
+                    <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+                </div>
+
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra()">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <p class="creator">Criado por Thiago F. Rodrigues</p>
+    </div>
+
+    <script>
+        const pixCode = '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540560.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA6304F57C';
+
+        function showPopup() {
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function paymentChanged() {
+            const method = document.getElementById('pagamento').value;
+            document.getElementById('pixSection').style.display = method === 'pix' ? 'block' : 'none';
+        }
+
+        function copiarPix() {
+            navigator.clipboard.writeText(pixCode)
+                .then(() => alert('Código PIX copiado para a área de transferência!'))
+                .catch(err => console.error('Erro ao copiar:', err));
+        }
+
+        function finalizarCompra() {
+            const nome = document.getElementById('nome').value;
+            const metodo = document.getElementById('pagamento').value;
+            
+            if(!nome || !metodo) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            let message = `> Olá meu nome é ${nome} e `;
+            message += metodo === 'dinheiro' 
+                ? 'iniciei a entrada no pedido do Cronograma Medicina Dinâmico 2025** com pagamento via DINHEIRO.'
+                : 'iniciei a entrada no pedido do *ronograma Medicina Dinâmico 2025**, com pagamento via PIX.';
+
+            window.open(`https://wa.me/5521997770936?text=${encodeURIComponent(message)}`, '_blank');
+            hidePopup();
+        }
+		
+		// NOVA FUNÇÃO PARA CONTROLE DE DATA/HORA
+		
+    </script>
+</body>
+</html>
