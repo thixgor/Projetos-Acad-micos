@@ -262,7 +262,7 @@
       <label for="local">Local de Prática:</label>
       <input type="text" id="local" required>
 
-      <label for="professor">Professor:</label>
+      <label for="professor">Professor(a):</label>
       <select id="professor" required>
         <option value="RONALD TEIXEIRA PEÇANHA FERNANDES">RONALD TEIXEIRA PEÇANHA FERNANDES</option>
 		<option value="DANIELLE CECATO DE ALMEIDA PASSOS">DANIELLE CECATO DE ALMEIDA PASSOS</option>
@@ -463,6 +463,7 @@
       const professor = document.getElementById('professor').value;
       const relatorio = tinymce.get('relatorio').getContent({ format: 'text' });
 
+	// Ajustar o título do professor
       // Validação dos campos
       let erros = [];
       if (!nome) erros.push("Nome do Aluno");
@@ -530,6 +531,7 @@
       doc.text("IDENTIFICAÇÃO & DETALHES", 20, idY);
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
+	  const professorFormatado = professor.trim().toLowerCase() === "danielle cecato de almeida passos".toLowerCase() ? "Professora" : "Professor";
       const items = [
         `Nome: ${nome}`,
         `Matrícula: ${matricula}`,
@@ -538,7 +540,7 @@
         "Semestre: 1° Semestre de 2025",
         "Disciplina: IESC (Integração Ensino-Serviço-Comunidade)",
         `Local de Prática: ${local}`,
-        `Professor: ${professor}`
+        `${professorFormatado}: ${professor}`
       ];
       let yPos = idY + 10;
       items.forEach(item => {
