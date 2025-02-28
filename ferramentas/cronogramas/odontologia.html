@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cronograma Dinâmico de Estudo Intensivo - Medicina - por Thiago F. Rodrigues</title>
-  <meta property="og:title" content="Cronograma de Medicina - UNIGRANRIO">
+  <title>Cronograma Dinâmico de Estudo Intensivo - Odontologia - por Thiago F. Rodrigues</title>
+  <meta property="og:title" content="Cronograma de Odontologia - AFYA">
   <meta property="og:description" content="A ferramenta pra quem precisa criar um Cronograma, de forma dinâmica e individual.">
   <meta property="og:image" content="https://i.ibb.co/8gZg6cB3/Inserir-um-pouquinho-de-texto-4.png">
   <meta property="og:image:width" content="1200">
@@ -119,6 +119,7 @@
       gap: 1.5rem;
       margin: 2rem 0;
     }
+	
     .day-card {
       background: white;
       padding: 1.5rem;
@@ -307,7 +308,7 @@
 		  <!-- Tela Inicial do Cronograma -->
 		  <div class="header" id="initialScreen">
 			<h1 style="color: var(--main-blue); margin-bottom: 1rem;">📚 Cronograma Dinâmico de Estudo Intensivo</h1>
-			<p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">O cronograma que se adapta à sua agenda do 1º período de Medicina</p>
+			<p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">O cronograma que se adapta à sua agenda do 1º período de Odontologia</p>
 			<button class="btn" onclick="startPlanning()">Vamos criar um cronograma →</button>
 		  </div>
 		  <!-- Demais seções do cronograma... -->
@@ -337,10 +338,16 @@
     // Variável global para armazenar o cronograma gerado e usá-lo no PDF
     let generatedSchedule = {};
 
-    const subjects = {
-      'SOI': ['Anatomia', 'Fisiologia', 'Bioquímica', 'Embriologia', 'Histologia'],
-      'HAM': ['Ética do estudante de medicina', 'Anamnese', 'Higienização das mãos', 'Exame físico', 'Sinais Vitais']
-    };
+	const subjects = {
+	  'Sistemas Orgânicos e Práticas': [
+		'Anatomia Humana Geral',
+		'Biologia Celular e Histologia',
+		'Bioquímica Básica'
+	  ],
+	  'Habilidades Sociais': [
+		'Educação em Saúde Bucal I'
+	  ]
+	};
 
     const difficultyColors = ['#4CAF50', '#FFEB3B', '#FF9800', '#F44336', '#880808'];
     const difficultyLabels = ['Fácil', 'Normal', 'Médio', 'Difícil', 'Muito Difícil'];
@@ -498,16 +505,19 @@
       const weights = {};
 
       // Calcular pesos, considerando apenas conteúdos não ignorados
-      for (const [subject, topics] of Object.entries(studyData.subjects)) {
-        weights[subject] = {};
-        for (const [topic, difficulty] of Object.entries(topics)) {
-          if (studyData.ignoredTopics[subject] && studyData.ignoredTopics[subject][topic]) continue;
-          if (difficulty === 0) continue;
-          const weight = 5 - difficulty;
-          weights[subject][topic] = weight;
-          totalWeight += weight;
-        }
-      }
+	  for (const [subject, topics] of Object.entries(studyData.subjects)) {
+		weights[subject] = {};
+		for (const [topic, difficulty] of Object.entries(topics)) {
+		  if (studyData.ignoredTopics[subject] && studyData.ignoredTopics[subject][topic]) continue;
+		  
+		  // Peso maior para disciplinas técnicas
+		  const baseWeight = subject === 'Sistemas Orgânicos e Práticas' ? 8 : 5;
+		  const weight = baseWeight - difficulty;
+		  
+		  weights[subject][topic] = weight;
+		  totalWeight += weight;
+		}
+	  }
 
       if (totalWeight === 0) {
         alert('Por favor, defina a dificuldade para pelo menos um conteúdo que não esteja ignorado!');
@@ -631,7 +641,7 @@
 	  const today = new Date();
 		const day = String(today.getDate()).padStart(2, '0');
 		const month = String(today.getMonth() + 1).padStart(2, '0');
-		const fileName = `Cronograma Medicina - ${day}-${month}.pdf`;
+		const fileName = `Cronograma Odontologia - ${day}-${month}.pdf`;
 
 		doc.save(fileName);
     }
