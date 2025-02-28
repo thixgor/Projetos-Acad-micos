@@ -199,7 +199,7 @@
     }
 	/* Estilos para o Modal de Feedback */
 	
-	.feedback-btn {
+	#feedbackModal .feedback-btn {
 		  padding: 5px 10px; /* Reduzido para economizar espaço */
 		  font-size: 14px; /* Tamanho de fonte menor */
 		  border: none; /* Remove bordas padrão */
@@ -407,14 +407,14 @@
 		  <div class="modal-body">
 			<form id="feedbackForm">
 			  <div class="d-flex justify-content-between mb-3">
-				<button type="button" class="btn feedback-btn" data-rating="Ruim">Ruim</button>
-				<button type="button" class="btn feedback-btn" data-rating="Normal">Normal</button>
-				<button type="button" class="btn feedback-btn" data-rating="Bom">Bom</button>
-				<button type="button" class="btn feedback-btn" data-rating="Excelente">Excelente</button>
+				<button type="button" class="btn feedback-btn" data-rating="Ruim">❌</button>
+				<button type="button" class="btn feedback-btn" data-rating="Normal">➖</button>
+				<button type="button" class="btn feedback-btn" data-rating="Bom">✅</button>
+				<button type="button" class="btn feedback-btn" data-rating="Excelente">💯</button>
 			  </div>
 			  
 			  <div class="mb-3">
-				<label for="comentario" class="form-label">O que podemos melhorar?</label>
+				<label for="comentario" class="form-label">O que pode melhorar na ferramenta? (opcional)</label>
 				<textarea class="form-control" id="comentario" rows="2"></textarea>
 			  </div>
 			  
@@ -570,40 +570,36 @@
 	  const body = document.body;
 	  const containers = document.querySelectorAll('.container');
 	  const toggleButton = document.getElementById('theme-toggle');
+	  const modals = document.querySelectorAll('.modal-content'); // Seleciona todos os modais
 
 	  if (body.classList.contains('light')) {
-		body.classList.remove('light');
-		body.classList.add('dark');
-		containers.forEach(container => {
-		  container.classList.remove('light');
-		  container.classList.add('dark');
-		});
+		// Tema Escuro
+		body.classList.replace('light', 'dark');
+		containers.forEach(container => container.classList.replace('light', 'dark'));
 		modals.forEach(modal => {
-		  modal.classList.remove('light');
-		  modal.classList.add('dark');
+		  modal.classList.replace('light', 'dark');
+		  modal.style.backgroundColor = '#2c3e50';
+		  modal.style.color = '#e9ecef';
 		});
 		toggleButton.textContent = '☀️';
-		// Ajustar TinyMCE para tema escuro
+		
+		// Ajustar TinyMCE
 		tinymce.activeEditor.getContainer().style.backgroundColor = '#444';
 		tinymce.activeEditor.getContainer().style.color = '#e9ecef';
 	  } else {
-		body.classList.remove('dark');
-		body.classList.add('light');
-		containers.forEach(container => {
-		  container.classList.remove('dark');
-		  container.classList.add('light');
-		});
+		// Tema Claro
+		body.classList.replace('dark', 'light');
+		containers.forEach(container => container.classList.replace('dark', 'light'));
 		modals.forEach(modal => {
-		  modal.classList.remove('dark');
-		  modal.classList.add('light');
+		  modal.classList.replace('dark', 'light');
+		  modal.style.backgroundColor = '#fff';
+		  modal.style.color = '#2c3e50';
 		});
 		toggleButton.textContent = '🌙';
-		// Ajustar TinyMCE para tema claro
+		
+		// Ajustar TinyMCE
 		tinymce.activeEditor.getContainer().style.backgroundColor = '#fff';
-		tinymce.activeEditor.getContainer().style.color = '#000';
-		const editorContainer = tinymce.activeEditor.getContainer();
-	    editorContainer.style.backgroundColor = body.classList.contains('dark') ? '#444' : '#fff';
-	    editorContainer.style.color = body.classList.contains('dark') ? '#e9ecef' : '#000';
+		tinymce.activeEditor.getContainer().style.color = '#2c3e50';
 	  }
 	}
 
