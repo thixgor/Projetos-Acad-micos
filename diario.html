@@ -197,6 +197,74 @@
       font-size: 1.5rem;
       cursor: pointer;
     }
+	/* Estilos para o Modal de Feedback */
+	
+	.feedback-btn {
+		  padding: 5px 10px; /* Reduzido para economizar espaço */
+		  font-size: 14px; /* Tamanho de fonte menor */
+		  border: none; /* Remove bordas padrão */
+		  border-radius: 5px;
+		  cursor: pointer;
+		  transition: transform 0.2s ease, background-color 0.3s ease;
+		}
+		
+		
+		.feedback-btn:hover {
+		  transform: scale(1.05); /* Efeito de leve aumento ao passar o mouse */
+		}
+
+		.feedback-btn.active {
+		  transform: scale(1.1); /* Botão selecionado fica um pouco maior */
+		  background-color: #007bff; /* Cor de destaque */
+		  color: white;
+		}
+
+
+	#feedbackModal .modal-dialog {
+	  max-width: 	400px; /* Reduzido de 95% para um valor fixo */
+	}
+
+	#feedbackModal .feedback-btn {
+	  flex: 1;
+	  margin: 0 2px;
+	  white-space: nowrap;
+	  transition: transform 0.2s, filter 0.2s;
+	}
+
+	#feedbackModal .feedback-btn:hover {
+	  transform: scale(1.05);
+	  filter: brightness(90%);
+	}
+
+	#feedbackModal .feedback-btn.active {
+	  transform: scale(1.1);
+	  filter: brightness(110%);
+	}
+
+	/* Ajustes para tema escuro */
+	body.dark #feedbackModal .modal-content {
+	  background-color: #2c3e50;
+	  color: #e9ecef;
+	}
+
+	body.dark #feedbackModal .form-control {
+	  background-color: #34495e;
+	  color: #e9ecef;
+	  border-color: #4a627a;
+	}
+
+	@media (max-width: 768px) {
+	  #feedbackModal .d-flex {
+		flex-wrap: wrap;
+		gap: 5px;
+	  }
+	  
+	  #feedbackModal .feedback-btn {
+		flex: 45%;
+		padding: 5px;
+		font-size: 0.9rem;
+	  }
+	}
 	
     @media (max-width: 600px) {
       .container {
@@ -317,11 +385,46 @@
 			  <h5>Atualizações (28/02/2025)</h5>
 			  <ul>
 				<li>Melhorias na compatibilidade de imagens.</li>
+				<li>Adicionado sistema de Feedback.</li>
 			  </ul>
 			</div>
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+		
+		<!-- Modal de Feedback -->
+	<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="feedbackModalLabel">Avalie sua experiência</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+		  </div>
+		  <div class="modal-body">
+			<form id="feedbackForm">
+			  <div class="d-flex justify-content-between mb-3">
+				<button type="button" class="btn feedback-btn" data-rating="Ruim">Ruim</button>
+				<button type="button" class="btn feedback-btn" data-rating="Normal">Normal</button>
+				<button type="button" class="btn feedback-btn" data-rating="Bom">Bom</button>
+				<button type="button" class="btn feedback-btn" data-rating="Excelente">Excelente</button>
+			  </div>
+			  
+			  <div class="mb-3">
+				<label for="comentario" class="form-label">O que podemos melhorar?</label>
+				<textarea class="form-control" id="comentario" rows="2"></textarea>
+			  </div>
+			  
+			  <div class="text-center">
+				<button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+			  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer justify-content-center">
+			<small>Criado por Thiago F. Rodrigues</small>
 		  </div>
 		</div>
 	  </div>
@@ -666,7 +769,7 @@
 		const dataFormatada2 = `${dia2}-${mes2}-${ano2}`; // Usa '-' ao invés de '/'
 
 		doc.save(`Diário de Campo - ${dataFormatada2}.pdf`);
-
+		showFeedbackWithDelay();
 
     }
 
@@ -678,6 +781,13 @@
         reader.readAsDataURL(file);
       });
     }
+	
+	function showFeedbackWithDelay() {
+	  setTimeout(() => {
+		const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+		feedbackModal.show();
+	  }, 1200); // 1.2 segundos de delay
+	}
 
     async function fetchLastUpdate() {
       try {
@@ -693,8 +803,47 @@
     }
     fetchLastUpdate();
 
+		// Feedback Handling
+	let selectedRating = '';
+
+	document.querySelectorAll('.feedback-btn').forEach(button => {
+	  button.addEventListener('click', function() {
+		selectedRating = this.dataset.rating;
+		document.querySelectorAll('.feedback-btn').forEach(btn => btn.classList.remove('active'));
+		this.classList.add('active');
+	  });
+	});
+
+	document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+	  e.preventDefault();
+	  
+	  const comentario = document.getElementById('comentario').value;
+	  const nome = document.getElementById('nome').value.trim();
+	  
+	  const formData = new FormData();
+	  formData.append('entry.85766025', comentario);
+	  formData.append('entry.1074346290', nome);
+	  formData.append('entry.305852309', selectedRating);
+	  
+	  try {
+		await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfyuOVVkmDGATCm3CiIe3YjG9_jSdMlhj-OfZaosEXsvulN1w/formResponse', {
+		  method: 'POST',
+		  body: formData,
+		  mode: 'no-cors'
+		});
+		
+		// Fechar modal após envio
+		bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+		alert('Obrigado pelo seu feedback! 😊');
+	  } catch (error) {
+		alert('Erro ao enviar feedback. Tente novamente mais tarde.');
+	  }
+	});
+
 
   </script>
+  
+  
 
 
 
