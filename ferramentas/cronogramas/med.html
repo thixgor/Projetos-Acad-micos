@@ -30,6 +30,55 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
     }
+	/* Tela Principal (oculta por padrão) */
+    #mainContent {
+      display: none;
+    }
+    /* Modal de Erro */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .modal-content button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: var(--main-blue);
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    /* Outros estilos... */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .btn {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      background-image: linear-gradient(135deg, var(--main-blue) 0%, var(--sec-blue) 100%);
+      color: white;
+    }
     body {
       margin: 0;
       padding: 20px;
@@ -200,16 +249,70 @@
       align-items: center;
       gap: 5px;
     }
+	
+	/* Tela de Login */
+    #loginScreen {
+      max-width: 400px;
+      margin: 100px auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    #loginScreen input {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    #loginScreen button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: var(--main-blue);
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
+
+	<div id="errorModal" class="modal">
+		<div class="modal-content">
+		  <p id="errorMessage"></p>
+		  <button onclick="redirectToCronogramas()">Ir para Cronogramas</button>
+		  <button onclick="closeModal()">Fechar</button>
+		</div>
+	  </div>
+	  
+	  <!-- Tela de Login -->
+	  <div id="loginScreen">
+		<h2>Login</h2>
+		<input type="text" id="loginUsername" placeholder="Usuário">
+		<input type="password" id="loginPassword" placeholder="Senha">
+		<button onclick="checkLogin()">Entrar</button>
+	  </div>
+	  
+	  
+
   <div class="container">
     <!-- Tela Inicial -->
-    <div class="header" id="initialScreen">
-      <h1 style="color: var(--main-blue); margin-bottom: 1rem;">📚 Cronograma Dinâmico de Estudo Intensivo</h1>
-      <p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">O cronograma que se adapta à sua agenda do 1º período de Medicina</p>
-      <button class="btn" onclick="startPlanning()">Vamos criar um cronograma →</button>
-    </div>
+	<div id="mainContent">
+		<div class="container">
+		  <!-- Tela Inicial do Cronograma -->
+		  <div class="header" id="initialScreen">
+			<h1 style="color: var(--main-blue); margin-bottom: 1rem;">📚 Cronograma Dinâmico de Estudo Intensivo</h1>
+			<p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">O cronograma que se adapta à sua agenda do 1º período de Medicina</p>
+			<button class="btn" onclick="startPlanning()">Vamos criar um cronograma →</button>
+		  </div>
+		  <!-- Demais seções do cronograma... -->
+		</div>
+	  </div>
 
     <!-- Formulário de Planejamento -->
     <div id="planningScreen" style="display: none;">
@@ -526,6 +629,46 @@
         startY: 30,
       });
       doc.save("cronograma-medico.pdf");
+    }
+	
+	
+	
+	
+	// Array com usuários permitidos
+    const allowedUsers = [
+      { username: "GRATIS", password: "GRATIS" },
+      { username: "usuario2", password: "senha2" }
+      // Adicione mais usuários conforme necessário
+    ];
+
+    function checkLogin() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      console.log('Tentando login com:', username, password);
+      
+      const user = allowedUsers.find(u => u.username === username);
+      if (!user) {
+        showModal("Essa conta não existe");
+      } else if (user.password !== password) {
+        showModal("A senha está incorreta.");
+      } else {
+        console.log('Login bem-sucedido');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+      }
+    }
+
+    function showModal(message) {
+      document.getElementById('errorMessage').innerText = message;
+      document.getElementById('errorModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('errorModal').style.display = 'none';
+    }
+
+    function redirectToCronogramas() {
+      window.location.href = "/ferramentas/cronogramas.html";
     }
   </script>
 </body>
