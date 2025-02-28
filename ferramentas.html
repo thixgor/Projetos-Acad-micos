@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ferramentas Thiago Med</title>
+    <title>Ferramentas Acadêmicas - por Thiago F. Rodrigues</title>
+  <meta property="og:description" content="Ferramentas para te ajudar academicamente, do jeito que você precisa na área da Saúde.">
+  <meta property="og:image" content="https://i.ibb.co/8gZg6cB3/Inserir-um-pouquinho-de-texto-4.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thiago.med.br">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Poppins', system-ui, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -29,70 +38,118 @@
         header {
             text-align: center;
             margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
         }
 
         h1 {
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
 
         .tool-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .tool-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .tool-card:hover::before {
+            animation: shine 1.5s;
         }
 
         .tool-title {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tool-title i {
+            font-size: 1.8rem;
             color: #3498db;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
         }
 
         .tool-description {
             color: #7f8c8d;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-weight: 400;
         }
 
         .btn {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .primary-btn {
-            background: #3498db;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
 
         .primary-btn:hover {
-            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
         }
 
         footer {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
             margin-top: auto;
+            font-weight: 300;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
         }
 
         @media (max-width: 768px) {
@@ -101,11 +158,11 @@
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .tool-card {
-                padding: 1.5rem;
+                padding: 2rem;
             }
         }
     </style>
@@ -118,21 +175,33 @@
 
         <div class="tools-grid">
             <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/diario')">
-                <h2 class="tool-title">Diário de Campo IESC</h2>
+                <h2 class="tool-title">
+                    <i class="fas fa-book-open"></i>
+                    Diário de Campo IESC
+                </h2>
                 <p class="tool-description">
                     Crie rapidamente PDFs profissionais para o curso Integração Ensino-Serviço-Comunidade. 
                     Inclua imagens e dados com modelos pré-formatados para máxima eficiência.
                 </p>
-                <a class="btn primary-btn">Acessar Ferramenta</a>
+                <a class="btn primary-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    Acessar Ferramenta
+                </a>
             </div>
 
-            <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/cronogramas">
-                <h2 class="tool-title">MedScheduler</h2>
+            <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/cronogramas')">
+                <h2 class="tool-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    MedScheduler
+                </h2>
                 <p class="tool-description">
                     Cronogramas inteligentes que se adaptam ao seu tempo e complexidade das tarefas. 
                     Gestão eficiente com priorização dinâmica, evitando sobrecarga e melhorando produtividade.
                 </p>
-                <a class="btn primary-btn">Acessar Cronogramas</a>
+                <a class="btn primary-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    Acessar Cronogramas
+                </a>
             </div>
         </div>
     </div>
@@ -142,14 +211,12 @@
     </footer>
 
     <script>
-        // Adiciona efeito de clique suave
-        document.querySelectorAll('.tool-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = 'translateY(-5px)';
-                }, 100);
-            });
+        // Animação suave ao carregar
+        document.querySelectorAll('.tool-card').forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 200);
         });
     </script>
 </body>
