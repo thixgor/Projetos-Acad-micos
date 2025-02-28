@@ -252,33 +252,44 @@
     }
 	
 	/* Tela de Login */
-    #loginScreen {
-      max-width: 400px;
-      margin: 100px auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    #loginScreen input {
-      width: 100%;
-      padding: 10px;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-    #loginScreen button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      background: var(--main-blue);
-      color: white;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1rem;
-    }
+	#loginScreen {
+	  max-width: 400px;
+	  margin: 100px auto;
+	  background: #ffffff; /* Fundo branco mais limpo */
+	  padding: 2rem;
+	  border-radius: 12px; /* Arredondamento leve */
+	  box-shadow: 0 15px 25px rgba(0,0,0,0.1); /* Sombra mais suave */
+	  text-align: center;
+	  font-family: 'Arial', sans-serif; /* Fonte simples e moderna */
+	}
+
+	#loginScreen input {
+	  width: 100%;
+	  padding: 14px;
+	  margin: 0.6rem 0;
+	  border: 1px solid #ddd; /* Cor clara para as bordas */
+	  border-radius: 8px; /* Bordas suavemente arredondadas */
+	  font-size: 1.1rem;
+	  background-color: #f9f9f9; /* Fundo mais suave no campo de entrada */
+	}
+
+	#loginScreen button {
+	  padding: 12px 25px;
+	  border: none;
+	  border-radius: 8px; /* Mesma borda arredondada */
+	  background: #6D4C41; /* Marrom */
+	  color: white;
+	  cursor: pointer;
+	  font-size: 1.1rem;
+	  margin-top: 1.2rem;
+	  transition: background 0.3s ease, transform 0.3s ease; /* Efeito de transição suave */
+	}
+
+	#loginScreen button:hover {
+	  background: #5b4031; /* Marrom mais intenso no hover */
+	  transform: scale(1.05); /* Efeito de aumento leve ao passar o mouse */
+	}
+
   </style>
 </head>
 <body>
@@ -293,7 +304,7 @@
 	  
 	  <!-- Tela de Login -->
 	  <div id="loginScreen">
-		<h2>Login</h2>
+		<h2>Login - HealthScheduler - Psicologia</h2>
 		<input type="text" id="loginUsername" placeholder="Usuário">
 		<input type="password" id="loginPassword" placeholder="Senha">
 		<button onclick="checkLogin()">Entrar</button>
