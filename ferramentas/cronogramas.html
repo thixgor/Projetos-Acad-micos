@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cronogramas para Medicina - por Thiago F. Rodrigues</title>
-  <meta property="og:title" content="Cronograma Dinâmico e Individual de Estudo Intensivo para Medicina">
+    <title>Cronogramas para Área da Saúde - por Thiago F. Rodrigues</title>
+  <meta property="og:title" content="Cronograma Dinâmico e Individual de Estudo Intensivo para Área da Saúde">
   <meta property="og:description" content="A ferramenta pra quem precisa criar um Cronograma, de forma dinâmica e individual.">
   <meta property="og:image" content="https://i.ibb.co/8gZg6cB3/Inserir-um-pouquinho-de-texto-4.png">
   <meta property="og:image:width" content="1200">
@@ -51,6 +51,29 @@
             gap: 1.5rem;
             margin: 3rem 0;
         }
+		
+		.course-options {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			margin-top: 1.5rem;
+		}
+
+		.course-btn {
+			background: #1a237e;
+			color: white;
+			padding: 1rem;
+			border: none;
+			border-radius: 10px;
+			cursor: pointer;
+			transition: all 0.3s;
+			font-size: 1rem;
+		}
+
+		.course-btn:hover {
+			background: #0d47a1;
+			transform: translateY(-2px);
+		}
 
         .card {
             background: rgba(255,255,255,0.1);
@@ -66,19 +89,19 @@
             transform: translateY(-5px);
         }
 
-        .btn {
-            background: #00e676;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 2rem;
-        }
+	.btn {
+		background: #00796b; /* Cor mais escura de verde */
+		color: white;
+		padding: 1rem 2rem;
+		border: none;
+		border-radius: 25px;
+		font-size: 1.1rem;
+		cursor: pointer;
+		transition: all 0.3s;
+		text-decoration: none;
+		display: inline-block;
+		margin-top: 2rem;
+	}
 
         .btn:hover {
             background: #00c853;
@@ -189,10 +212,35 @@
     <div class="container">
         <h1>Cronogramas Dinâmicos</h1>
         
-        <div class="grid">
-            <div class="card" onclick="window.location.href='cronogramas/med.html'">
-                <h2><i class="fas fa-book-medical"></i> Cronograma Medicina</h2>
-                <p>Acesso ao planejamento completo</p>
+		<div class="grid">
+					<div class="card" onclick="showCoursePopup()">
+						<h2><i class="fas fa-book-medical"></i> Cronogramas</h2>
+						<p>Acesso ao planejamento completo do seu curso</p>
+					</div>
+				</div>
+		
+		<div class="popup" id="coursePopup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hideCoursePopup()">&times;</span>
+                <h3 style="color: #1a237e;">Selecione seu curso</h3>
+                
+                <div class="course-options">
+                    <button class="course-btn" onclick="redirectToCourse('medicina')">
+                        Medicina
+                    </button>
+                    <button class="course-btn" onclick="redirectToCourse('odontologia')">
+                        Odontologia
+                    </button>
+                    <button class="course-btn" onclick="redirectToCourse('biomedicina')">
+                        Biomedicina
+                    </button>
+                    <button class="course-btn" onclick="redirectToCourse('enfermagem')">
+                        Enfermagem
+                    </button>
+                    <button class="course-btn" onclick="redirectToCourse('psicologia')">
+                        Psicologia
+                    </button>
+                </div>
             </div>
         </div>
 		
@@ -202,88 +250,283 @@
 		Senha para acesso: <strong>GRATIS</strong>
 	</div>
 
-        <button class="btn btn-comprar" onclick="showPopup()">Adquirir Criador de Cronogramas</button>
+        <button class="btn" onclick="showPopup('medicina')">Comprar - Criador de Cronogramas Medicina AFYA</button>
+		<button class="btn" onclick="showPopup('biomedicina')">Comprar - Cronograma Biomedicina AFYA</button>
+		<button class="btn" onclick="showPopup('enfermagem')">Comprar - Cronograma Enfermagem AFYA</button>
+		<button class="btn" onclick="showPopup('odontologia')">Comprar - Cronograma Odontologia AFYA</button>
+		<button class="btn" onclick="showPopup('psicologia')">Comprar - Cronograma Psicologia AFYA</button>
 
-        <div class="popup" id="popup">
-            <div class="popup-content">
-                <span class="close-btn" onclick="hidePopup()">&times;</span>
-                <h3 style="color: #1a237e;">Criador de Cronogramas</h3>
-                <p>Valor: R$ 60,00 (Vitalício)</p>
-                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-                
-                <input type="text" id="nome" placeholder="Seu nome completo">
-                <select id="pagamento" onchange="paymentChanged()">
-                    <option value="">Selecione o pagamento</option>
-                    <option value="pix">PIX</option>
-                    <option value="dinheiro">Dinheiro</option>
-                </select>
 
-                <div id="pixSection" style="display: none;">
-                    <div id="qrcode">
-                        <img src="https://i.imgur.com/Gh3eNUH.png" alt="QR Code PIX">
-                    </div>
-                    
-                    <div class="pix-info">
-                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                        <p><strong>Valor:</strong> R$60,00</p>
-                    </div>
+<div class="popup" id="popupMedicina">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('medicina')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina AFYA</h3>
+        <p>Valor: R$ 65,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
-                    <button class="copy-btn" onclick="copiarPix()">
-                        <i class="fas fa-copy"></i> Copiar Código PIX
-                    </button>
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            <strong>SOI:</strong> Anatomia, Fisiologia, Bioquímica, Embriologia, Histologia<br>
+            <strong>HAM:</strong> Ética do estudante, Anamnese, Higienização, Exame físico, Sinais Vitais
+        </p>
 
-                    <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
-                </div>
+        <input type="text" id="nomeMedicina" placeholder="Seu nome completo">
+        <select id="pagamentoMedicina" onchange="paymentChanged('medicina')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
 
-                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra()">Finalizar Compra</button>
+        <div id="pixSectionMedicina" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/VsjRI2m.png" alt="QR Code PIX">
             </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$65,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('medicina')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
         </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medicina')">Finalizar Compra</button>
+    </div>
+</div>
 
-        <p class="creator">Criado por Thiago F. Rodrigues</p>
+		<div class="popup" id="popupBiomedicina">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('biomedicina')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Biomedicina AFYA</h3>
+        <p>Valor: R$ 55,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            Anatomia Humana, Bioquímica, Direitos Humanos e Diversidade,<br>
+            Citologia/Histologia, Educação Ambiental e Sustentabilidade,<br>
+            Gestão e Empreendedorismo, Microbiologia, Laboratório Clínico
+        </p>
+
+        <input type="text" id="nomeBiomedicina" placeholder="Seu nome completo">
+        <select id="pagamentoBiomedicina" onchange="paymentChanged('biomedicina')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="pixSectionBiomedicina" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/2ZGMqeG.png" alt="QR Code PIX">
+            </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$55,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('biomedicina')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+        </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('biomedicina')">Finalizar Compra</button>
+    </div>
+</div>
+
+<!-- Popup Enfermagem -->
+<div class="popup" id="popupEnfermagem">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('enfermagem')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Enfermagem AFYA</h3>
+        <p>Valor: R$ 45,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            Anatomia Humana I, Citologia e Histologia,<br>
+            Aspectos Fundamentais da Assistência de Enfermagem I,<br>
+            Ciências Sociais e Filosofia Aplicada à Enfermagem,<br>
+            Políticas Nacionais de Saúde, Exercício Profissional da Enfermagem, Psicologia Aplicada à Saúde
+        </p>
+
+        <input type="text" id="nomeEnfermagem" placeholder="Seu nome completo">
+        <select id="pagamentoEnfermagem" onchange="paymentChanged('enfermagem')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="pixSectionEnfermagem" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/yizvQkM.png" alt="QR Code PIX">
+            </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$45,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('enfermagem')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+        </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('enfermagem')">Finalizar Compra</button>
+    </div>
+</div>
+
+<!-- Popup Odontologia -->
+<div class="popup" id="popupOdontologia">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('odontologia')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Odontologia AFYA</h3>
+        <p>Valor: R$ 60,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            Anatomia Humana Geral, Biologia Celular e Histologia,<br>
+            Bioquímica Básica, Educação em Saúde Bucal I
+        </p>
+
+        <input type="text" id="nomeOdontologia" placeholder="Seu nome completo">
+        <select id="pagamentoOdontologia" onchange="paymentChanged('odontologia')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="pixSectionOdontologia" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/Bmek1pm.png" alt="QR Code PIX">
+            </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$60,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('odontologia')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+        </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('odontologia')">Finalizar Compra</button>
+    </div>
+</div>
+
+<!-- Popup Psicologia -->
+<div class="popup" id="popupPsicologia">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('psicologia')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Psicologia AFYA</h3>
+        <p>Valor: R$ 55,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            Bases Filosóficas da Psicologia, Abordagens Psicológicas,<br>
+            Desenvolvimento Humano I, Psicodiagnóstico I
+        </p>
+
+        <input type="text" id="nomePsicologia" placeholder="Seu nome completo">
+        <select id="pagamentoPsicologia" onchange="paymentChanged('psicologia')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="pixSectionPsicologia" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/AE3zHlC.png" alt="QR Code PIX">
+            </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$55,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('psicologia')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+        </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('psicologia')">Finalizar Compra</button>
+    </div>
+</div>
+		
+		
+		
+		
+
+	<p class="creator">Criado por Thiago F. Rodrigues</p>
+
     </div>
 
     <script>
-        const pixCode = '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540560.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA6304F57C';
+        const pixCodes = {
+		medicina: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540565.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA63044C41',
+		biomedicina: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540555.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMABIOMED63047D2B',
+		enfermagem: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540545.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAENFERMAGEM63044D4E',
+		odontologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540560.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAODONTO63048A9F',
+		psicologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540555.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA6304AE89'
+	};
 
-        function showPopup() {
-            document.getElementById('popup').style.display = 'flex';
-        }
+		function showPopup(curso) {
+			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'flex';
+		}
 
-        function hidePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
+		function hidePopup(curso) {
+			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'none';
+		}
 
-        function paymentChanged() {
-            const method = document.getElementById('pagamento').value;
-            document.getElementById('pixSection').style.display = method === 'pix' ? 'block' : 'none';
-        }
 
-        function copiarPix() {
-            navigator.clipboard.writeText(pixCode)
-                .then(() => alert('Código PIX copiado para a área de transferência!'))
-                .catch(err => console.error('Erro ao copiar:', err));
-        }
+		function paymentChanged(curso) {
+			const method = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
+			document.getElementById(`pixSection${capitalizeFirstLetter(curso)}`).style.display = method === 'pix' ? 'block' : 'none';
+		}
 
-        function finalizarCompra() {
-            const nome = document.getElementById('nome').value;
-            const metodo = document.getElementById('pagamento').value;
-            
-            if(!nome || !metodo) {
-                alert('Preencha todos os campos!');
-                return;
-            }
+		function copiarPix(curso) {
+			navigator.clipboard.writeText(pixCodes[curso])
+				.then(() => alert('Código PIX copiado!'))
+				.catch(err => console.error('Erro ao copiar:', err));
+		}
 
-            let message = `> Olá meu nome é ${nome} e `;
-            message += metodo === 'dinheiro' 
-                ? 'iniciei a entrada no pedido do Cronograma Medicina Dinâmico 2025** com pagamento via DINHEIRO.'
-                : 'iniciei a entrada no pedido do *ronograma Medicina Dinâmico 2025**, com pagamento via PIX.';
+		function finalizarCompra(curso) {
+			const nome = document.getElementById(`nome${capitalizeFirstLetter(curso)}`).value;
+			const metodo = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
+			
+			if(!nome || !metodo) {
+				alert('Preencha todos os campos!');
+				return;
+			}
 
-            window.open(`https://wa.me/5521997770936?text=${encodeURIComponent(message)}`, '_blank');
-            hidePopup();
-        }
+			const cursoNome = {
+				medicina: 'Medicina AFYA',
+				biomedicina: 'Biomedicina AFYA',
+				enfermagem: 'Enfermagem AFYA',
+				odontologia: 'Odontologia AFYA',
+				psicologia: 'Psicologia AFYA'
+			}[curso];
+
+			let message = `Olá, meu nome é ${nome} e `;
+			message += metodo === 'dinheiro' 
+				? `iniciei a entrada no pedido do Cronograma ${cursoNome} com pagamento via DINHEIRO.`
+				: `iniciei a entrada no pedido do Cronograma ${cursoNome}, com pagamento via PIX.`;
+
+			window.open(`https://wa.me/5521997770936?text=${encodeURIComponent(message)}`, '_blank');
+			hidePopup(curso);
+		}
+
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
 		
-		// NOVA FUNÇÃO PARA CONTROLE DE DATA/HORA
 		
+		function showCoursePopup() {
+            document.getElementById('coursePopup').style.display = 'flex';
+        }
+
+        function hideCoursePopup() {
+            document.getElementById('coursePopup').style.display = 'none';
+        }
+
+        function redirectToCourse(course) {
+            window.location.href = `https://thiago.med.br/ferramentas/cronogramas/${course}`;
+        }
     </script>
 </body>
 </html>
