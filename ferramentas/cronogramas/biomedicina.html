@@ -601,7 +601,7 @@
     function downloadSchedule() {
       html2canvas(document.querySelector("#scheduleOutput")).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'cronograma-medico.png';
+        link.download = 'cronograma-biomedicina.png';
         link.href = canvas.toDataURL();
         link.click();
       });
