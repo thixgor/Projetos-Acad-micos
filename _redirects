@@ -1,3 +1,6 @@
 /  /hub.html  200
 /diario /ferramentas/diario.html 200  
 /cronogramas /ferramentas/cronogramas 301
+/cronograma /ferramentas/cronogramas 301
+/medscheduler /ferramentas/cronogramas 301
+/cronograma/med /ferramentas/cronogramas 301
