@@ -651,13 +651,18 @@
 	
 	
 	
-	async function loadUsers() {
+		async function loadUsers() {
 		try {
-			const response = await fetch('https://raw.githubusercontent.com/thixgor/Projetos-Acad-micos/refs/heads/main/data.json');
+			// Faz o fetch do arquivo raw do Pastebin
+			const response = await fetch('https://pastebin.com/raw/zFYnPjcE');
 			if (!response.ok) {
 				throw new Error('Erro ao carregar usuários');
 			}
-			const users = await response.json();
+			const data = await response.text();  // Pega o conteúdo em formato de texto
+			const users = data.split('\n').map(line => {
+				const [usuario, senha] = line.split(':');
+				return { usuario: usuario.trim(), senha: senha.trim() };
+			});
 			return users;
 		} catch (error) {
 			console.error('Erro ao carregar usuários:', error);
@@ -670,7 +675,7 @@
 		const password = document.getElementById('loginPassword').value;
 		console.log('Tentando login com:', username, password);
 
-		// Carrega a lista de usuários do arquivo JSON
+		// Carrega a lista de usuários do Pastebin
 		const allowedUsers = await loadUsers();
 
 		// Verifica se o usuário e senha correspondem
@@ -685,6 +690,7 @@
 			document.getElementById('mainContent').style.display = 'block';
 		}
 	}
+
 
 
     function showModal(message) {
