@@ -650,20 +650,17 @@
 	
 	
 	
-	const usersUrl = 'https://raw.githubusercontent.com/thixgor/Projetos-Acad-micos/refs/heads/main/data.json';
-
-	// Função para carregar os usuários do JSON
+	
 	async function loadUsers() {
 		try {
-			const response = await fetch(usersUrl);
+			const response = await fetch('https://raw.githubusercontent.com/thixgor/Projetos-Acad-micos/refs/heads/main/data.json');
 			if (!response.ok) {
-				throw new Error('Erro ao carregar os usuários');
+				throw new Error('Erro ao carregar usuários');
 			}
-			const data = await response.json();
-			return data;
+			const users = await response.json();
+			return users;
 		} catch (error) {
-			console.error('Erro:', error);
-			showModal("Erro ao carregar os usuários. Tente novamente mais tarde.");
+			console.error('Erro ao carregar usuários:', error);
 			return [];
 		}
 	}
@@ -673,14 +670,14 @@
 		const password = document.getElementById('loginPassword').value;
 		console.log('Tentando login com:', username, password);
 
-		// Carrega a lista de usuários
+		// Carrega a lista de usuários do arquivo JSON
 		const allowedUsers = await loadUsers();
 
 		// Verifica se o usuário e senha correspondem
-		const user = allowedUsers.find(u => u.username === username);
+		const user = allowedUsers.find(u => u.usuario === username);
 		if (!user) {
 			showModal("Essa conta não existe");
-		} else if (user.password !== password) {
+		} else if (user.senha !== password) {
 			showModal("A senha está incorreta.");
 		} else {
 			console.log('Login bem-sucedido');
@@ -688,6 +685,7 @@
 			document.getElementById('mainContent').style.display = 'block';
 		}
 	}
+
 
     function showModal(message) {
       document.getElementById('errorMessage').innerText = message;
