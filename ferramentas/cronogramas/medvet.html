@@ -663,32 +663,48 @@
 	
 	
 	
-	async function loadUsers() {
+	async function loadUsers(curso) { // Recebe o curso como parâmetro
 		try {
-			const response = await fetch('/.netlify/functions/fetchUsersMedVet');
+			// Faz a requisição para a função serverless no Netlify
+			const response = await fetch(`/.netlify/functions/fetchUsers?curso=${curso}`);
+			
+			// Verifica se a requisição foi bem-sucedida
 			if (!response.ok) {
 				throw new Error('Erro ao carregar usuários');
 			}
-			const data = await response.text(); // Pega o conteúdo em formato de texto
+
+			// Pega o conteúdo da resposta em formato de texto
+			const data = await response.text();
+
+			// Processa o conteúdo: divide por linhas e mapeia para objetos { usuario, senha }
 			const users = data.split('\n').map(line => {
-				const [usuario, senha] = line.split(':');
-				return { usuario: usuario.trim(), senha: senha.trim() };
+				const [usuario, senha] = line.split(':'); // Divide cada linha no caractere ":"
+				return { 
+					usuario: usuario.trim(), // Remove espaços em branco
+					senha: senha.trim()     // Remove espaços em branco
+				};
 			});
+
+			// Retorna a lista de usuários
 			return users;
 		} catch (error) {
+			// Em caso de erro, loga o erro e retorna uma lista vazia
 			console.error('Erro ao carregar usuários:', error);
 			return [];
 		}
 	}
-
+	
 	async function checkLogin() {
 		const username = document.getElementById('loginUsername').value.trim();
 		const password = document.getElementById('loginPassword').value;
 		console.log('Tentando login com:', username, password);
 
-		// Carrega a lista de usuários do Pastebin
-		const allowedUsers = await loadUsers();
-	
+		// Define o curso que está sendo verificado (exemplo: 'biomed')
+		const curso = 'medvet'; // Você pode mudar isso dinamicamente conforme necessário
+
+		// Carrega a lista de usuários do curso especificado
+		const allowedUsers = await loadUsers(curso);
+
 		// Verifica se o usuário e senha correspondem
 		const user = allowedUsers.find(u => u.usuario === username);
 		if (!user) {
