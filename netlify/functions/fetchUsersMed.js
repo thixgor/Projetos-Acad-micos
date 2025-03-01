@@ -1,4 +1,4 @@
-// netlify/functions/fetchUsers.js
+// netlify/functions/fetchUsersMed.js
 exports.handler = async (event, context) => {
     try {
         const targetUrl = 'https://pastebin.com/raw/zFYnPjcE';
