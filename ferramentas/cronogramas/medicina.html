@@ -653,7 +653,7 @@
 	
 	async function loadUsers() {
 		try {
-			const response = await fetch('/.netlify/functions/fetchUsers');
+			const response = await fetch('/.netlify/functions/fetchUsersMed');
 			if (!response.ok) {
 				throw new Error('Erro ao carregar usuários');
 			}
@@ -676,7 +676,7 @@
 
 		// Carrega a lista de usuários do Pastebin
 		const allowedUsers = await loadUsers();
-
+	
 		// Verifica se o usuário e senha correspondem
 		const user = allowedUsers.find(u => u.usuario === username);
 		if (!user) {

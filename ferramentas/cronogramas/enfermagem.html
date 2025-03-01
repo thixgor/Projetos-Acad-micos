@@ -662,29 +662,44 @@
 	
 	
 	
-	// Array com usuários permitidos
-    const allowedUsers = [
-      { username: "GRATIS", password: "GRATIS" },
-      { username: "thiago", password: "thiago123456" }
-      // Adicione mais usuários conforme necessário
-    ];
+	async function loadUsers() {
+		try {
+			const response = await fetch('/.netlify/functions/fetchUsersEnfermagem');
+			if (!response.ok) {
+				throw new Error('Erro ao carregar usuários');
+			}
+			const data = await response.text(); // Pega o conteúdo em formato de texto
+			const users = data.split('\n').map(line => {
+				const [usuario, senha] = line.split(':');
+				return { usuario: usuario.trim(), senha: senha.trim() };
+			});
+			return users;
+		} catch (error) {
+			console.error('Erro ao carregar usuários:', error);
+			return [];
+		}
+	}
 
-    function checkLogin() {
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      console.log('Tentando login com:', username, password);
-      
-      const user = allowedUsers.find(u => u.username === username);
-      if (!user) {
-        showModal("Essa conta não existe");
-      } else if (user.password !== password) {
-        showModal("A senha está incorreta.");
-      } else {
-        console.log('Login bem-sucedido');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-      }
-    }
+	async function checkLogin() {
+		const username = document.getElementById('loginUsername').value.trim();
+		const password = document.getElementById('loginPassword').value;
+		console.log('Tentando login com:', username, password);
+
+		// Carrega a lista de usuários do Pastebin
+		const allowedUsers = await loadUsers();
+	
+		// Verifica se o usuário e senha correspondem
+		const user = allowedUsers.find(u => u.usuario === username);
+		if (!user) {
+			showModal("Essa conta não existe");
+		} else if (user.senha !== password) {
+			showModal("A senha está incorreta.");
+		} else {
+			console.log('Login bem-sucedido');
+			document.getElementById('loginScreen').style.display = 'none';
+			document.getElementById('mainContent').style.display = 'block';
+		}
+	}
 
     function showModal(message) {
       document.getElementById('errorMessage').innerText = message;
