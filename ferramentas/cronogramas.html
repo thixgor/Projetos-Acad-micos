@@ -226,26 +226,29 @@
                 
                 <div class="course-options">
                     <button class="course-btn" onclick="redirectToCourse('medicina')">
-                        Medicina
+                        Medicina AFYA
                     </button>
                     <button class="course-btn" onclick="redirectToCourse('odontologia')">
-                        Odontologia
+                        Odontologia AFYA
                     </button>
                     <button class="course-btn" onclick="redirectToCourse('biomedicina')">
-                        Biomedicina
+                        Biomedicina AFYA
                     </button>
                     <button class="course-btn" onclick="redirectToCourse('enfermagem')">
-                        Enfermagem
+                        Enfermagem AFYA
                     </button>
                     <button class="course-btn" onclick="redirectToCourse('psicologia')">
-                        Psicologia
+                        Psicologia AFYA
+                    </button>
+					<button class="course-btn" onclick="redirectToCourse('medvet')">
+                        Medicina Veterinária UNESA
                     </button>
                 </div>
             </div>
         </div>
 		
 	<div class="anuncio-rodape" id="anuncio">
-		A plataforma que te dá um cronograma que cabe no seu calendário. <br><br>
+		A plataforma que te dá um cronograma que cabe no seu calendário, por um preço acessível. <br><br>
 		De acordo com suas <strong>DIFICULDADES</strong> <br>
 		De acordo com seu <strong>TEMPO</strong>
 	</div>
@@ -255,6 +258,7 @@
 		<button class="btn" onclick="showPopup('enfermagem')">Comprar - Cronograma Enfermagem AFYA</button>
 		<button class="btn" onclick="showPopup('odontologia')">Comprar - Cronograma Odontologia AFYA</button>
 		<button class="btn" onclick="showPopup('psicologia')">Comprar - Cronograma Psicologia AFYA</button>
+		<button class="btn" onclick="showPopup('medvet')">Comprar - Cronograma Medicina Veterinária UNESA</button>
 
 
 <div class="popup" id="popupMedicina">
@@ -447,8 +451,47 @@
         <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('psicologia')">Finalizar Compra</button>
     </div>
 </div>
-		
-		
+
+<!-- Popup MedVet -->
+<div class="popup" id="popupMedvet">
+    <div class="popup-content">
+        <span class="close-btn" onclick="hidePopup('medvet')">&times;</span>
+        <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina Veterinária UNESA</h3>
+        <p>Valor: R$ 35,00 (Vitalício)</p>
+        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+        <p style="font-size: 0.9rem; color: #333;">
+            Cobre o 1º período com as matérias:<br>
+            Processos Bioquímicos e Biofísicos em Animais,<br>
+            Anatomia Estrutural Animal,<br>
+            Citologia e Embriologia Veterinária,<br>
+            Bioterismo e Bem-Estar Animal,<br>
+            Ecologia, Manejo e Conservação da Vida Silvestre
+        </p>
+
+        <input type="text" id="nomeMedvet" placeholder="Seu nome completo">
+        <select id="pagamentoMedvet" onchange="paymentChanged('medvet')">
+            <option value="">Selecione o pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="pixSectionMedvet" style="display: none;">
+            <div id="qrcode">
+                <img src="https://i.imgur.com/BcBY5Qi.png" alt="QR Code PIX">
+            </div>
+            <div class="pix-info">
+                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                <p><strong>Valor:</strong> R$35,00</p>
+            </div>
+            <button class="copy-btn" onclick="copiarPix('Medvet')">
+                <i class="fas fa-copy"></i> Copiar Código PIX
+            </button>
+            <p style="margin-top: 1rem;">Envie o comprovante para (21) 99777-0936</p>
+        </div>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('Medvet')">Finalizar Compra</button>
+    </div>
+</div>
 		
 		
 
@@ -462,7 +505,8 @@
 		biomedicina: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540555.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMABIOMED63047D2B',
 		enfermagem: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540545.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAENFERMAGEM63044D4E',
 		odontologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540560.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAODONTO63048A9F',
-		psicologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540555.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA6304AE89'
+		psicologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540555.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA6304AE89',
+		medvet: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540535.005802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAMEDVET6304D787'
 	};
 
 		function showPopup(curso) {
@@ -499,7 +543,8 @@
 				biomedicina: 'Biomedicina AFYA',
 				enfermagem: 'Enfermagem AFYA',
 				odontologia: 'Odontologia AFYA',
-				psicologia: 'Psicologia AFYA'
+				psicologia: 'Psicologia AFYA',
+				medvet: 'Medicina Veterinária UNESA'
 			}[curso];
 
 			let message = `Olá, meu nome é ${nome} e `;
