@@ -651,14 +651,13 @@
 	
 	
 	
-		async function loadUsers() {
+	async function loadUsers() {
 		try {
-			// Faz o fetch do arquivo raw do Pastebin
-			const response = await fetch('https://pastebin.com/raw/zFYnPjcE');
+			const response = await fetch('/.netlify/functions/fetchUsers');
 			if (!response.ok) {
 				throw new Error('Erro ao carregar usuários');
 			}
-			const data = await response.text();  // Pega o conteúdo em formato de texto
+			const data = await response.text(); // Pega o conteúdo em formato de texto
 			const users = data.split('\n').map(line => {
 				const [usuario, senha] = line.split(':');
 				return { usuario: usuario.trim(), senha: senha.trim() };
