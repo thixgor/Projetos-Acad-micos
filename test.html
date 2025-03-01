@@ -23,8 +23,11 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Impede o envio do formulário
 
+            // URL do arquivo JSON no GitHub (Raw)
+            const url = 'https://raw.githubusercontent.com/thixgor/Projetos-Acad-micos/refs/heads/main/data.json';
+
             // Carrega o arquivo JSON
-            fetch('./data.json')
+            fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erro ao carregar o arquivo JSON');
