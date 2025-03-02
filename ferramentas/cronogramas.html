@@ -123,6 +123,7 @@
 		text-decoration: none;
 		display: inline-block;
 		margin-top: 2rem;
+		margin: 1rem 0;
 	}
 
         .btn:hover {
@@ -145,16 +146,34 @@
 
         .popup-content {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem; /* Reduzir padding */
+			overflow-y: auto; /* Habilita scroll vertical */
+			max-height: 85vh;
+			display: flex;
             border-radius: 15px;
+			flex-direction: column;
             color: #333;
             max-width: 400px;
             width: 90%;
             position: relative;
         }
+		
+		.popup-content h3 {
+			margin-top: 1.5rem;
+		}
+		
+		.form-fields {
+			flex-shrink: 0;
+			margin-top: auto;
+		}
+
 
         .close-btn {
             position: absolute;
+			color: #333 !important;
+			background: rgba(255,255,255,0.9);
+			z-index: 1;
+			backdrop-filter: blur(5px);
             top: 1rem;
             right: 1rem;
             cursor: pointer;
@@ -253,7 +272,7 @@
             margin: 1rem 0;
             text-align: left;
             background: #f5f5f5;
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 10px;
         }
 
@@ -291,6 +310,37 @@
 
 		/* Melhorias para visualização mobile */
 		@media (max-width: 480px) {
+		
+			.popup-content {
+				padding: 1rem;
+				width: 95%;
+				max-height: 90vh;
+			}
+			.materias-container {
+				max-height: 30vh;
+				font-size: 14px;
+			}
+			
+			input, select {
+				padding: 0.7rem;
+				margin: 0.3rem 0;
+				font-size: 14px;
+			}
+			
+			.btn {
+				padding: 0.8rem;
+				margin: 0.5rem 0;
+				font-size: 1rem;
+			}
+			
+			.pix-info p {
+				font-size: 14px;
+			}
+			
+			.copy-btn {
+				padding: 0.5rem 0.8rem;
+				font-size: 14px;
+			}
 			#periodPopup .popup-content {
 				max-width: 90%;
 				padding: 1.5rem;
@@ -739,10 +789,12 @@
 	};
 
 		function showPopup(curso) {
+			document.body.style.overflow = 'hidden';
 			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'flex';
 		}
 
 		function hidePopup(curso) {
+			document.body.style.overflow = 'auto';
 			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'none';
 		}
 
