@@ -109,6 +109,27 @@
             font-size: 1.8rem;
             color: #3498db;
         }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding: 10px;
+            background-color: rgba(52, 152, 219, 0.05);
+            border-radius: 12px;
+        }
+        
+        .tool-logo {
+            height: 60px;
+            margin: 0 auto;
+        }
+        
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
 
         .tool-description {
             color: #7f8c8d;
@@ -169,6 +190,8 @@
                 padding: 2rem;
             }
         }
+		
+		
     </style>
 </head>
 <body>
@@ -194,9 +217,14 @@
             </div>
 
             <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/cronogramas')">
+                <div class="logo-container">
+                    <img src="https://i.imgur.com/2WJyWRK.png" alt="Logo HealthScheduler" class="tool-logo">
+                </div>
 				<h2 class="tool-title">
-					<i class="fas fa-calendar-alt"></i>
-					HealthScheduler
+                    <div class="title-container">
+                        <i class="fas fa-calendar-alt"></i>
+                        HealthScheduler
+                    </div>
 				</h2>
 				<p class="tool-description">
 					Cronogramas inteligentes que se adaptam ao seu tempo e complexidade das tarefas. 
