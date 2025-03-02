@@ -50,6 +50,37 @@
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
+		
+		.tool-card.diary {
+            padding: 2.5rem;
+        }
+		
+		.diary-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+		
+		.benefits-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .benefits-list li i {
+            color: #3498db;
+            font-size: 1.2rem;
+        }
 
         .tools-grid {
             display: grid;
@@ -176,6 +207,44 @@
             0% { left: -50%; }
             100% { left: 150%; }
         }
+		
+		.video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
+            height: 0;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+		
+		.tool-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .tool-badge.free {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            color: white;
+        }
+
+        .tool-badge.premium {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -202,14 +271,37 @@
 
         <div class="tools-grid">
             <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/diario')">
-                <h2 class="tool-title">
+				<div class="tool-badge free">
+                    <i class="fas fa-gift"></i> Gratuito
+                </div>
+				<div class="diary-icon">
                     <i class="fas fa-book-open"></i>
+                </div>
+                <h2 class="tool-title">
                     Diário de Campo IESC
                 </h2>
                 <p class="tool-description">
                     Crie rapidamente PDFs profissionais para o curso Integração Ensino-Serviço-Comunidade. 
                     Inclua imagens e dados com modelos pré-formatados para máxima eficiência.
                 </p>
+				<ul class="benefits-list">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        Modelos pré-formatados
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        Inclusão de imagens e dados
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        Exportação em PDF
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        Interface simples e intuitiva
+                    </li>
+                </ul>
                 <a class="btn primary-btn">
                     <i class="fas fa-external-link-alt"></i>
                     Acessar Ferramenta
@@ -217,6 +309,9 @@
             </div>
 
             <div class="tool-card" onclick="window.open('https://thiago.med.br/ferramentas/cronogramas')">
+				<div class="tool-badge premium">
+                    <i class="fas fa-star"></i> Assinatura Única
+                </div>
                 <div class="logo-container">
                     <img src="https://i.imgur.com/2WJyWRK.png" alt="Logo HealthScheduler" class="tool-logo">
                 </div>
@@ -233,6 +328,16 @@
 				<p class="tool-availability">
 					<strong>Disponível para:</strong> Medicina, Biomedicina, Enfermagem, Odontologia, Psicologia.
 				</p>
+				
+				<div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/EC7VyMnQ5zM" 
+                            title="HealthScheduler" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
 
 				<a class="btn primary-btn">
 					<i class="fas fa-external-link-alt"></i>
