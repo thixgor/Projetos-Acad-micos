@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso - HealthScheduler© 2025</title>
+    <style>
+        :root {
+            --primary-color: #005b96; /* Azul médico mais profissional */
+            --secondary-color: #43a047; /* Verde médico */
+            --accent-color: #1976d2; /* Azul para destaques */
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --light-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 6px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 0;
+            margin: 0;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary-color), #0277bd);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .medical-icon-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            margin-bottom: 1rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.5rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            margin-top: -40px;
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--secondary-color);
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.8rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 1rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 2rem 0 1rem 0;
+            font-weight: 500;
+            font-size: 1.4rem;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: "§";
+            color: var(--secondary-color);
+            margin-right: 8px;
+            font-weight: 400;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+        
+        ul {
+            margin: 0 0 1.2rem 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.7rem;
+            position: relative;
+            padding-left: 0.5rem;
+        }
+        
+        .highlight {
+            background-color: rgba(0, 91, 150, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+        
+        .contact-section {
+            background-color: #f1f8e9;
+            border: 1px solid #dcedc8;
+            padding: 1.8rem;
+            border-radius: var(--border-radius);
+            margin: 2.5rem 0;
+            position: relative;
+        }
+        
+        .contact-heading {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .contact-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .contact-icon {
+            margin-right: 0.9rem;
+            color: var(--secondary-color);
+            width: 22px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background-color: var(--dark-gray);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .copyright {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+        
+        .back-to-top.visible {
+            opacity: 0.9;
+        }
+        
+        .back-to-top.visible:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        
+        .term-date {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            font-weight: 500;
+        }
+        
+        /* Elementos médicos decorativos */
+        .medical-watermark {
+            position: absolute;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .medical-watermark.pulse {
+            top: 50%;
+            right: 10%;
+            width: 200px;
+            height: 80px;
+        }
+        
+        .medical-watermark.caduceus {
+            bottom: 10%;
+            left: 5%;
+            width: 100px;
+            height: 150px;
+        }
+        
+        /* Estilização para dispositivos móveis */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: -30px 15px 30px 15px;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .medical-watermark.pulse {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            .container {
+                padding: 1.2rem;
+                margin-top: -25px;
+            }
+            
+            .contact-section {
+                padding: 1.5rem 1rem;
+            }
+            
+            .medical-watermark.caduceus {
+                display: none;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="medical-icon-pattern"></div>
+        <div class="logo-container">
+            <div class="logo">
+                <span class="logo-icon">⚕️</span>
+                <span>HealthScheduler ©</span>
+            </div>
+            <p class="tagline">Plataforma de Cronogramas Dinâmicos</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Elementos decorativos médicos -->
+        <svg class="medical-watermark pulse" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,40 L30,40 C30,40 45,10 60,40 C75,70 90,10 105,40 C120,70 135,10 150,40 C165,70 180,10 190,40" 
+                  stroke="#005b96" fill="none" stroke-width="2"/>
+        </svg>
+        
+        <svg class="medical-watermark caduceus" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,10 L50,140" stroke="#005b96" stroke-width="3"/>
+            <path d="M35,30 C0,50 0,100 35,120" stroke="#005b96" fill="none" stroke-width="2"/>
+            <path d="M65,30 C100,50 100,100 65,120" stroke="#005b96" fill="none" stroke-width="2"/>
+            <path d="M35,70 C35,60 65,60 65,70" stroke="#005b96" fill="none" stroke-width="2"/>
+            <path d="M35,80 C35,90 65,90 65,80" stroke="#005b96" fill="none" stroke-width="2"/>
+            <circle cx="50" cy="20" r="10" fill="#005b96"/>
+        </svg>
+        
+        <h1>Termos de Serviço - HealthScheduler</h1>
+        
+        <div class="highlight">
+            <p>A utilização da plataforma HealthScheduler implica na aceitação integral dos termos apresentados abaixo. Por favor, leia atentamente antes de utilizar nossos serviços.</p>
+        </div>
+        
+        <h2>1. Aceitação dos Termos</h2>
+        <p>Ao acessar e utilizar a plataforma HealthScheduler, você concorda em cumprir os seguintes Termos de Uso. Se não concordar com qualquer parte deste termo, não utilize nossa plataforma.</p>
+        
+        <h2>2. Uso Exclusivo da Conta</h2>
+        <p>Cada conta do HealthScheduler é pessoal e intransferível. A prática de compartilhar informações de conta, como login e senha, com terceiros é expressamente proibida. O uso compartilhado de contas resultará no bloqueio imediato da conta do usuário, sem direito a reembolso ou compensação de qualquer natureza. A plataforma monitora e rastreia atividades suspeitas, como login simultâneo em diferentes localizações geográficas ou comportamentos não usuais.</p>
+        
+        <h2>3. Proibição de Divulgação de Conta</h2>
+        <p>A divulgação de contas ou informações de acesso é estritamente proibida. O usuário não poderá compartilhar seu acesso com terceiros, seja por meio de venda, empréstimo, troca ou qualquer outro tipo de transmissão de dados de acesso. Caso qualquer violação dessa política seja identificada, a conta será bloqueada e o usuário não terá direito a reembolso.</p>
+        
+        <h2>4. Responsabilidade do Usuário</h2>
+        <p>O usuário é responsável por manter a confidencialidade de sua conta e senha, sendo o único responsável por qualquer atividade que ocorra em sua conta. Caso identifique qualquer uso não autorizado de sua conta, deve comunicar imediatamente à plataforma.</p>
+        
+        <h2>5. Propriedade Intelectual</h2>
+        <p>Todo o conteúdo da plataforma HealthScheduler, incluindo, mas não se limitando a textos, gráficos, logotipos, imagens, vídeos e softwares, é de propriedade exclusiva da plataforma e protegido por direitos autorais e outras leis de propriedade intelectual. O uso não autorizado de qualquer conteúdo da plataforma pode resultar em penalidades legais.</p>
+        
+        <h2>6. Modificação dos Termos de Uso</h2>
+        <p>A HealthScheduler reserva-se o direito de modificar, a qualquer momento, estes Termos de Uso. Tais alterações entrarão em vigor imediatamente após a publicação no site. Recomendamos que o usuário revise regularmente os Termos de Uso para manter-se informado sobre quaisquer atualizações.</p>
+        
+        <h2>7. Política de Reembolso</h2>
+        <p>Devido à natureza do serviço, uma vez adquirido o cronograma personalizado, não há possibilidade de reembolso. A plataforma oferece acesso vitalício ao serviço, sendo a cobrança única e não sujeita a devolução, independentemente do uso futuro da plataforma.</p>
+        
+        <h2>8. Uso Indevido da Plataforma</h2>
+        <p>Qualquer uso indevido da plataforma, incluindo, mas não se limitando a, violação dos direitos de propriedade intelectual, ações fraudulentas ou atividades ilegais, resultará em suspensão imediata da conta do usuário, sem direito a reembolso.</p>
+        
+        <h2>9. Responsabilidade Limita da Plataforma</h2>
+        <p>A HealthScheduler não será responsável por quaisquer danos diretos ou indiretos, incluindo, mas não se limitando a, danos financeiros, perda de dados ou lucros, que possam ocorrer em decorrência do uso da plataforma, exceto nos casos previstos por lei.</p>
+        
+        <h2>10. Termos de Conduta do Usuário</h2>
+        <p>Ao utilizar a plataforma, você concorda em não realizar qualquer das seguintes ações:</p>
+        <ul>
+            <li>Utilizar a plataforma para fins ilícitos ou que infrinjam os direitos de propriedade intelectual de terceiros.</li>
+            <li>Compartilhar, revender ou distribuir o acesso à plataforma de forma não autorizada.</li>
+            <li>Realizar qualquer ação que comprometa o funcionamento ou segurança da plataforma.</li>
+        </ul>
+        
+        <h2>11. Disposições Gerais</h2>
+        <p>Esses Termos de Uso são regidos pelas leis brasileiras. Qualquer disputa relacionada a esses Termos será resolvida pelos tribunais competentes da cidade do Rio de Janeiro, Rio de Janeiro, Brasil.</p>
+        
+        <h2>12. Contato</h2>
+        <p>Em caso de dúvidas ou questões relativas a esses Termos de Uso, entre em contato conosco por meio do nosso suporte ao cliente disponível no site da plataforma.</p>
+        
+        <div class="contact-section">
+            <span class="contact-heading">Contato</span>
+            <h3>Informações para Suporte e Atendimento</h3>
+            <div class="contact-item">
+                <span class="contact-icon">E-mail:</span>
+                <span>Email: throdrigf@gmail.com</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">Telefone-Celular:</span>
+                <span>Telefone: (21) 99777-0936</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">Site:</span>
+                <span>https://thiago.med.br/cronogramas</span>
+            </div>
+        </div>
+        
+        <p class="term-date" id="term-date"><strong>Data de Vigência:</strong> Esses Termos de Uso entram em vigor na data de sua publicação e são aplicáveis a todos os usuários da plataforma HealthScheduler.</p>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">HealthScheduler © 2025</div>
+            <p>Cronogramas Dinâmicos para Área de Saúde</p>
+            <p class="copyright">&copy; 2025 © HealthScheduler - Todos os direitos reservados a Thiago F. Rodrigues.</p>
+        </div>
+    </footer>
+    
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <script>
+        // Script para o botão "Voltar ao topo"
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Script para efeito suave ao navegar para as seções
+        document.querySelectorAll('h2').forEach(heading => {
+            heading.addEventListener('click', () => {
+                // Aplica highlight temporário
+                heading.style.color = var(--secondary-color);
+                
+                setTimeout(() => {
+                    heading.style.color = '';
+                }, 1500);
+            });
+        });
+        
+        // Atualiza a data de vigência
+        const updateTermDate = () => {
+            const currentDate = new Date();
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const formattedDate = currentDate.toLocaleDateString('pt-BR', options);
+            
+            document.getElementById('term-date').innerHTML = 
+                `<strong>Data de Vigência:</strong> Esses Termos de Uso entram em vigor em ${formattedDate} e são aplicáveis a todos os usuários da plataforma HealthScheduler.`;
+        }
+        
+        // Inicializa a data
+        updateTermDate();
+        
+        // Adiciona decoração visual com tema médico
+        const addMedicalDecoration = () => {
+            // Verificação de suporte a animações
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (!prefersReducedMotion) {
+                // Adicionaria animações sutis aqui se necessário
+            }
+        }
+        
+        // Inicializa decorações
+        addMedicalDecoration();
+    </script>
+</body>
+</html>
