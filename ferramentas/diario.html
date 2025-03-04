@@ -635,9 +635,15 @@
           if (document.body.classList.contains('dark')) {
             editor.getContainer().style.backgroundColor = '#444';
             editor.getContainer().style.color = '#e9ecef';
+            // Set the content area background and text color
+            editor.getBody().style.backgroundColor = '#1e1e1e';
+            editor.getBody().style.color = '#e9ecef';
           }
         });
-      }
+      },
+      content_style: `
+        body.dark { background-color: #1e1e1e; color: #e9ecef; }
+      `
     });
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -752,7 +758,7 @@
 	  const body = document.body;
 	  const containers = document.querySelectorAll('.container');
 	  const toggleButton = document.getElementById('theme-toggle');
-	  const modals = document.querySelectorAll('.modal-content'); // Seleciona todos os modais
+	  const modals = document.querySelectorAll('.modal-content');
 
 	  if (body.classList.contains('light')) {
 		// Tema Escuro
@@ -766,8 +772,12 @@
 		toggleButton.textContent = '☀️';
 		
 		// Ajustar TinyMCE
-		tinymce.activeEditor.getContainer().style.backgroundColor = '#444';
-		tinymce.activeEditor.getContainer().style.color = '#e9ecef';
+		if (tinymce.activeEditor) {
+		  tinymce.activeEditor.getContainer().style.backgroundColor = '#444';
+		  tinymce.activeEditor.getContainer().style.color = '#e9ecef';
+		  tinymce.activeEditor.getBody().style.backgroundColor = '#1e1e1e';
+		  tinymce.activeEditor.getBody().style.color = '#e9ecef';
+		}
 	  } else {
 		// Tema Claro
 		body.classList.replace('dark', 'light');
@@ -780,8 +790,12 @@
 		toggleButton.textContent = '🌙';
 		
 		// Ajustar TinyMCE
-		tinymce.activeEditor.getContainer().style.backgroundColor = '#fff';
-		tinymce.activeEditor.getContainer().style.color = '#2c3e50';
+		if (tinymce.activeEditor) {
+		  tinymce.activeEditor.getContainer().style.backgroundColor = '#fff';
+		  tinymce.activeEditor.getContainer().style.color = '#2c3e50';
+		  tinymce.activeEditor.getBody().style.backgroundColor = '#fff';
+		  tinymce.activeEditor.getBody().style.color = '#2c3e50';
+		}
 	  }
 	}
 
