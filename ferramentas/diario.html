@@ -15,287 +15,467 @@
   <!-- Bootstrap CSS -->
   <script src="https://cdn.tiny.cloud/1/wnknc1eopnaayokad1axrsn0koq4pgrndxu8rhd7ozx5j9sg/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --secondary: #0ea5e9;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --background-light: #f8fafc;
+      --background-dark: #0f172a;
+      --text-light: #1e293b;
+      --text-dark: #f1f5f9;
+      --border-light: #e2e8f0;
+      --border-dark: #334155;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       margin: 0;
       padding: 0;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
     }
-    /* Tema Claro (padrão) */
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Tema Claro */
     body.light {
-      background: linear-gradient(135deg, #f4f4f9, #e9ecef);
-      color: #2c3e50;
+      background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #dbeafe, #ede9fe);
+      color: var(--text-light);
     }
+
     /* Tema Escuro */
     body.dark {
-      background: linear-gradient(135deg, #1a1a1a, #2c3e50);
-      color: #e9ecef;
+      background: linear-gradient(-45deg, #020617, #1e1b4b, #1e1b4b, #020617);
+      color: var(--text-dark);
     }
-    body.dark footer {
-      background-color: #333;
-      color: #e9ecef;
-      border-top: 1px solid #666;
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 40px;
+      border-radius: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
     }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+    }
+
+    .container.light {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .container.dark {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    #home h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    #home p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .dark #home p {
+      color: var(--text-dark);
+    }
+
+    #home button {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      border-radius: 16px;
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #home button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    #home button:hover::before {
+      left: 100%;
+    }
+
+    #home button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: inherit;
+      opacity: 0.9;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      border: 2px solid var(--border-light);
+      border-radius: 14px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    /* Estilização das opções do select */
+    select option {
+      background-color: var(--background-light);
+      color: var(--text-light);
+      padding: 12px;
+    }
+
+    .dark select option {
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+    }
+
+    /* Estilização do select quando aberto */
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .dark select:focus {
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+    }
+
+    /* Cor do placeholder do select */
+    select option[value=""] {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .dark select option[value=""] {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #theme-toggle:hover {
+      transform: rotate(45deg);
+    }
+
+    #changelogButton {
+      position: fixed;
+      top: 20px;
+      right: 80px;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: inherit;
+    }
+
+    #changelogButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+      border-radius: 14px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      color: white;
+    }
+
+    .btn-info {
+      background: linear-gradient(45deg, var(--secondary), var(--accent));
+      border: none;
+      color: white;
+    }
+
+    .modal-content {
+      border-radius: 24px;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+    }
+
+    .dark .modal-content {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-dark);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid rgba(229, 231, 235, 0.1);
+      padding: 24px;
+    }
+
+    .modal-body {
+      padding: 32px;
+    }
+
+    .feedback-btn {
+      padding: 16px 28px;
+      border-radius: 14px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: transparent;
+      border: 2px solid var(--border-light);
+    }
+
+    .dark .feedback-btn {
+      border-color: var(--border-dark);
+    }
+
+    .feedback-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .feedback-btn.active {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+    }
+
     footer {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      background-color: #f4f4f9;
-      padding: 10px 0;
+      padding: 16px;
       text-align: center;
-      border-top: 1px solid #ccc;
-      z-index: 1000;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.1);
     }
+
+    .dark footer {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 24px;
+      }
+
+      #home h1 {
+        font-size: 2.2rem;
+      }
+
+      #home button {
+        font-size: 1rem;
+        padding: 14px 24px;
+      }
+
+      #theme-toggle {
+        top: 12px;
+        right: 12px;
+      }
+
+      #changelogButton {
+        top: 12px;
+        right: 70px;
+        font-size: 0.8rem;
+        padding: 8px 16px;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 30px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
-      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      animation: fadeIn 0.5s ease-out;
     }
-    .container.light {
-      background-color: #fff;
-      color: #2c3e50;
-    }
-    .container.dark {
-      background-color: #333;
-      color: #e9ecef;
-    }
-	body.dark .modal-content {
-	  background-color: #333; /* Fundo escuro */
-	  color: #e9ecef; /* Texto claro */
-	}
 
-	/* Ajuste da borda do cabeçalho do modal */
-	body.dark .modal-header {
-	  border-bottom: 1px solid #666; /* Borda visível no tema escuro */
-	}
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
 
-	/* Ajuste da borda do rodapé do modal */
-	body.dark .modal-footer {
-	  border-top: 1px solid #666; /* Borda visível no tema escuro */
-	}
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-	/* Garantir que o título do modal fique claro */
-	body.dark .modal-title {
-	  color: #e9ecef; /* Cor clara para o título */
-	}
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
 
-	/* Garantir que parágrafos dentro do modal tenham texto claro */
-	body.dark .modal-content p {
-	  color: #e9ecef; /* Cor clara para parágrafos */
-	}
-    #home h1 {
-      font-size: 2.5rem;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-      font-weight: bold;
+    .dark ::-webkit-scrollbar-thumb {
+      background: var(--secondary);
     }
-    .light #home p {
-      color: #666;
-    }
-    .dark #home p {
-      color: #e9ecef;
-    }
-    #home p {
-      text-align: center;
-      transition: color 0.3s ease;
-    }
-    #home button {
-      background: linear-gradient(45deg, #28a745, #218838);
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-      transition: all 0.3s ease;
-    }
-    #home button:hover {
-      background: linear-gradient(45deg, #218838, #1e7e34);
-      transform: translateY(-2px);
-      box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 16px;
-      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    }
-    .dark input, .dark select, .dark textarea {
-      background-color: #444;
-      color: #e9ecef;
-      border-color: #666;
-    }
+
+    /* Preview styles */
     #preview {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 10px;
-      overflow-x: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+      width: 100%;
     }
+
     .preview-item {
       position: relative;
-      width: 100px;
-      height: 100px;
-      flex: 0 0 auto;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--background-light);
     }
+
+    .dark .preview-item {
+      background: var(--background-dark);
+    }
+
     .preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border: 2px solid #ddd;
-      border-radius: 8px;
     }
-    .dark .preview-item img {
-      border-color: #666;
-    }
+
     .remove-btn {
       position: absolute;
-      top: 5px;
-      right: 5px;
-      background: red;
+      top: 8px;
+      right: 8px;
+      background: rgba(239, 68, 68, 0.9);
       color: white;
       border: none;
       cursor: pointer;
-      padding: 2px 5px;
+      padding: 4px;
       border-radius: 50%;
-      font-size: 12px;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      z-index: 2;
     }
+
     .remove-btn:hover {
-      background: darkred;
+      background: rgb(220, 38, 38);
+      transform: scale(1.1);
     }
-    .hidden {
-      display: none !important;
+
+    /* TinyMCE customization */
+    .tox-tinymce {
+      border-radius: 14px !important;
+      overflow: hidden;
+      border: 2px solid var(--border-light) !important;
     }
-    #theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
+
+    .dark .tox-tinymce {
+      border-color: var(--border-dark) !important;
     }
-	/* Estilos para o Modal de Feedback */
-	
-	#feedbackModal .feedback-btn {
-		  padding: 5px 10px; /* Reduzido para economizar espaço */
-		  font-size: 14px; /* Tamanho de fonte menor */
-		  border: none; /* Remove bordas padrão */
-		  border-radius: 5px;
-		  cursor: pointer;
-		  transition: transform 0.2s ease, background-color 0.3s ease;
-		}
-		
-		
-		.feedback-btn:hover {
-		  transform: scale(1.05); /* Efeito de leve aumento ao passar o mouse */
-		}
 
-		.feedback-btn.active {
-		  transform: scale(1.1); /* Botão selecionado fica um pouco maior */
-		  background-color: #007bff; /* Cor de destaque */
-		  color: white;
-		}
+    .dark .tox-edit-area__iframe {
+      background: var(--background-dark) !important;
+    }
 
+    .dark .tox-toolbar,
+    .dark .tox-statusbar {
+      background: var(--background-dark) !important;
+    }
 
-	#feedbackModal .modal-dialog {
-	  max-width: 	400px; /* Reduzido de 95% para um valor fixo */
-	}
-
-	#feedbackModal .feedback-btn {
-	  flex: 1;
-	  margin: 0 2px;
-	  white-space: nowrap;
-	  transition: transform 0.2s, filter 0.2s;
-	}
-
-	#feedbackModal .feedback-btn:hover {
-	  transform: scale(1.05);
-	  filter: brightness(90%);
-	}
-
-	#feedbackModal .feedback-btn.active {
-	  transform: scale(1.1);
-	  filter: brightness(110%);
-	}
-
-	/* Ajustes para tema escuro */
-	body.dark #feedbackModal .modal-content {
-	  background-color: #2c3e50;
-	  color: #e9ecef;
-	}
-
-	body.dark #feedbackModal .form-control {
-	  background-color: #34495e;
-	  color: #e9ecef;
-	  border-color: #4a627a;
-	}
-
-	@media (max-width: 768px) {
-	  #feedbackModal .d-flex {
-		flex-wrap: wrap;
-		gap: 5px;
-	  }
-	  
-	  #feedbackModal .feedback-btn {
-		flex: 45%;
-		padding: 5px;
-		font-size: 0.9rem;
-	  }
-	}
-	
-    @media (max-width: 600px) {
-      .container {
-        margin: 10px;
-        padding: 15px;
-      }
-      #home h1 {
-        font-size: 1.8rem;
-      }
-      #home button {
-        font-size: 1rem;
-        padding: 12px 20px;
-      }
-      .preview-item {
-        width: 80px;
-        height: 80px;
-      }
-      #theme-toggle {
-        top: 10px;
-        right: 10px;
-      }
-      #changelogButton {
-        top: 10px;
-        right: 60px;
-      }
-		.modal-content {
-			transition: background-color 0.3s ease, color 0.3s ease;
-		}
-
-		
-	}
+    /* Modal footer fix */
+    .modal-footer {
+      border-top: 1px solid rgba(229, 231, 235, 0.1);
+      padding: 20px;
+    }
   </style>
 </head>
 <body class="light">
@@ -332,8 +512,9 @@
 
       <label for="professor">Professor(a):</label>
       <select id="professor" required>
+        <option value="">Selecione Professor(a)</option>
         <option value="RONALD TEIXEIRA PEÇANHA FERNANDES">RONALD TEIXEIRA PEÇANHA FERNANDES</option>
-		<option value="DANIELLE CECATO DE ALMEIDA PASSOS">DANIELLE CECATO DE ALMEIDA PASSOS</option>
+        <option value="DANIELLE CECATO DE ALMEIDA PASSOS">DANIELLE CECATO DE ALMEIDA PASSOS</option>
       </select>
 
       <label for="relatorio">Relatório de Campo:</label>
@@ -357,11 +538,11 @@
         </div>
         <div class="modal-body">
           <ul>
-            <li>Esse diário deverá ser entregue via CANVAS.</li>
-            <li>O dia do relato deve ser o dia que teve a atividade, não o dia que você está criando esse relatório.</li>
-            <li>Nos relatos o aluno deve redigir um texto contendo os relatos das vivências do referido dia do IESC.</li>
-            <li>Você deve redigir as suas considerações finais, objetivos alcançados nesse dia na aula e o que foi aprendido de interessante.</li>
-            <li>Você pode anexar fotografias, se achar interessante e dependendo da atividade ocorrida no dia do relato.</li>
+            <li>Este diário deve ser submetido através da plataforma CANVAS.</li>
+            <li>A data do relato deve corresponder ao dia em que a atividade foi realizada, e não ao dia em que o relatório está sendo elaborado.</li>
+            <li>No relato, o aluno deve redigir um texto detalhado sobre as experiências vivenciadas no respectivo dia no IESC.</li>
+            <li>É necessário incluir considerações finais, objetivos alcançados durante a aula e os aprendizados significativos do dia.</li>
+            <li>Fotografias podem ser anexadas, caso sejam relevantes e pertinentes à atividade realizada no dia do relato.</li>
           </ul>
         </div>
         <div class="modal-footer">
@@ -382,10 +563,11 @@
 		  <div class="modal-body">
 			<div id="changelogContent">
 			  <!-- Conteúdo do changelog estático -->
-			  <h5>Atualizações (28/02/2025)</h5>
+			  <h5>Atualizações (04/03/2025)</h5>
 			  <ul>
-				<li>Melhorias na compatibilidade de imagens.</li>
-				<li>Adicionado sistema de Feedback.</li>
+				<li>Melhorias na visibilidade das opções do select em modo escuro.</li>
+				<li>Melhorando o design do diário de campo.</li>
+				<li>Atualização das instruções para criação do diário, tornando-as mais instrutivas e formais.</li>
 			  </ul>
 			</div>
 		  </div>
@@ -622,7 +804,7 @@
       if (!matricula) erros.push("Matrícula");
       if (!data) erros.push("Data");
       if (!local) erros.push("Local de Prática");
-      if (!professor) erros.push("Professor");
+      if (!professor || professor === "Selecione Professor(a)" || professor === "") erros.push("Professor(a)");
       if (!relatorio) erros.push("Relatório de Campo");
 
       if (erros.length > 0) {
