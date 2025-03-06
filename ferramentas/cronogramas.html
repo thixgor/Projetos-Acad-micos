@@ -365,6 +365,7 @@
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
+                margin-top: 3rem;
             }
             
             h2 {
@@ -375,12 +376,17 @@
                 padding: 1.8rem;
             }
 
-            .container > .btn:first-child {
-                margin-bottom: 20px;
+            .container > div:first-child {
+                margin-bottom: 1rem;
+            }
+
+            .container > div:first-child .btn {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                top: -10px;
                 font-size: 0.9rem;
                 padding: 0.6rem 1.2rem;
-                float: none;
-                margin-top: 10px;
             }
 
             .popup {
@@ -521,11 +527,15 @@
 </head>
 <body>
     <div class="container">
-        <a href="https://thiago.med.br/ferramentas" class="btn" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.8rem 1.5rem; margin-bottom: 30px; display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); float: left;">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-		<h1>HealthScheduler</h1>
-		<h2>Cronogramas Dinâmicos</h2>
+        <div style="position: relative; width: 100%; margin-bottom: 2rem;">
+            <a href="https://thiago.med.br/ferramentas" class="btn" style="position: absolute; left: 0; top: 0; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.8rem 1.5rem; display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            <div style="text-align: center; padding-top: 1rem;">
+                <h1>HealthScheduler</h1>
+                <h2>Cronogramas Dinâmicos</h2>
+            </div>
+        </div>
 		<img src="https://i.imgur.com/2WJyWRK.png" alt="Logo HealthScheduler" class="logo">
         
         <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 800px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
