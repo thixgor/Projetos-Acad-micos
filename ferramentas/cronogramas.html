@@ -588,7 +588,7 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('medicina')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina AFYA</h3>
-        <p>Valor: R$94,99 (Semestral)</p>
+        <p class="preco-valor">R$94,99 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
         <div class="materias-container">
@@ -605,6 +605,10 @@
         </div>
 
         <input type="text" id="nomeMedicina" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('medicina', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoMedicina" onchange="paymentChanged('medicina')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -636,7 +640,7 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('biomedicina')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Biomedicina AFYA</h3>
-        <p>Valor: R$73,07 (Semestral)</p>
+        <p class="preco-valor">R$73,07 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
         <div class="materias-container">
@@ -652,6 +656,10 @@
         </div>
 
         <input type="text" id="nomeBiomedicina" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('biomedicina', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoBiomedicina" onchange="paymentChanged('biomedicina')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -681,7 +689,7 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('enfermagem')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Enfermagem AFYA</h3>
-        <p>Valor: R$64,30 (Semestral)</p>
+        <p class="preco-valor">R$64,30 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
         <div class="materias-container">
@@ -698,6 +706,10 @@
         </div>
 
         <input type="text" id="nomeEnfermagem" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('enfermagem', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoEnfermagem" onchange="paymentChanged('enfermagem')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -726,7 +738,7 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('odontologia')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Odontologia AFYA</h3>
-        <p>Valor: R$84,77 (Semestral)</p>
+        <p class="preco-valor">R$84,77 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
         <div class="materias-container">
@@ -743,6 +755,10 @@
         </div>
 
         <input type="text" id="nomeOdontologia" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('odontologia', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoOdontologia" onchange="paymentChanged('odontologia')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -771,7 +787,7 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('psicologia')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Psicologia AFYA</h3>
-        <p>Valor: R$66,93 (Semestral)</p>
+        <p class="preco-valor">R$66,93 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
         <div class="materias-container">
@@ -789,6 +805,10 @@
         </div>
 
         <input type="text" id="nomePsicologia" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('psicologia', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoPsicologia" onchange="paymentChanged('psicologia')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -817,19 +837,22 @@
     <div class="popup-content">
         <span class="close-btn" onclick="hidePopup('medvet')">&times;</span>
         <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina Veterinária UNESA</h3>
-        <p>Valor: R$29,90 (Semestral)</p>
+        <p class="preco-valor">R$29,90 (Semestral)</p>
         <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
 
-        <p style="font-size: 0.9rem; color: #333;">
-            Cobre o 1º período com as matérias:<br>
-            Processos Bioquímicos e Biofísicos em Animais,<br>
-            Anatomia Estrutural Animal,<br>
-            Citologia e Embriologia Veterinária,<br>
-            Bioterismo e Bem-Estar Animal,<br>
-            Ecologia, Manejo e Conservação da Vida Silvestre
-        </p>
+        <div class="materias-container">
+            <p style="font-size: 0.9rem; color: #333;">
+                <strong>Cobertura:</strong> Até o 1º Período<br><br>
+                <strong>1° Período:</strong> Processos Bioquímicos e Biofísicos em Animais, Anatomia Estrutural Animal, Citologia e Embriologia Veterinária, Bioterismo e Bem-Estar Animal, Ecologia, Manejo e Conservação da Vida Silvestre.<br><br>
+                <strong>Observação:</strong> O cronograma é atualizado semestralmente com a inclusão de novos períodos e disciplinas. Fique atento às atualizações!
+            </p>
+        </div>
 
         <input type="text" id="nomeMedvet" placeholder="Seu nome completo">
+        <select class="subscription-type" onchange="updatePrice('medvet', this.value)">
+            <option value="semestral">Assinatura Semestral</option>
+            <option value="vitalicio">Assinatura Vitalícia</option>
+        </select>
         <select id="pagamentoMedvet" onchange="paymentChanged('medvet')">
             <option value="">Selecione o pagamento</option>
             <option value="pix">PIX</option>
@@ -838,18 +861,18 @@
 
         <div id="pixSectionMedvet" style="display: none;">
             <div id="qrcode">
-                <img src="https://i.imgur.com/r3Z2GqS.png" alt="QR Code PIX">
+                <img src="https://i.imgur.com/CW1sizF.png" alt="QR Code PIX">
             </div>
             <div class="pix-info">
                 <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
                 <p><strong>Valor:</strong> R$29,90</p>
             </div>
-            <button class="copy-btn" onclick="copiarPix('Medvet')">
+            <button class="copy-btn" onclick="copiarPix('medvet')">
                 <i class="fas fa-copy"></i> Copiar Código PIX
             </button>
             <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
         </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('Medvet')">Finalizar Compra</button>
+        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medvet')">Finalizar Compra</button>
     </div>
 </div>
 		
@@ -918,66 +941,164 @@
 
 
         const pixCodes = {
-		medicina: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540594.995802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA63042C94',
-		biomedicina: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540573.075802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMABIOMED630466D8',
-		enfermagem: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540564.305802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAENFERMAGEM63043B04',
-		odontologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540584.775802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAODONTO6304FCBA',
-		psicologia: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540566.935802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA630417B4',
-		medvet: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540529.995802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAMEDVET63040543'
-	};
+            medicina: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540594.995802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA63042C94',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+55219977709365204000053039865406324.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62220518CRONOGRAMAMEDICINA6304A733'
+            },
+            biomedicina: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540573.075802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMABIOMED630466D8',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+55219977709365204000053039865406249.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMABIOMED63045445'
+            },
+            enfermagem: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540564.305802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAENFERMAGEM63043B04',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+55219977709365204000053039865406219.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAENFERMAGEM6304EF2E'
+            },
+            odontologia: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540584.775802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAODONTO6304FCBA',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+55219977709365204000053039865406289.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAODONTO6304366D'
+            },
+            psicologia: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540566.935802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA630417B4',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+55219977709365204000053039865406228.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62240520CRONOGRAMAPSICOLOGIA6304E257'
+            },
+            medvet: {
+                semestral: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540529.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAMEDVET6304BC9C',
+                vitalicio: '00020126360014BR.GOV.BCB.PIX0114+5521997770936520400005303986540579.905802BR5925Thiago Ferreira Rodrigues6014RIO DE JANEIRO62200516CRONOGRAMAMEDVET630428E6'
+            }
+        };
 
-		function showPopup(curso) {
-			document.body.style.overflow = 'hidden';
-			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'flex';
-		}
+        const precos = {
+            medicina: {
+                semestral: 94.99,
+                vitalicio: 324.90
+            },
+            biomedicina: {
+                semestral: 73.07,
+                vitalicio: 249.90
+            },
+            enfermagem: {
+                semestral: 64.30,
+                vitalicio: 219.90
+            },
+            odontologia: {
+                semestral: 84.77,
+                vitalicio: 289.90
+            },
+            psicologia: {
+                semestral: 66.93,
+                vitalicio: 228.90
+            },
+            medvet: {
+                semestral: 29.90,
+                vitalicio: 79.90
+            }
+        };
 
-		function hidePopup(curso) {
-			document.body.style.overflow = 'auto';
-			document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'none';
-		}
+        const qrCodes = {
+            medicina: {
+                semestral: 'https://i.imgur.com/4wexILd.png',
+                vitalicio: 'https://i.imgur.com/BmRMW78.png'
+            },
+            biomedicina: {
+                semestral: 'https://i.imgur.com/JZFeDux.png',
+                vitalicio: 'https://i.imgur.com/v0NebSX.png'
+            },
+            enfermagem: {
+                semestral: 'https://i.imgur.com/n2YzKKs.png',
+                vitalicio: 'https://i.imgur.com/JfOo9mw.png'
+            },
+            odontologia: {
+                semestral: 'https://i.imgur.com/likEEfQ.png',
+                vitalicio: 'https://i.imgur.com/To40z8k.png'
+            },
+            psicologia: {
+                semestral: 'https://i.imgur.com/0GMqECz.png',
+                vitalicio: 'https://i.imgur.com/de5BLaj.png'
+            },
+            medvet: {
+                semestral: 'https://i.imgur.com/CW1sizF.png',
+                vitalicio: 'https://i.imgur.com/UT0bkkn.png'
+            }
+        };
 
+        function showPopup(curso) {
+            document.body.style.overflow = 'hidden';
+            const popup = document.getElementById(`popup${capitalizeFirstLetter(curso)}`);
+            
+            // Reset subscription type to semestral
+            const subscriptionSelect = popup.querySelector('.subscription-type');
+            if (subscriptionSelect) {
+                subscriptionSelect.value = 'semestral';
+                updatePrice(curso, 'semestral');
+            }
+            
+            popup.style.display = 'flex';
+        }
 
-		function paymentChanged(curso) {
-			const method = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
-			document.getElementById(`pixSection${capitalizeFirstLetter(curso)}`).style.display = method === 'pix' ? 'block' : 'none';
-		}
+        function updatePrice(curso, tipo) {
+            const preco = precos[curso][tipo];
+            const qrCode = qrCodes[curso][tipo];
+            const popup = document.getElementById(`popup${capitalizeFirstLetter(curso)}`);
+            
+            // Update price display
+            const precoElement = popup.querySelector('.preco-valor');
+            if (precoElement) {
+                precoElement.textContent = `R$${preco.toFixed(2)} (${tipo === 'semestral' ? 'Semestral' : 'Vitalício'})`;
+            }
+            
+            // Update QR code image
+            const qrCodeImg = popup.querySelector('#qrcode img');
+            if (qrCodeImg) {
+                qrCodeImg.src = qrCode;
+            }
+            
+            // Update PIX info value
+            const pixInfoValue = popup.querySelector('.pix-info p:last-child');
+            if (pixInfoValue) {
+                pixInfoValue.innerHTML = `<strong>Valor:</strong> R$${preco.toFixed(2)}`;
+            }
+        }
 
-		function copiarPix(curso) {
-			navigator.clipboard.writeText(pixCodes[curso])
-				.then(() => alert('Código PIX copiado!'))
-				.catch(err => console.error('Erro ao copiar:', err));
-		}
+        function copiarPix(curso) {
+            const popup = document.getElementById(`popup${capitalizeFirstLetter(curso)}`);
+            const tipo = popup.querySelector('.subscription-type').value;
+            navigator.clipboard.writeText(pixCodes[curso][tipo])
+                .then(() => alert('Código PIX copiado!'))
+                .catch(err => console.error('Erro ao copiar:', err));
+        }
 
-		function finalizarCompra(curso) {
-			const nome = document.getElementById(`nome${capitalizeFirstLetter(curso)}`).value;
-			const metodo = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
-			
-			if(!nome || !metodo) {
-				alert('Preencha todos os campos!');
-				return;
-			}
+        function finalizarCompra(curso) {
+            const nome = document.getElementById(`nome${capitalizeFirstLetter(curso)}`).value;
+            const metodo = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
+            const tipo = document.querySelector(`#popup${capitalizeFirstLetter(curso)} .subscription-type`).value;
+            
+            if(!nome || !metodo) {
+                alert('Preencha todos os campos!');
+                return;
+            }
 
-			const cursoNome = {
-				medicina: 'Medicina AFYA',
-				biomedicina: 'Biomedicina AFYA',
-				enfermagem: 'Enfermagem AFYA',
-				odontologia: 'Odontologia AFYA',
-				psicologia: 'Psicologia AFYA',
-				medvet: 'Medicina Veterinária UNESA'
-			}[curso];
+            const cursoNome = {
+                medicina: 'Medicina AFYA',
+                biomedicina: 'Biomedicina AFYA',
+                enfermagem: 'Enfermagem AFYA',
+                odontologia: 'Odontologia AFYA',
+                psicologia: 'Psicologia AFYA',
+                medvet: 'Medicina Veterinária UNESA'
+            }[curso];
 
-			let message = `Olá, meu nome é ${nome} e `;
-			message += metodo === 'dinheiro' 
-				? `iniciei a entrada no pedido do Cronograma ${cursoNome} com pagamento via DINHEIRO.`
-				: `iniciei a entrada no pedido do Cronograma ${cursoNome}, com pagamento via PIX.`;
+            let message = `Olá, meu nome é ${nome} e `;
+            message += `iniciei a entrada no pedido do Cronograma ${cursoNome} (${tipo === 'semestral' ? 'Assinatura Semestral' : 'Assinatura Vitalícia'}) `;
+            message += metodo === 'dinheiro' 
+                ? `com pagamento via DINHEIRO.`
+                : `com pagamento via PIX.`;
 
-			window.open(`https://wa.me/5521997770936?text=${encodeURIComponent(message)}`, '_blank');
-			hidePopup(curso);
-		}
+            window.open(`https://wa.me/5521997770936?text=${encodeURIComponent(message)}`, '_blank');
+            hidePopup(curso);
+        }
 
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
 		
 		
 		function showCoursePopup() {
@@ -992,6 +1113,16 @@
 			const videoSection = document.getElementById('video-section');
 			videoSection.scrollIntoView({ behavior: 'smooth' });
 		}
+
+        function hidePopup(curso) {
+            document.body.style.overflow = 'auto';
+            document.getElementById(`popup${capitalizeFirstLetter(curso)}`).style.display = 'none';
+        }
+
+        function paymentChanged(curso) {
+            const method = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
+            document.getElementById(`pixSection${capitalizeFirstLetter(curso)}`).style.display = method === 'pix' ? 'block' : 'none';
+        }
 
     </script>
 </body>
