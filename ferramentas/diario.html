@@ -14,6 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <!-- Bootstrap CSS -->
   <script src="https://cdn.tiny.cloud/1/wnknc1eopnaayokad1axrsn0koq4pgrndxu8rhd7ozx5j9sg/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -337,6 +338,32 @@
       background: rgba(15, 23, 42, 0.5);
     }
 
+    /* Back button styles */
+    #backButton {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+    }
+
+    #backButton:hover {
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
     @media (max-width: 600px) {
       .container {
         margin: 10px;
@@ -476,9 +503,75 @@
       border-top: 1px solid rgba(229, 231, 235, 0.1);
       padding: 20px;
     }
+
+    .pdf-list {
+      margin-top: 20px;
+      border: 2px dashed var(--border-light);
+      border-radius: 14px;
+      padding: 20px;
+      min-height: 200px;
+    }
+
+    .dark .pdf-list {
+      border-color: var(--border-dark);
+    }
+
+    .pdf-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+    }
+
+    .dark .pdf-item {
+      border-color: var(--border-dark);
+    }
+
+    .pdf-item .pdf-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pdf-item .pdf-icon {
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .pdf-item .pdf-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .pdf-item .pdf-date {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .pdf-item .remove-pdf {
+      background: none;
+      border: none;
+      color: var(--emergency-red);
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .pdf-item .remove-pdf:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="light">
+  <!-- Botão de Voltar -->
+  <button id="backButton" onclick="handleBack()">← Voltar</button>
+  
   <!-- Botão de Troca de Tema -->
   <button id="theme-toggle">🌙</button>
   <!-- Botão de Changelogs na página inicial -->
@@ -488,8 +581,20 @@
   <div id="home" class="container light">
     <h1>Diário de Campo (Logbook)</h1>
     <p class="text-center mb-4">Crie seu relatório de vivências para o IESC!</p>
-    <button class="btn btn-lg w-100" onclick="showCreatePage()">Criar Diário de Campo</button>
+    <button class="btn btn-lg w-100 mb-3" onclick="showCreatePage()">Criar Diário de Campo</button>
+    <button class="btn btn-lg w-100" onclick="showAttachPage()">Anexar Diários</button>
     <p class="text-center mt-4" style="font-size: 0.9rem;">Criado por Thiago F. Rodrigues</p>
+  </div>
+
+  <!-- Página de Anexar PDFs -->
+  <div id="attach" class="container light hidden">
+    <h1>Anexar Diários</h1>
+    <div class="mb-4">
+      <input type="file" id="pdfInput" multiple accept=".pdf" class="form-control mb-3" onchange="handlePDFUpload(event)">
+      <div id="pdfPreview" class="pdf-list"></div>
+    </div>
+    <button class="btn btn-success" onclick="mergePDFs()">Combinar PDFs</button>
+    <button class="btn btn-secondary ms-2" onclick="showHomePage()">Voltar</button>
   </div>
 
   <!-- Página de Criação do Diário -->
@@ -622,6 +727,7 @@
 
   <script>
     let selectedImages = [];
+    let selectedPDFs = [];
 
     // Inicialização do TinyMCE
     tinymce.init({
@@ -649,12 +755,28 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('home').classList.remove('hidden');
       document.getElementById('create').classList.add('hidden');
+      document.getElementById('attach').classList.add('hidden');
       toggleTheme(); // Configura o tema inicial
     });
+
+    function showHomePage() {
+      document.getElementById('home').classList.remove('hidden');
+      document.getElementById('create').classList.add('hidden');
+      document.getElementById('attach').classList.add('hidden');
+      document.getElementById('footer').style.display = 'block';
+    }
 
     function showCreatePage() {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('create').classList.remove('hidden');
+      document.getElementById('attach').classList.add('hidden');
+      document.getElementById('footer').style.display = 'none';
+    }
+
+    function showAttachPage() {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('create').classList.add('hidden');
+      document.getElementById('attach').classList.remove('hidden');
       document.getElementById('footer').style.display = 'none';
     }
 
@@ -1032,6 +1154,121 @@
 	  }
 	});
 
+    function handlePDFUpload(event) {
+      const files = Array.from(event.target.files);
+      
+      // Process each file
+      files.forEach(file => {
+        if (file.name.startsWith('Diário de Campo - ')) {
+          const dateStr = file.name.match(/\d{2}-\d{2}-\d{4}/)[0];
+          const version = file.name.match(/\(\d+\)/) ? parseInt(file.name.match(/\(\d+\)/)[0].replace(/[()]/g, '')) : 0;
+          
+          // Check if we already have a file with this date
+          const existingIndex = selectedPDFs.findIndex(pdf => pdf.date === dateStr);
+          
+          if (existingIndex === -1 || version > selectedPDFs[existingIndex].version) {
+            const pdfInfo = {
+              file: file,
+              date: dateStr,
+              version: version,
+              name: file.name
+            };
+            
+            if (existingIndex !== -1) {
+              selectedPDFs[existingIndex] = pdfInfo;
+            } else {
+              selectedPDFs.push(pdfInfo);
+            }
+          }
+        }
+      });
+      
+      // Sort PDFs by date
+      selectedPDFs.sort((a, b) => {
+        const dateA = new Date(a.date.split('-').reverse().join('-'));
+        const dateB = new Date(b.date.split('-').reverse().join('-'));
+        return dateA - dateB;
+      });
+      
+      renderPDFPreview();
+    }
+
+    function renderPDFPreview() {
+      const preview = document.getElementById('pdfPreview');
+      preview.innerHTML = '';
+      
+      if (selectedPDFs.length === 0) {
+        preview.innerHTML = '<p class="text-center text-muted mt-4">Nenhum PDF selecionado</p>';
+        return;
+      }
+      
+      selectedPDFs.forEach((pdf, index) => {
+        const item = document.createElement('div');
+        item.className = 'pdf-item';
+        item.innerHTML = `
+          <div class="pdf-info">
+            <span class="pdf-icon">📄</span>
+            <div>
+              <div class="pdf-name">${pdf.name}</div>
+              <div class="pdf-date">${pdf.date}</div>
+            </div>
+          </div>
+          <button class="remove-pdf" onclick="removePDF(${index})">×</button>
+        `;
+        preview.appendChild(item);
+      });
+    }
+
+    function removePDF(index) {
+      selectedPDFs.splice(index, 1);
+      renderPDFPreview();
+    }
+
+    async function mergePDFs() {
+      if (selectedPDFs.length === 0) {
+        alert('Por favor, selecione pelo menos um PDF para combinar.');
+        return;
+      }
+
+      const { PDFDocument } = PDFLib;
+      const mergedPdf = await PDFDocument.create();
+      
+      try {
+        for (const pdfInfo of selectedPDFs) {
+          const pdfBytes = await pdfInfo.file.arrayBuffer();
+          const pdf = await PDFDocument.load(pdfBytes);
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+        
+        const mergedPdfFile = await mergedPdf.save();
+        const blob = new Blob([mergedPdfFile], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Diário de Campo Completo.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Erro ao combinar PDFs:', error);
+        alert('Ocorreu um erro ao combinar os PDFs. Por favor, tente novamente.');
+      }
+    }
+
+    function handleBack() {
+      const homeVisible = !document.getElementById('home').classList.contains('hidden');
+      const createVisible = !document.getElementById('create').classList.contains('hidden');
+      const attachVisible = !document.getElementById('attach').classList.contains('hidden');
+
+      if (homeVisible) {
+        window.location.href = 'https://thiago.med.br/ferramentas';
+      } else if (createVisible || attachVisible) {
+        showHomePage();
+      }
+    }
 
   </script>
   
