@@ -526,15 +526,23 @@
         </div>
 		
 		<div class="grid">
-					<div class="card" onclick="showCoursePopup()">
+					<div class="card" onclick="showCoursePopup()" style="cursor: pointer; position: relative;">
 						<h2><i class="fas fa-book-medical"></i> Cronogramas</h2>
 						<p>Acesso ao planejamento completo do seu curso</p>
 						<p style="margin-top: 10px; color: #4CAF50;"><i class="fas fa-envelope"></i> Receba lembretes automáticos por e-mail 1 semana antes das avaliações para melhor organização dos seus estudos!</p>
+						<div style="margin-top: 20px; background: rgba(255,255,255,0.2); padding: 12px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+							<i class="fas fa-mouse-pointer" style="color: #fff;"></i>
+							<span style="color: #fff;">Clique aqui para ver a lista de cursos disponíveis</span>
+						</div>
 					</div>
 				</div>
 		
 		<button class="btn video-btn" onclick="scrollToVideo()">
 			<i class="fas fa-play-circle"></i> Ver o Vídeo da Plataforma
+		</button>
+
+        <button class="btn video-btn" onclick="scrollToPrecos()" style="background: linear-gradient(135deg, #00796b, #009688); margin-left: 15px;">
+			<i class="fas fa-tags"></i> Ver Preços dos Cronogramas
 		</button>
 
 		<div class="popup" id="coursePopup">
@@ -574,322 +582,322 @@
 				</div>
 			</div>
 		</div>
-		
+
+        <div class="video-section" id="precos-section" style="margin-top: 4rem;">
+            <h2 class="video-title">Adquirir</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px;">
+                <button class="btn" onclick="showPopup('medicina')" style="width: 100%; background: linear-gradient(135deg, #1a237e, #283593); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-stethoscope"></i> Medicina AFYA
+                </button>
+                <button class="btn" onclick="showPopup('biomedicina')" style="width: 100%; background: linear-gradient(135deg, #00796b, #00897b); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-microscope"></i> Biomedicina AFYA
+                </button>
+                <button class="btn" onclick="showPopup('enfermagem')" style="width: 100%; background: linear-gradient(135deg, #c2185b, #d81b60); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-user-nurse"></i> Enfermagem AFYA
+                </button>
+                <button class="btn" onclick="showPopup('odontologia')" style="width: 100%; background: linear-gradient(135deg, #0277bd, #0288d1); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-tooth"></i> Odontologia AFYA
+                </button>
+                <button class="btn" onclick="showPopup('psicologia')" style="width: 100%; background: linear-gradient(135deg, #6a1b9a, #7b1fa2); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-brain"></i> Psicologia AFYA
+                </button>
+                <button class="btn" onclick="showPopup('medvet')" style="width: 100%; background: linear-gradient(135deg, #ef6c00, #f57c00); margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-paw"></i> Medicina Veterinária UNESA
+                </button>
+            </div>
+        </div>
+
+        <!-- Popups de compra para cada curso -->
+        <div class="popup" id="popupMedicina">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('medicina')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina AFYA</h3>
+                <p class="preco-valor">R$94,99 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 5º Período<br><br>
+                        <strong>Sistemas Orgânicos Integrados (SOI I-V):</strong><br>
+                        Anatomia Humana, Morfologia, Fisiologia Humana, Bioquímica, Genética, Imunologia, 
+                        Microbiologia Médica, Patologia Geral e Sistêmica, Farmacologia.<br><br>
+                        
+                        <strong>Habilidades e Atitudes Médicas (HAM  I-V):</strong><br>
+                        Ética e Bioética em Medicina, Técnicas de Anamnese, Técnicas de Exame Físico, 
+                        Procedimentos Médicos Básicos, Comunicação em Saúde.
+                    </p>
+                </div>
+
+                <input type="text" id="nomeMedicina" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('medicina', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoMedicina" onchange="paymentChanged('medicina')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionMedicina" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/4wexILd.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$94,99</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('medicina')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medicina')">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <div class="popup" id="popupBiomedicina">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('biomedicina')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Biomedicina AFYA</h3>
+                <p class="preco-valor">R$73,07 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 6º Período<br><br>
+                        <strong>1° Período:</strong> Biologia Celular,  Química Geral e Orgânica,  Laboratório Clínico, Genética,  Morfofisiologia dos Sistemas I.<br>
+                        <strong>2° Período:</strong> Morfofisiologia dos Sistemas II, Microbiologia e Imunologia, Bioquímica, Psicologia em Saúde, Biologia Molecular e Biotecnologia.<br>
+                        <strong>3° Período:</strong> Imaginologia, Parasitologia, Saúde de Coletiva e Epidemiologia, Farmacologia Geral,  Patologia Geral, Integração Metabólica.<br>
+                        <strong>4° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Doenças Parasitárias e Virais, Bromatologia, Líquidos Corporais,  Ética e Bioética em Saúde, Reprodução Humana Assistida.<br>
+                        <strong>5° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Doenças Bacterianas e Fúngicas, Hematologia e Banco de Sangue,  Citologia Hormonal e Oncótica,  Práticas Integrativas e Complementares em Saúde, Gestão e Empreendedorismo<br>
+                        <strong>6° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Distúrbios Endócrinos e Metabólicos, Técnicas de Manejo Clínico e Laboratorial de Desordens Imunohematológicas, Cosmetologia e Estética, Análises Toxicológicas e Forenseses
+                    </p>
+                </div>
+
+                <input type="text" id="nomeBiomedicina" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('biomedicina', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoBiomedicina" onchange="paymentChanged('biomedicina')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionBiomedicina" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/JZFeDux.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$73,07</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('biomedicina')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('biomedicina')">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <div class="popup" id="popupEnfermagem">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('enfermagem')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Enfermagem AFYA</h3>
+                <p class="preco-valor">R$64,30 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 7º Período<br><br>
+                        <strong>1° Período:</strong> Direitos Humanos, Diversidade e Inclusão,  Biologia Celular,  Legislação e História da Enfermagem,  Fundamentos e Vida Acadêmica na Enfermagem, Enfermagem na Saúde da Família e Comunidade, Morfofisiologia dos Sistemas I.<br>
+                        <strong>2° Período:</strong> Morfofisiologia dos Sistemas II, Microbiologia e Imunologia, Bioquímica,  Genética Humana, Estação de Aprendizado Saúde e Comunidade, Gestão da Qualidade e Segurança do Paciente.<br>
+                        <strong>3° Período:</strong> Fundamentos da Semiotécnica em Enfermagem, Patologia Geral, Semiologia e Sistematização em Enfermagem,  Farmacologia Geral, Psicologia em Saúde.<br>
+                        <strong>4° Período:</strong> Farmacologia Clínica, Estação de Aprendizagem em Sistematização da Assistência da Enfermagem, Ética e Bioética em Saúde,  Enfermagem na Atenção Básica, Parasitologia.<br>
+                        <strong>5° Período:</strong> Exames Diagnósticos, Estação de aprendizagem bases para o cuidado de enfermagem, Enfermagem em Doenças Infectocontagiosa, Enfermagem na Atenção ao Adulto, Enfermagem no Idoso.<br>
+                        <strong>6° Período:</strong> Saúde de Coletiva e Epidemiologia,  Estação de Aprendizagem Raciocínio clínico, Enfermagem na Saúde da Mulher e Recem-nascido, Enfermagem na Saúde da Criança e Adolescente, Enfermagem em Centro Cirúrgico e Central de Material.<br>
+                        <strong>7° Período:</strong> Gerenciamento em Enfermagem,  Estação de Aprendizagem para cuidados a pacientes fragilizados,  Enfermagem em Saúde Mental e Atenção Psicosocial,  Enfermagem em Trauma e Emergência.
+                    </p>
+                </div>
+
+                <input type="text" id="nomeEnfermagem" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('enfermagem', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoEnfermagem" onchange="paymentChanged('enfermagem')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionEnfermagem" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/n2YzKKs.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$64,30</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('enfermagem')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('enfermagem')">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <div class="popup" id="popupOdontologia">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('odontologia')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Odontologia AFYA</h3>
+                <p class="preco-valor">R$84,77 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 7º Período<br><br>
+                        <strong>1° Período:</strong> Psicologia em Saúde, Biologia Celular, Introdução a Odontologia e ambiência, Microbiologia e Imunologia, Morfofisiologia dos Sistemas, Ética e Bioética, Saúde Coletiva e Epidemiologia.<br>
+                        <strong>2° Período:</strong> Anatomia de Cabeça e Pescoço, Anatomia e Escultura Dentária, Bioquímica, Patologia Geral, Farmacologia Geral, Materiais Odontológicos, Principios do SUS, Suporte Básico de Vida.<br>
+                        <strong>3° Período:</strong> Periodontia, Propedêutica Clínica e Radiologia, Semiologia e Estomatologia, Oclusão e Disfunção Temporomandibular, Dentística, Anestesiologia e Terapêutica Medicamentosa, Sistema Único de Saúde.<br>
+                        <strong>4° Período:</strong> Direitos Humanos, Diversidade e Qualidade de Vida, Prótese Fixa, Técnicas Cirúrgicas, Endodontia, Peridontia Avançada e  Implantodontia, Clínica de Cariologia e Adequação do Meio Bucal, Biossegurança, Dentística Avançada.<br>
+                        <strong>5° Período:</strong> Cirurgia e Traumatologia Buco-Maxilo-Facial, Prótese Removível, Clínica Integradora, Clínica de Atenção Básica, Endodontia Avançada, Deontologia e Odontologia Legal, Cuidados Terapêuticos à População.<br>
+                        <strong>6° Período:</strong> Odontologia para Paciente com Necessidades Especiais, Odontopediatria, Clínica Integradora de média complexidade, Ortodontia, Bases para Harmonização Orofacial, Clínica da Dor (DTM).<br>
+                        <strong>7° Período:</strong> Clínica Integradora Avançada, Tópicos Integradores em Odontologia, Estudo da Clínica de Urgências Odontológicas I, Odontologia Hospitalar, Oncologia na Odontologia
+                    </p>
+                </div>
+
+                <input type="text" id="nomeOdontologia" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('odontologia', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoOdontologia" onchange="paymentChanged('odontologia')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionOdontologia" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/likEEfQ.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$84,77</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('odontologia')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('odontologia')">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <div class="popup" id="popupPsicologia">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('psicologia')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Psicologia AFYA</h3>
+                <p class="preco-valor">R$66,93 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 8º Período<br><br>
+                        <strong>1° Período:</strong> Competência Relacional, Sociologia e Antropologia, Psicologia e Artes, Introdução à Psicologia, Fenômenos e Processos Psicológicos Básicos, Ética Profissional em Psicologia.<br>
+                        <strong>2° Período:</strong> Filosofia, Bases Biológicas do Comportamento, Direitos Humanos e Diversidade e Inclusão, Psicologia do Desenvolvimento Infância e Adolescência, Psicologia em Saúde. <br>
+                        <strong>3° Período:</strong> Psicologia do Desenvolvimento Adulto e Idoso, Estatística Aplicada à Psicologia, Psicologia Experimental, Neuroanatomia Humana<br>
+                        <strong>4° Período:</strong> Psicologia Social, Psicologia e Saúde Mental, Psicologia Comunitária, Psicologia Escolar, Educacional e Aprendizagem.<br>
+                        <strong>5° Período:</strong> Psicometria e Testagem Psicológica, Teorias e Técnicas Grupais, Fundamentos de Psicologia Comportamental, Psicologia Jurídica, Fundamentos da Psicanálise.<br>
+                        <strong>6° Período:</strong> Psicanálise, Psicologia Comportamental, Fundamentos de Psicopatologia, Fundamentos de Psicologia Fenomenológica e Existencial.<br>
+                        <strong>7° Período:</strong> O Estudo da Avaliação Psicológica, Psicologia Fenomenológica Existencial, Técnicas de Exame Psicológico, Psicologia Organizacional e do Trabalho, Psicologia Hospitalar.<br>
+                        <strong>8° Período:</strong> Psicologia e Políticas Públicas, Psicologia, Projeto de Pesquisa em Psicologia, Gênero e Sexualidade Humana, Neuropsicologia.
+                    </p>
+                </div>
+
+                <input type="text" id="nomePsicologia" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('psicologia', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoPsicologia" onchange="paymentChanged('psicologia')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionPsicologia" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/0GMqECz.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$66,93</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('psicologia')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('psicologia')">Finalizar Compra</button>
+            </div>
+        </div>
+
+        <div class="popup" id="popupMedvet">
+            <div class="popup-content">
+                <span class="close-btn" onclick="hidePopup('medvet')">&times;</span>
+                <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina Veterinária UNESA</h3>
+                <p class="preco-valor">R$29,90 (Semestral)</p>
+                <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
+
+                <div class="materias-container">
+                    <p style="font-size: 0.9rem; color: #333;">
+                        <strong>Cobertura:</strong> Até o 1º Período<br><br>
+                        <strong>1° Período:</strong> Processos Bioquímicos e Biofísicos em Animais, Anatomia Estrutural Animal, Citologia e Embriologia Veterinária, Bioterismo e Bem-Estar Animal, Ecologia, Manejo e Conservação da Vida Silvestre.<br><br>
+                        <strong>Observação:</strong> O cronograma é atualizado semestralmente com a inclusão de novos períodos e disciplinas. Fique atento às atualizações!
+                    </p>
+                </div>
+
+                <input type="text" id="nomeMedvet" placeholder="Seu nome completo">
+                <select class="subscription-type" onchange="updatePrice('medvet', this.value)">
+                    <option value="semestral">Assinatura Semestral</option>
+                    <option value="vitalicio">Assinatura Vitalícia</option>
+                </select>
+                <select id="pagamentoMedvet" onchange="paymentChanged('medvet')">
+                    <option value="">Selecione o pagamento</option>
+                    <option value="pix">PIX</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+
+                <div id="pixSectionMedvet" style="display: none;">
+                    <div id="qrcode">
+                        <img src="https://i.imgur.com/CW1sizF.png" alt="QR Code PIX">
+                    </div>
+                    <div class="pix-info">
+                        <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
+                        <p><strong>Valor:</strong> R$29,90</p>
+                    </div>
+                    <button class="copy-btn" onclick="copiarPix('medvet')">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                    <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medvet')">Finalizar Compra</button>
+            </div>
+        </div>
 
 		
 	<div class="anuncio-rodape" id="anuncio">
-		A plataforma que te dá um cronograma que cabe no seu calendário, por um preço acessível. <br><br>
-		De acordo com suas <strong>DIFICULDADES</strong> <br>
-		De acordo com seu <strong>TEMPO</strong>
+		Cronogramas personalizados de acordo com suas <strong>DIFICULDADES</strong> e seu <strong>TEMPO</strong>
 		<button class="fechar" onclick="this.parentElement.style.display='none';">×</button>
 	</div>
 
-        <button class="btn" onclick="showPopup('medicina')">Comprar - Criador de Cronogramas - Medicina AFYA</button>
-		<button class="btn" onclick="showPopup('biomedicina')">Comprar - Criador de Cronogramas - Biomedicina AFYA</button>
-		<button class="btn" onclick="showPopup('enfermagem')">Comprar - Criador de Cronogramas - Enfermagem AFYA</button>
-		<button class="btn" onclick="showPopup('odontologia')">Comprar - Criador de Cronogramas - Odontologia AFYA</button>
-		<button class="btn" onclick="showPopup('psicologia')">Comprar - Criador de Cronogramas - Psicologia AFYA</button>
-		<button class="btn" onclick="showPopup('medvet')">Comprar - Criador de Cronogramas - Medicina Veterinária UNESA</button>
-
-<!-- Medicina -->
-
-<div class="popup" id="popupMedicina">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('medicina')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina AFYA</h3>
-        <p class="preco-valor">R$94,99 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 5º Período<br><br>
-                <strong>Sistemas Orgânicos Integrados (SOI I-V):</strong><br>
-                Anatomia Humana, Morfologia, Fisiologia Humana, Bioquímica, Genética, Imunologia, 
-                Microbiologia Médica, Patologia Geral e Sistêmica, Farmacologia.<br><br>
-                
-                <strong>Habilidades e Atitudes Médicas (HAM  I-V):</strong><br>
-                Ética e Bioética em Medicina, Técnicas de Anamnese, Técnicas de Exame Físico, 
-                Procedimentos Médicos Básicos, Comunicação em Saúde.
-            </p>
-        </div>
-
-        <input type="text" id="nomeMedicina" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('medicina', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoMedicina" onchange="paymentChanged('medicina')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionMedicina" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/4wexILd.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$94,99</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('medicina')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medicina')">Finalizar Compra</button>
-    </div>
-</div>
-
-
-
-
-
-		<div class="popup" id="popupBiomedicina">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('biomedicina')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Biomedicina AFYA</h3>
-        <p class="preco-valor">R$73,07 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 6º Período<br><br>
-                <strong>1° Período:</strong> Biologia Celular,  Química Geral e Orgânica,  Laboratório Clínico, Genética,  Morfofisiologia dos Sistemas I.<br>
-                <strong>2° Período:</strong> Morfofisiologia dos Sistemas II, Microbiologia e Imunologia, Bioquímica, Psicologia em Saúde, Biologia Molecular e Biotecnologia.<br>
-                <strong>3° Período:</strong> Imaginologia, Parasitologia, Saúde de Coletiva e Epidemiologia, Farmacologia Geral,  Patologia Geral, Integração Metabólica.<br>
-                <strong>4° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Doenças Parasitárias e Virais, Bromatologia, Líquidos Corporais,  Ética e Bioética em Saúde, Reprodução Humana Assistida.<br>
-                <strong>5° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Doenças Bacterianas e Fúngicas, Hematologia e Banco de Sangue,  Citologia Hormonal e Oncótica,  Práticas Integrativas e Complementares em Saúde, Gestão e Empreendedorismo<br>
-                <strong>6° Período:</strong> Técnicas de Manejo Clínico e Laboratorial de Distúrbios Endócrinos e Metabólicos, Técnicas de Manejo Clínico e Laboratorial de Desordens Imunohematológicas, Cosmetologia e Estética, Análises Toxicológicas e Forenseses
-            </p>
-        </div>
-
-        <input type="text" id="nomeBiomedicina" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('biomedicina', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoBiomedicina" onchange="paymentChanged('biomedicina')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionBiomedicina" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/JZFeDux.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$73,07</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('biomedicina')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('biomedicina')">Finalizar Compra</button>
-    </div>
-</div>
-
-
-
-<div class="popup" id="popupEnfermagem">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('enfermagem')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Enfermagem AFYA</h3>
-        <p class="preco-valor">R$64,30 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 7º Período<br><br>
-                <strong>1° Período:</strong> Direitos Humanos, Diversidade e Inclusão,  Biologia Celular,  Legislação e História da Enfermagem,  Fundamentos e Vida Acadêmica na Enfermagem, Enfermagem na Saúde da Família e Comunidade, Morfofisiologia dos Sistemas I.<br>
-                <strong>2° Período:</strong> Morfofisiologia dos Sistemas II, Microbiologia e Imunologia, Bioquímica,  Genética Humana, Estação de Aprendizado Saúde e Comunidade, Gestão da Qualidade e Segurança do Paciente.<br>
-                <strong>3° Período:</strong> Fundamentos da Semiotécnica em Enfermagem, Patologia Geral, Semiologia e Sistematização em Enfermagem,  Farmacologia Geral, Psicologia em Saúde.<br>
-                <strong>4° Período:</strong> Farmacologia Clínica, Estação de Aprendizagem em Sistematização da Assistência da Enfermagem, Ética e Bioética em Saúde,  Enfermagem na Atenção Básica, Parasitologia.<br>
-                <strong>5° Período:</strong> Exames Diagnósticos, Estação de aprendizagem bases para o cuidado de enfermagem, Enfermagem em Doenças Infectocontagiosa, Enfermagem na Atenção ao Adulto, Enfermagem no Idoso.<br>
-                <strong>6° Período:</strong> Saúde de Coletiva e Epidemiologia,  Estação de Aprendizagem Raciocínio clínico, Enfermagem na Saúde da Mulher e Recem-nascido, Enfermagem na Saúde da Criança e Adolescente, Enfermagem em Centro Cirúrgico e Central de Material.<br>
-                <strong>7° Período:</strong> Gerenciamento em Enfermagem,  Estação de Aprendizagem para cuidados a pacientes fragilizados,  Enfermagem em Saúde Mental e Atenção Psicosocial,  Enfermagem em Trauma e Emergência.
-            </p>
-        </div>
-
-        <input type="text" id="nomeEnfermagem" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('enfermagem', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoEnfermagem" onchange="paymentChanged('enfermagem')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionEnfermagem" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/n2YzKKs.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$64,30</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('enfermagem')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('enfermagem')">Finalizar Compra</button>
-    </div>
-</div>
-
-
-<div class="popup" id="popupOdontologia">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('odontologia')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Odontologia AFYA</h3>
-        <p class="preco-valor">R$84,77 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 7º Período<br><br>
-                <strong>1° Período:</strong> Psicologia em Saúde, Biologia Celular, Introdução a Odontologia e ambiência, Microbiologia e Imunologia, Morfofisiologia dos Sistemas, Ética e Bioética, Saúde Coletiva e Epidemiologia.<br>
-                <strong>2° Período:</strong> Anatomia de Cabeça e Pescoço, Anatomia e Escultura Dentária, Bioquímica, Patologia Geral, Farmacologia Geral, Materiais Odontológicos, Principios do SUS, Suporte Básico de Vida.<br>
-                <strong>3° Período:</strong> Periodontia, Propedêutica Clínica e Radiologia, Semiologia e Estomatologia, Oclusão e Disfunção Temporomandibular, Dentística, Anestesiologia e Terapêutica Medicamentosa, Sistema Único de Saúde.<br>
-                <strong>4° Período:</strong> Direitos Humanos, Diversidade e Qualidade de Vida, Prótese Fixa, Técnicas Cirúrgicas, Endodontia, Peridontia Avançada e  Implantodontia, Clínica de Cariologia e Adequação do Meio Bucal, Biossegurança, Dentística Avançada.<br>
-                <strong>5° Período:</strong> Cirurgia e Traumatologia Buco-Maxilo-Facial, Prótese Removível, Clínica Integradora, Clínica de Atenção Básica, Endodontia Avançada, Deontologia e Odontologia Legal, Cuidados Terapêuticos à População.<br>
-                <strong>6° Período:</strong> Odontologia para Paciente com Necessidades Especiais, Odontopediatria, Clínica Integradora de média complexidade, Ortodontia, Bases para Harmonização Orofacial, Clínica da Dor (DTM).<br>
-                <strong>7° Período:</strong> Clínica Integradora Avançada, Tópicos Integradores em Odontologia, Estudo da Clínica de Urgências Odontológicas I, Odontologia Hospitalar, Oncologia na Odontologia
-            </p>
-        </div>
-
-        <input type="text" id="nomeOdontologia" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('odontologia', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoOdontologia" onchange="paymentChanged('odontologia')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionOdontologia" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/likEEfQ.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$84,77</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('odontologia')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('odontologia')">Finalizar Compra</button>
-    </div>
-</div>
-
-<!-- Popup Psicologia -->
-<div class="popup" id="popupPsicologia">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('psicologia')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Psicologia AFYA</h3>
-        <p class="preco-valor">R$66,93 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 8º Período<br><br>
-                <strong>1° Período:</strong> Competência Relacional, Sociologia e Antropologia, Psicologia e Artes, Introdução à Psicologia, Fenômenos e Processos Psicológicos Básicos, Ética Profissional em Psicologia.<br>
-                <strong>2° Período:</strong> Filosofia, Bases Biológicas do Comportamento, Direitos Humanos e Diversidade e Inclusão, Psicologia do Desenvolvimento Infância e Adolescência, Psicologia em Saúde. <br>
-                <strong>3° Período:</strong> Psicologia do Desenvolvimento Adulto e Idoso, Estatística Aplicada à Psicologia, Psicologia Experimental, Neuroanatomia Humana<br>
-                <strong>4° Período:</strong> Psicologia Social, Psicologia e Saúde Mental, Psicologia Comunitária, Psicologia Escolar, Educacional e Aprendizagem.<br>
-                <strong>5° Período:</strong> Psicometria e Testagem Psicológica, Teorias e Técnicas Grupais, Fundamentos de Psicologia Comportamental, Psicologia Jurídica, Fundamentos da Psicanálise.<br>
-                <strong>6° Período:</strong> Psicanálise, Psicologia Comportamental, Fundamentos de Psicopatologia, Fundamentos de Psicologia Fenomenológica e Existencial.<br>
-                <strong>7° Período:</strong> O Estudo da Avaliação Psicológica, Psicologia Fenomenológica Existencial, Técnicas de Exame Psicológico, Psicologia Organizacional e do Trabalho, Psicologia Hospitalar.<br>
-                <strong>8° Período:</strong> Psicologia e Políticas Públicas, Psicologia, Projeto de Pesquisa em Psicologia, Gênero e Sexualidade Humana, Neuropsicologia.
-            </p>
-        </div>
-
-        <input type="text" id="nomePsicologia" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('psicologia', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoPsicologia" onchange="paymentChanged('psicologia')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionPsicologia" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/0GMqECz.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$66,93</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('psicologia')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('psicologia')">Finalizar Compra</button>
-    </div>
-</div>
-
-<!-- Popup MedVet -->
-<div class="popup" id="popupMedvet">
-    <div class="popup-content">
-        <span class="close-btn" onclick="hidePopup('medvet')">&times;</span>
-        <h3 style="color: #1a237e;">Criador de Cronogramas - Medicina Veterinária UNESA</h3>
-        <p class="preco-valor">R$29,90 (Semestral)</p>
-        <p style="color: red; font-size: 0.9rem;">Qualquer atividade suspeita resultará na revogação da licença</p>
-
-        <div class="materias-container">
-            <p style="font-size: 0.9rem; color: #333;">
-                <strong>Cobertura:</strong> Até o 1º Período<br><br>
-                <strong>1° Período:</strong> Processos Bioquímicos e Biofísicos em Animais, Anatomia Estrutural Animal, Citologia e Embriologia Veterinária, Bioterismo e Bem-Estar Animal, Ecologia, Manejo e Conservação da Vida Silvestre.<br><br>
-                <strong>Observação:</strong> O cronograma é atualizado semestralmente com a inclusão de novos períodos e disciplinas. Fique atento às atualizações!
-            </p>
-        </div>
-
-        <input type="text" id="nomeMedvet" placeholder="Seu nome completo">
-        <select class="subscription-type" onchange="updatePrice('medvet', this.value)">
-            <option value="semestral">Assinatura Semestral</option>
-            <option value="vitalicio">Assinatura Vitalícia</option>
-        </select>
-        <select id="pagamentoMedvet" onchange="paymentChanged('medvet')">
-            <option value="">Selecione o pagamento</option>
-            <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-        </select>
-
-        <div id="pixSectionMedvet" style="display: none;">
-            <div id="qrcode">
-                <img src="https://i.imgur.com/CW1sizF.png" alt="QR Code PIX">
-            </div>
-            <div class="pix-info">
-                <p><strong>Nome:</strong> Thiago Ferreira Rodrigues</p>
-                <p><strong>Valor:</strong> R$29,90</p>
-            </div>
-            <button class="copy-btn" onclick="copiarPix('medvet')">
-                <i class="fas fa-copy"></i> Copiar Código PIX
-            </button>
-            <p style="margin-top: 1rem;">Clique em Finalizar Compra</p>
-        </div>
-        <button class="btn" style="margin-top: 1rem;" onclick="finalizarCompra('medvet')">Finalizar Compra</button>
-    </div>
-</div>
-		
-		
-
-	<p class="creator">Criado por Thiago F. Rodrigues</p>
-
-		<div class="video-section" id="video-section">
+        <div class="video-section" id="video-section">
             <h2 class="video-title">Conheça a Plataforma</h2>
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/T1c2tad4b3k" title="HealthScheduler" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -946,8 +954,6 @@
 		const courseSlug = selectedCourse === 'medvet' ? 'medvet' : selectedCourse;
 		window.location.href = `https://thiago.med.br/ferramentas/cronogramas/${courseSlug}/periodo${periodNumber}`;
 	}
-
-
 
         const pixCodes = {
             medicina: {
@@ -1131,6 +1137,11 @@
         function paymentChanged(curso) {
             const method = document.getElementById(`pagamento${capitalizeFirstLetter(curso)}`).value;
             document.getElementById(`pixSection${capitalizeFirstLetter(curso)}`).style.display = method === 'pix' ? 'block' : 'none';
+        }
+
+        function scrollToPrecos() {
+            const precosSection = document.getElementById('precos-section');
+            precosSection.scrollIntoView({ behavior: 'smooth' });
         }
 
     </script>
