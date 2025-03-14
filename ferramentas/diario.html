@@ -12,9 +12,15 @@
   <meta property="og:url" content="https://thiago.med.br">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Bootstrap CSS -->
   <script src="https://cdn.tiny.cloud/1/wnknc1eopnaayokad1axrsn0koq4pgrndxu8rhd7ozx5j9sg/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/blob-polyfill@7.0.20220408/Blob.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -566,6 +572,25 @@
     .pdf-item .remove-pdf:hover {
       opacity: 1;
     }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    
+    .btn-group .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-weight: 500;
+    }
+    
+    .btn-group .btn i {
+      font-size: 1.1em;
+    }
   </style>
 </head>
 <body class="light">
@@ -624,6 +649,7 @@
 
       <label for="relatorio">Relatório de Campo:</label>
       <textarea id="relatorio" name="relatorio" required></textarea>
+      <small class="text-muted d-block mt-1 mb-3">Dica: Para melhor formatação, use parágrafos curtos e evite espaçamentos excessivos. Você pode colar texto de outras fontes diretamente.</small>
 
       <label for="fotos">Anexar Fotos (máx. 6, atualmente <span id="imageCount">0</span>/6):</label>
       <input type="file" id="fotos" multiple accept="image/*" onchange="handleImageUpload(event)">
@@ -720,7 +746,8 @@
 
   <!-- Bibliotecas Externas -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
   <script src="https://cdn.jsdelivr.net/npm/blueimp-load-image@5.16.0/js/load-image.all.min.js"></script>
@@ -734,8 +761,33 @@
       selector: '#relatorio',
       height: 300,
       menubar: false,
-      plugins: 'lists',
+      plugins: 'lists paste autolink',
       toolbar: 'undo redo | bold italic underline | bullist numlist | alignleft aligncenter alignright alignjustify',
+      paste_as_text: false,
+      paste_enable_default_filters: true,
+      paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3,p,br',
+      paste_retain_style_properties: 'none',
+      paste_text_linebreaktype: 'p',
+      paste_remove_styles: true,
+      paste_remove_styles_if_webkit: true,
+      paste_strip_class_attributes: 'all',
+      browser_spellcheck: true,
+      contextmenu: false,
+      entity_encoding: 'raw',
+      forced_root_block: 'p',
+      init_instance_callback: function(editor) {
+        // Remove the required attribute from the hidden textarea
+        const textarea = document.getElementById('relatorio');
+        textarea.removeAttribute('required');
+        
+        // Prevent form submission
+        document.getElementById('diarioForm').addEventListener('submit', function(e) {
+          e.preventDefault(); // Prevent form submission
+          if (!editor.getContent().trim()) {
+            alert('Por favor, preencha o relatório.');
+          }
+        });
+      },
       setup: function(editor) {
         editor.on('init', function() {
           if (document.body.classList.contains('dark')) {
@@ -746,13 +798,35 @@
             editor.getBody().style.color = '#e9ecef';
           }
         });
+        
+        // Formatar texto colado automaticamente
+        editor.on('paste', function(e) {
+          setTimeout(function() {
+            const content = editor.getContent();
+            const formattedContent = content
+              .replace(/<p>\s*<\/p>/g, '') // Remove parágrafos vazios
+              .replace(/\n\s*\n/g, '\n') // Remove linhas em branco extras
+              .replace(/(<br\s*\/?>){3,}/gi, '<br /><br />'); // Limita quebras de linha consecutivas
+            editor.setContent(formattedContent);
+          }, 100);
+        });
+        
+        // Adicionar atalho para colar como texto simples
+        editor.addShortcut('ctrl+shift+v', 'Colar como texto', function() {
+          editor.execCommand('mceTogglePlainTextPaste');
+        });
       },
       content_style: `
+        body { font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; }
         body.dark { background-color: #1e1e1e; color: #e9ecef; }
+        p { margin: 0 0 0.75em 0; line-height: 1.5; }
+        ul, ol { margin-bottom: 0.75em; }
+        li { margin-bottom: 0.25em; }
       `
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // Remover o evento de carregamento do logo
+    document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('home').classList.remove('hidden');
       document.getElementById('create').classList.add('hidden');
       document.getElementById('attach').classList.add('hidden');
@@ -831,15 +905,36 @@
 			loadImage(
 			  file,
 			  (canvas) => {
-				canvas.toBlob((blob) => {
-				  const reader = new FileReader();
-				  reader.onload = () => resolve({
-					dataURL: reader.result,
-					format: blob.type === 'image/png' ? 'PNG' : 'JPEG'
-				  });
-				  reader.onerror = reject;
-				  reader.readAsDataURL(blob);
-				}, file.type);
+				try {
+				  // Redimensionar a imagem para um tamanho razoável
+				  const maxWidth = 800;
+				  const maxHeight = 600;
+				  let width = canvas.width;
+				  let height = canvas.height;
+				  
+				  if (width > maxWidth) {
+					height = (maxWidth / width) * height;
+					width = maxWidth;
+				  }
+				  
+				  if (height > maxHeight) {
+					width = (maxHeight / height) * width;
+					height = maxHeight;
+				  }
+				  
+				  // Criar um novo canvas com as dimensões ajustadas
+				  const resizedCanvas = document.createElement('canvas');
+				  resizedCanvas.width = width;
+				  resizedCanvas.height = height;
+				  const ctx = resizedCanvas.getContext('2d');
+				  ctx.drawImage(canvas, 0, 0, width, height);
+				  
+				  // Converter para dataURL
+				  const dataURL = resizedCanvas.toDataURL('image/jpeg', 0.8);
+				  resolve({ dataURL });
+				} catch (error) {
+				  reject(error);
+				}
 			  },
 			  {
 				orientation: true,
@@ -925,6 +1020,12 @@
     document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
     async function gerarPDF() {
+      // Verificar se a biblioteca pdfmake está carregada
+      if (typeof pdfMake === 'undefined') {
+        alert("Erro: A biblioteca pdfMake não foi carregada corretamente. Verifique sua conexão com a internet e recarregue a página.");
+        return;
+      }
+
       // Capturar os valores dos campos
       const nome = document.getElementById('nome').value.trim();
       const matricula = document.getElementById('matricula').value.trim();
@@ -934,157 +1035,356 @@
       const relatorio = tinymce.get('relatorio').getContent({ format: 'text' });
 
 	// Ajustar o título do professor
-      // Validação dos campos
-      let erros = [];
-      if (!nome) erros.push("Nome do Aluno");
-      if (!matricula) erros.push("Matrícula");
-      if (!data) erros.push("Data");
-      if (!local) erros.push("Local de Prática");
-      if (!professor || professor === "Selecione Professor(a)" || professor === "") erros.push("Professor(a)");
-      if (!relatorio) erros.push("Relatório de Campo");
-
-      if (erros.length > 0) {
-        alert("Por favor, preencha todos os campos obrigatórios: " + erros.join(", "));
-        return;
-      }
-
-      if (!window.jspdf || !window.jspdf.jsPDF) {
-        alert("Erro: A biblioteca jsPDF não foi carregada corretamente. Verifique sua conexão com a internet.");
-        return;
-      }
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const professorFormatado = professor.trim().toLowerCase() === "danielle cecato de almeida passes".toLowerCase() ? "Professora" : "Professor";
 
       // Formatar data para DD/MM/AAAA
-      const dataInput = document.getElementById('data').value;
-      const [ano, mes, dia] = dataInput.split('-');
+      const [ano, mes, dia] = data.split('-');
       const dataFormatada = `${dia}/${mes}/${ano}`;
 
-      // Página 1
-      doc.setFontSize(22);
-      doc.setFont("helvetica", "bold");
-      doc.text("DIÁRIO DE CAMPO", 105, 20, { align: "center" });
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setFont("helvetica", "italic");
-      doc.text("A seguir uma apresentação do relato de vivências.", 105, 30, { align: "center" });
-      doc.text(`Data: ${dataFormatada}`, 20, 30);
-      doc.setFont("helvetica", "normal");
-      doc.text("1. Informações institucionais;", 20, 40);
-      doc.text("2. Identificação e detalhes.", 20, 45);
-      doc.line(20, 50, 190, 50);
+      // Formatar o texto do relatório
+      const relatorioFormatado = relatorio
+        .replace(/\n{3,}/g, '\n\n')
+        .replace(/\t/g, '    ')
+        .trim();
 
-      // Seção Instituição com Logo
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("INSTITUIÇÃO", 20, 60);
-      const logoUrl = "https://i.imgur.com/c5JnMVK.png";
-      const logoWidth = 80;
-      const logoHeight = logoWidth / 5.33;
-      try {
-        doc.addImage(logoUrl, 'PNG', 17, 63, logoWidth, logoHeight);
+      // Processar imagens para o PDF
+      const imagensProcessadas = [];
+      if (selectedImages.length > 0) {
+        try {
+          for (let file of selectedImages.slice(0, 6)) {
+            const processed = await processImageForPDF(file);
+            imagensProcessadas.push({
+              image: processed.dataURL,
+              width: 80,
+              height: 80
+            });
+          }
       } catch (e) {
-        console.error("Erro ao carregar a logo:", e);
-        doc.text("(Logo não carregada)", 20, 70);
+          alert("Erro ao processar as imagens. Certifique-se de que são válidas.");
+          console.error(e);
+          return;
+        }
       }
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      const textY = 65 + logoHeight + 5;
-      doc.text("Universidade Unigranrio - Afya - Campus Barra da Tijuca", 20, textY);
-      doc.text("Av. Ayrton Senna, 2.200 – Barra da Tijuca, Rio de Janeiro - RJ, 22775-003", 20, textY + 5);
 
-      // Seção Identificação e Detalhes
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      const idY = textY + 15;
-      doc.text("IDENTIFICAÇÃO & DETALHES", 20, idY);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
-	  const professorFormatado = professor.trim().toLowerCase() === "danielle cecato de almeida passos".toLowerCase() ? "Professora" : "Professor";
-      const items = [
+      // Definir estrutura do documento
+      const docDefinition = {
+        pageSize: 'A4',
+        pageMargins: [40, 40, 40, 40],
+        defaultStyle: {
+          fontSize: 12
+        },
+        content: [
+          // Página 1
+          {
+            stack: [
+              {
+                text: 'DIÁRIO DE CAMPO',
+                style: 'header',
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: 'A seguir uma apresentação do relato de vivências.',
+                style: 'subheader',
+                alignment: 'center',
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: `Data: ${dataFormatada}`,
+                style: 'small',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: '1. Informações institucionais;',
+                style: 'small',
+                margin: [0, 0, 0, 5]
+              },
+              {
+                text: '2. Identificação e detalhes.',
+                style: 'small',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 }],
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: 'INSTITUIÇÃO',
+                style: 'sectionHeader',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: 'Universidade Unigranrio - Afya - Campus Barra da Tijuca',
+                style: 'small',
+                margin: [0, 0, 0, 5]
+              },
+              {
+                text: 'Av. Ayrton Senna, 2.200 – Barra da Tijuca, Rio de Janeiro - RJ, 22775-003',
+                style: 'small',
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: 'IDENTIFICAÇÃO & DETALHES',
+                style: 'sectionHeader',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                ul: [
         `Nome: ${nome}`,
         `Matrícula: ${matricula}`,
-        "Curso: Medicina",
-        "Turno: Integral",
-        "Semestre: 1° Semestre de 2025",
-        "Disciplina: IESC (Integração Ensino-Serviço-Comunidade)",
+                  'Curso: Medicina',
+                  'Turno: Integral',
+                  'Semestre: 1° Semestre de 2025',
+                  'Disciplina: IESC (Integração Ensino-Serviço-Comunidade)',
         `Local de Prática: ${local}`,
         `${professorFormatado}: ${professor}`
-      ];
-      let yPos = idY + 10;
-      items.forEach(item => {
-        doc.setFont("helvetica", "bold");
-        doc.text("•", 20, yPos);
-        doc.setFont("helvetica", "normal");
-        doc.text(item, 25, yPos);
-        yPos += 8;
-      });
-      doc.setFontSize(10);
-      doc.text("Página 01 (um)", 105, 290, { align: "center" });
+                ],
+                style: 'list',
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: 'Página 01 (um)',
+                style: 'footer',
+                alignment: 'center',
+                margin: [0, 20, 0, 0]
+              }
+            ],
+            pageBreak: 'after'
+          },
+          
+          // Página 2 (relatório)
+          {
+            stack: [
+              {
+                text: 'DIÁRIO DE CAMPO',
+                style: 'header',
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: `Data: ${dataFormatada}`,
+                style: 'small',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: 'TEXTO RELATORIAL',
+                style: 'sectionHeader',
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                canvas: [
+                  {
+                    type: 'rect',
+                    x: 0,
+                    y: 0,
+                    w: 515,
+                    h: 600,
+                    lineWidth: 1,
+                    lineColor: '#000000'
+                  }
+                ],
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: relatorioFormatado,
+                style: 'paragraph',
+                margin: [10, -580, 10, 0]
+              },
+              {
+                text: 'Página 02 (dois)',
+                style: 'footer',
+                alignment: 'center',
+                margin: [0, 20, 0, 0]
+              }
+            ],
+            pageBreak: imagensProcessadas.length > 0 ? 'after' : undefined
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 22,
+            bold: true,
+            margin: [0, 0, 0, 10]
+          },
+          subheader: {
+            fontSize: 12,
+            margin: [0, 0, 0, 5]
+          },
+          sectionHeader: {
+            fontSize: 14,
+            bold: true,
+            margin: [0, 0, 0, 10]
+          },
+          paragraph: {
+            fontSize: 12,
+            lineHeight: 1.5,
+            alignment: 'justify'
+          },
+          small: {
+            fontSize: 10
+          },
+          list: {
+            fontSize: 12,
+            lineHeight: 1.3
+          },
+          footer: {
+            fontSize: 10,
+            margin: [0, 20, 0, 0]
+          }
+        }
+      };
 
-      // Página 2
-      doc.addPage();
-      doc.setFontSize(22);
-      doc.setFont("helvetica", "bold");
-      doc.text("DIÁRIO DE CAMPO", 105, 20, { align: "center" });
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Data: ${dataFormatada}`, 20, 30);
-      doc.setFont("helvetica", "italic");
-      doc.text("A seguir uma apresentação do relato de vivências.", 105, 40, { align: "center" });
-      doc.setFont("helvetica", "normal");
-      doc.text("1. 1 (um) texto relatorial", 20, 50);
-      if (selectedImages.length > 0) {
-        doc.text("2. Fotografias da atividade.", 20, 55);
+      // Se houver imagens, adicionar uma terceira página
+      if (imagensProcessadas.length > 0) {
+        // Criar tabela para as imagens (até 3 por linha)
+        const rows = [];
+        let currentRow = [];
+        
+        for (let i = 0; i < imagensProcessadas.length; i++) {
+          currentRow.push(imagensProcessadas[i]);
+          
+          if (currentRow.length === 3 || i === imagensProcessadas.length - 1) {
+            while (currentRow.length < 3) {
+              currentRow.push({});
+            }
+            rows.push(currentRow);
+            currentRow = [];
+          }
+        }
+        
+        docDefinition.content.push(
+          {
+            stack: [
+              {
+                text: 'DIÁRIO DE CAMPO',
+                style: 'header',
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: `Data: ${dataFormatada}`,
+                style: 'small',
+                margin: [0, 0, 0, 10]
+              },
+              {
+                text: 'FOTOGRAFIAS DA ATIVIDADE',
+                style: 'sectionHeader',
+                alignment: 'center',
+                margin: [0, 0, 0, 20]
+              },
+              {
+                table: {
+                  widths: ['*', '*', '*'],
+                  body: rows
+                },
+                layout: 'noBorders',
+                margin: [0, 0, 0, 20]
+              },
+              {
+                text: 'Página 03 (três)',
+                style: 'footer',
+                alignment: 'center',
+                margin: [0, 20, 0, 0]
+              }
+            ]
+          }
+        );
       }
-      doc.line(20, 60, 190, 60);
 
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("TEXTO RELATORIAL", 105, 70, { align: "center" });
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
-      const relatorioLinhas = doc.splitTextToSize(relatorio, 170);
-      doc.text(relatorioLinhas, 20, 80);
-      doc.rect(20, 75, 170, 130);
-
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      if (selectedImages.length > 0) {
-        doc.text("Fotografias produzidas durante a atividade:", 20, 215);
-      }
-      let x = 20;
-      const y = 225;
-		if (selectedImages.length > 0) {
-		  try {
-			for (let file of selectedImages.slice(0, 6)) {
-			  const processed = await processImageForPDF(file);
-			  doc.addImage(
-				processed.dataURL,
-				processed.format,
-				x, y,
-				30, 30
-			  );
-			  x += 35;
-			  if (x > 170) break;
-			}
-		  } catch (e) {
-			alert("Erro ao processar as imagens. Certifique-se de que são válidas.");
-			console.error(e);
-			return;
-		  }
-		}
-
-      doc.setFontSize(10);
-      doc.text("Página 02 (dois)", 105, 290, { align: "center" });
-		const dataInput2 = document.getElementById('data').value;
-		const [ano2, mes2, dia2] = dataInput2.split('-');
-		const dataFormatada2 = `${dia2}-${mes2}-${ano2}`; // Usa '-' ao invés de '/'
-
-		doc.save(`Diário de Campo - ${dataFormatada2}.pdf`);
+      // Gerar o PDF
+      const dataFormatada2 = `${dia}-${mes}-${ano}`; // Usa '-' ao invés de '/'
+      const fileName = `Diário de Campo - ${dataFormatada2}.pdf`;
+      
+      try {
+        // Criar um indicador de carregamento
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'alert alert-info mt-3';
+        loadingIndicator.textContent = 'Gerando PDF... Por favor, aguarde.';
+        document.getElementById('diarioForm').appendChild(loadingIndicator);
+        
+        // Gerar o PDF
+        const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+        
+        // Criar container para os botões
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'btn-group mt-3 d-flex gap-2';
+        document.getElementById('diarioForm').appendChild(buttonContainer);
+        
+        // Botão para visualizar o PDF
+        const viewButton = document.createElement('button');
+        viewButton.className = 'btn btn-primary';
+        viewButton.innerHTML = '<i class="fas fa-eye"></i> Visualizar PDF';
+        viewButton.onclick = function() {
+          pdfDocGenerator.open({}, window);
+        };
+        buttonContainer.appendChild(viewButton);
+        
+        // Botão para download direto
+        const downloadButton = document.createElement('button');
+        downloadButton.className = 'btn btn-success';
+        downloadButton.innerHTML = '<i class="fas fa-download"></i> Baixar PDF';
+        downloadButton.onclick = function() {
+          try {
+            pdfDocGenerator.download(fileName);
+          } catch (downloadError) {
+            console.error('Erro ao fazer download:', downloadError);
+            alert('Não foi possível fazer o download automático. O PDF será aberto em uma nova janela, você pode salvá-lo de lá.');
+            pdfDocGenerator.open({}, window);
+          }
+        };
+        buttonContainer.appendChild(downloadButton);
+        
+        // Remover o indicador de carregamento após um tempo
+        setTimeout(() => {
+          if (document.contains(loadingIndicator)) {
+            loadingIndicator.remove();
+          }
+          // Adicionar mensagem de sucesso
+          const successMessage = document.createElement('div');
+          successMessage.className = 'alert alert-success mt-3';
+          successMessage.textContent = 'PDF gerado com sucesso! Você pode visualizá-lo ou baixá-lo usando os botões acima.';
+          document.getElementById('diarioForm').appendChild(successMessage);
+          
+          // Remover mensagem de sucesso após 5 segundos
+          setTimeout(() => {
+            if (document.contains(successMessage)) {
+              successMessage.remove();
+            }
+          }, 5000);
+          
+          // Mostrar feedback
 		showFeedbackWithDelay();
-
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Erro ao gerar o PDF:', error);
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'alert alert-danger mt-3';
+        errorMessage.innerHTML = `
+          <strong>Erro ao gerar o PDF</strong><br>
+          Por favor, tente novamente. Se o problema persistir:
+          <ul class="mb-0">
+            <li>Verifique sua conexão com a internet</li>
+            <li>Tente usar um navegador diferente</li>
+            <li>Certifique-se de que não há bloqueadores de pop-up ativos</li>
+          </ul>
+        `;
+        document.getElementById('diarioForm').appendChild(errorMessage);
+        
+        // Remover o indicador de carregamento em caso de erro
+        const loadingIndicator = document.querySelector('.alert-info');
+        if (loadingIndicator && document.contains(loadingIndicator)) {
+          loadingIndicator.remove();
+        }
+        
+        // Remover mensagem de erro após 10 segundos
+        setTimeout(() => {
+          if (document.contains(errorMessage)) {
+            errorMessage.remove();
+          }
+        }, 10000);
+      }
     }
 
     function readFileAsDataURL(file) {
@@ -1230,16 +1530,41 @@
         return;
       }
 
+      try {
+        // Certifique-se de que a biblioteca PDF-LIB está disponível
+        const PDFLib = window.PDFLib || window.pdfjsLib;
+        if (!PDFLib) {
+          alert('Erro: A biblioteca PDF-LIB não foi carregada corretamente. Verifique sua conexão com a internet.');
+        return;
+      }
+
       const { PDFDocument } = PDFLib;
       const mergedPdf = await PDFDocument.create();
       
-      try {
+        // Mostrar indicador de progresso
+        const preview = document.getElementById('pdfPreview');
+        const progressDiv = document.createElement('div');
+        progressDiv.className = 'alert alert-info';
+        progressDiv.textContent = 'Combinando PDFs... Por favor, aguarde.';
+        preview.appendChild(progressDiv);
+        
         for (const pdfInfo of selectedPDFs) {
+          try {
           const pdfBytes = await pdfInfo.file.arrayBuffer();
           const pdf = await PDFDocument.load(pdfBytes);
           const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
           copiedPages.forEach((page) => mergedPdf.addPage(page));
+            
+            // Atualizar progresso
+            progressDiv.textContent = `Processando: ${pdfInfo.name}`;
+          } catch (error) {
+            console.error(`Erro ao processar o PDF ${pdfInfo.name}:`, error);
+            // Continuar com o próximo PDF
+          }
         }
+        
+        // Remover indicador de progresso
+        preview.removeChild(progressDiv);
         
         const mergedPdfFile = await mergedPdf.save();
         const blob = new Blob([mergedPdfFile], { type: 'application/pdf' });
@@ -1252,6 +1577,8 @@
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+        
+        alert('PDFs combinados com sucesso!');
       } catch (error) {
         console.error('Erro ao combinar PDFs:', error);
         alert('Ocorreu um erro ao combinar os PDFs. Por favor, tente novamente.');
