@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais Didáticos - Thiago F. Rodrigues</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --light-text: #666;
+            --bg-color: #f8f9fa;
+            --card-bg: #fff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .materials {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+        
+        .material-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .material-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .card-description {
+            margin-bottom: 1.5rem;
+            color: var(--light-text);
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+        
+        .card-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .meta-item i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .materials {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Materiais Didáticos</h1>
+        <p>Criado por Thiago F. Rodrigues</p>
+    </header>
+    
+    <div class="container">
+        <div class="materials" id="materials-container">
+            <!-- Os cards serão inseridos aqui via JavaScript -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Thiago F. Rodrigues - Todos os direitos reservados</p>
+    </footer>
+    
+    <script>
+        // Dados dos materiais
+        const materials = [
+            {
+                title: "Material de APGs - Sistemas Organicos Integrados",
+                description: "Material didático e detalhado para APG em Medicina nas instituições AFYA, seguindo a Metodologia PBL. Atualizado frequentemente, cobre todos os sistemas de SOI. Criado para auxiliar colegas estudantes.",
+                author: "Thiago F. Rodrigues",
+                cover: "https://i.imgur.com/MepC57X.png",
+                orientation: "vertical",
+                pages: 192,
+                downloadLink: "https://download1474.mediafire.com/llbg21iqcangInm_8zEg6-VN0NHnpgVz-ebGm6Q5mZZ8XBInh3RnfzQsF5k_BZ1kPokf3iX-ZZXle_TdaNPJ__b8mtySZ-vLAV8KSqd5i-56hP2PCLw0T7eEfZv0BGKqtkP-uQmgWZ0ALcbfoaxAV2BKA0wOVxaEXjwawSebfgXoOw/vh9761hzwnrohwn/Material+APGs+-+SOI+-+Criado+por+Thiago+F+Rodrigues.pdf",
+                size: "2.09MB"
+            },
+            {
+                title: "Material de Sistema Cardiovascular - Anatomia Orgânica & Ilustrativa",
+                description: "Material didático visual que apresenta a anatomia humana de forma detalhada e acessível. Com ilustrações e vistas anatômicas do coração, vasos sanguíneos e membros superiores, inclui gabaritos e abreviações para facilitar o aprendizado. Ideal para quem quer perder o medo de anatomia.",
+                author: "Thiago F. Rodrigues",
+                cover: "https://i.imgur.com/6uZgZhJ.png",
+                orientation: "horizontal",
+                pages: 32,
+                downloadLink: "https://download854.mediafire.com/nle7xwqtl9ug60D2BtbY_aJLd8iXcV7ZKaem_qzrA2YszaQI5h3KOJ0E9Ib1Uq4Qti_SEdWxsqlkz5kVluqUBABLEHNtbRXU-0ZiHuLUS3py7Q7Wo2iyhscePtZPCzjoPYfKONJGv9LMIoC-Gjf8isXqfXf3YyJVOQjqhqk_q9ZAnA/umsfcknspucvmho/Material+-+ANATOMIA+ORG%C3%82NICA+E+ILUSTRATIVA+-+Thiago+F+Rodrigues.pdf",
+                size: "12.56MB"
+            },
+            {
+                title: "Material de Sistema Cardiovascular - Fisiologia e Características Anatômicas",
+                description: "Material didático completo que explora as características anatômicas a e a fisiologia do sistema cardiovascular. Apresenta tabelas detalhadas e aborda a hemodinâmica, eletrofisiologia e a relação entre anatomia e função. Inclui questões de fixação e aplicadas ao contexto clínico, reforçando a compreensão e a correlação entre teoria e prática.",
+                author: "Thiago F. Rodrigues",
+                cover: "https://i.imgur.com/lz9kLJR.png",
+                orientation: "vertical",
+                pages: 33,
+                downloadLink: "https://download1591.mediafire.com/cmdsf5qzdovgPSG0qJWr7lkf1zc3oytObuc9X_ioXoLrWrdP1SBA0RX3R4vh_FTM-CY0FZ07HeKZOMfScRdeUCt3QwPB5Gf8GtC0miCxZGJBUAmIT5-K34uo2zYWJIKuX0hCL4DmmTZRjFPM2jtA6zhznSyiT6lJ4Tkq0B6zqdnZGA/idyatd0tzrhp05q/Material+-+Estudo+Cardiovascular-+Por+Thiago+F+Rodrigues.pdf",
+                size: "4.02MB"
+            },
+            {
+                title: "Material - Os Potenciais de Ação e o Eletrocardiograma",
+                description: "Este material explora detalhadamente a eletrofisiologia cardíaca, abordando a polarização, despolarização e repolarização das células cardíacas, com ênfase no papel dos íons Na+, K+, Ca2+ e Cl-. São explicadas as funções do sistema de condução cardíaco, incluindo os nós SA e AV, o feixe de His e as fibras de Purkinje. O conteúdo também trata das principais características do ECG, como derivações, triângulo de Einthoven e interpretação do traçado, sendo essencial para estudantes e profissionais da saúde que buscam aprofundar seus conhecimentos sobre a eletrofisiologia cardíaca e diagnóstico clínico de arritmias.",
+                author: "Thiago F. Rodrigues",
+                cover: "https://i.imgur.com/ajTu5mE.png",
+                orientation: "horizontal",
+                pages: 13,
+                downloadLink: "https://download1478.mediafire.com/ke7pox1bogyguAJW0qNpuD_CDCapeIgBvGnSqvHL2kWTL0JtNsd9Rq5IajNzTO79lMgZbl_k-_pvuuIFlt1kD9biO-yb0yJvEaG0dbU2ms2tIS3MV0Uve_DDIOYC24CmqbS0Tl_x-TYByzFly-aQD4-SNxwPO5XExWEqWLFbCuUx0A/ldnr6n95r15e62w/Os+Potenciais+de+A%C3%A7%C3%A3o+e+o+Eletrocardiograma+RODRIGUES%2C+THIAGO+F..pdf",
+                size: "3.59MB"
+            }
+        ];
+        
+        // Função para renderizar os materiais
+        function renderMaterials() {
+            const container = document.getElementById('materials-container');
+            
+            materials.forEach(material => {
+                const card = document.createElement('div');
+                card.className = 'material-card';
+                
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${material.cover}" alt="${material.title}">
+                        <span class="badge">${material.orientation === 'vertical' ? 'A4 Vertical' : 'A4 Horizontal'}</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${material.title}</h3>
+                        <div class="card-description">${material.description}</div>
+                        <div class="card-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-user"></i>
+                                <span>${material.author}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-file-alt"></i>
+                                <span>${material.pages} páginas</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-weight-hanging"></i>
+                                <span>${material.size}</span>
+                            </div>
+                        </div>
+                        <a href="${material.downloadLink}" class="download-btn" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Carregar materiais quando a página estiver carregada
+        document.addEventListener('DOMContentLoaded', renderMaterials);
+    </script>
+</body>
+</html>
