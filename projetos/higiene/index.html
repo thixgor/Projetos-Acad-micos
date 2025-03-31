@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Heróis da Higiene</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Tela inicial -->
+        <div id="splash-screen" class="screen active">
+            <div class="splash-animation">
+                <div class="logo-container">
+                    <img src="https://i.imgur.com/qgMvhTs.png" alt="Super Heróis da Higiene" class="game-logo">
+                    <h1>SUPER HERÓIS</h1>
+                    <h2>DA HIGIENE</h2>
+                </div>
+                <div class="splash-bubbles">
+                    <div class="bubble b1"></div>
+                    <div class="bubble b2"></div>
+                    <div class="bubble b3"></div>
+                    <div class="bubble b4"></div>
+                    <div class="bubble b5"></div>
+                </div>
+            </div>
+            <button id="start-button" class="btn pulse-effect">JOGAR AGORA!</button>
+            <div class="credits">
+                <p>Um projeto da turma de 1º período de Medicina da Unigranrio Barra</p>
+                <div class="toggle-credits">Ver Equipe +</div>
+                <div class="credits-details">
+                    <p>Thiago Ferreira. Rodrigues, João Henrique Lemos, Maria Victoria Monteiro Maria, Júlia Rodrigues, Lucas Mattos, Gustavo Gonçalves, Joaquim Henrique, Maria Rita Assunção, Larissa Bastos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seleção de personagem -->
+        <div id="character-select" class="screen">
+            <h2>ESCOLHA SEU SUPER-HERÓI</h2>
+            <div class="hero-select-container">
+                <div class="hero-card" data-hero="boy">
+                    <div class="hero-img boy"></div>
+                    <div class="hero-info">
+                        <h3>CAPITÃO LIMPEZA</h3>
+                        <div class="hero-powers">
+                            <span>SUPER FORÇA</span>
+                            <span>VISÃO DE GERMES</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-card" data-hero="girl">
+                    <div class="hero-img girl"></div>
+                    <div class="hero-info">
+                        <h3>DOUTORA HIGIENE</h3>
+                        <div class="hero-powers">
+                            <span>VELOCIDADE</span>
+                            <span>ESCUDO ANTIBACTERIANO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hub central do jogo -->
+        <div id="game-hub" class="screen">
+            <div class="hub-header">
+                <div class="player-info">
+                    <div id="player-avatar"></div>
+                    <div class="player-stats">
+                        <div id="player-name">SUPER-HERÓI</div>
+                        <div class="power-bar">
+                            <div class="power-label">PODER</div>
+                            <div class="power-track">
+                                <div id="power-level"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hub-mission">
+                    <div class="mission-title">MISSÃO: SALVAR A ESCOLA DOS GERMES</div>
+                </div>
+            </div>
+            
+            <div class="city-map">
+                <div class="map-background"></div>
+                
+                <div class="location-marker bathroom" data-location="bathroom">
+                    <div class="location-icon"></div>
+                    <div class="location-alert pulse-danger">!</div>
+                    <div class="location-label">BANHEIRO</div>
+                </div>
+                
+                <div class="location-marker classroom" data-location="classroom">
+                    <div class="location-icon"></div>
+                    <div class="location-alert pulse-danger">!</div>
+                    <div class="location-label">SALA DE AULA</div>
+                </div>
+                
+                <div class="location-marker cafeteria" data-location="cafeteria">
+                    <div class="location-icon"></div>
+                    <div class="location-alert pulse-danger">!</div>
+                    <div class="location-label">REFEITÓRIO</div>
+                </div>
+                
+                <div class="location-marker playground" data-location="playground">
+                    <div class="location-icon"></div>
+                    <div class="location-alert pulse-danger">!</div>
+                    <div class="location-label">PÁTIO</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container de jogos -->
+        <div id="game-arena" class="screen">
+            <div class="game-header">
+                <button id="exit-game" class="btn-small">VOLTAR</button>
+                <div id="game-title">MISSÃO EM ANDAMENTO</div>
+                <div id="game-timer">
+                    <div class="timer-bar">
+                        <div class="timer-progress"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="game-content"></div>
+            
+            <div class="game-controls">
+                <button id="game-action" class="btn">INICIAR</button>
+            </div>
+        </div>
+
+        <!-- Tela de Sucesso da Missão -->
+        <div id="mission-complete" class="screen">
+            <div class="result-animation">
+                <div class="victory-badge"></div>
+                <div class="confetti-container">
+                    <div class="confetti c1"></div>
+                    <div class="confetti c2"></div>
+                    <div class="confetti c3"></div>
+                    <div class="confetti c4"></div>
+                    <div class="confetti c5"></div>
+                    <div class="confetti c6"></div>
+                    <div class="confetti c7"></div>
+                    <div class="confetti c8"></div>
+                </div>
+            </div>
+            
+            <h2>MISSÃO COMPLETA!</h2>
+            <div class="power-gained">
+                <span>+</span><span id="power-gained">25</span><span>% DE PODER</span>
+            </div>
+            
+            <div class="mission-card">
+                <div class="mission-icon"></div>
+                <div class="mission-fact">
+                    <h3>VOCÊ SABIA?</h3>
+                    <p id="hygiene-fact"></p>
+                </div>
+            </div>
+            
+            <button id="continue-button" class="btn">CONTINUAR</button>
+        </div>
+
+        <!-- Tela de Falha da Missão -->
+        <div id="mission-failed" class="screen">
+            <div class="result-animation">
+                <div class="failure-animation"></div>
+            </div>
+            
+            <h2>MISSÃO FALHOU!</h2>
+            <p class="try-again-text">Os germes são muitos! Tente novamente!</p>
+            
+            <div class="retry-card">
+                <p>Dica: <span id="failure-tip"></span></p>
+            </div>
+            
+            <button id="retry-button" class="btn">TENTAR DE NOVO</button>
+        </div>
+
+        <!-- Tela de vitória final -->
+        <div id="game-victory" class="screen">
+            <div class="victory-content">
+                <h1>PARABÉNS!</h1>
+                <p>Você completou todas as missões e se tornou um verdadeiro defensor da higiene!</p>
+                
+                <div class="hero-victory boy"></div>
+                <h2>Seu nível: <span id="hero-level">VETERANO</span></h2>
+                
+                <div id="game-stats-container" class="stats-container">
+                    <!-- Aqui serão exibidas as estatísticas do jogo -->
+                </div>
+                
+                <p>Agora você sabe como combater germes e manter-se saudável na escola!</p>
+                <button id="play-again" class="btn-primary">JOGAR NOVAMENTE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html> 
