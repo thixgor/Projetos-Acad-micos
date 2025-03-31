@@ -190,8 +190,10 @@ p {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -15px); }
+    50% { transform: translate(-5px, 10px); }
+    75% { transform: translate(-10px, -10px); }
 }
 
 @keyframes rotate {
@@ -333,6 +335,11 @@ p {
     cursor: pointer;
     z-index: 2;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.location-marker:active {
+    transform: scale(0.95);
 }
 
 .location-marker:hover {
@@ -356,23 +363,23 @@ p {
 }
 
 .location-marker.bathroom {
-    top: 20%;
-    left: 20%;
+    top: 15%;
+    left: 15%;
 }
 
 .location-marker.classroom {
-    top: 25%;
-    right: 20%;
+    top: 15%;
+    right: 15%;
 }
 
 .location-marker.cafeteria {
-    bottom: 25%;
-    left: 25%;
+    bottom: 15%;
+    left: 15%;
 }
 
 .location-marker.playground {
-    bottom: 20%;
-    right: 25%;
+    bottom: 15%;
+    right: 15%;
 }
 
 .location-marker.bathroom .location-icon {
@@ -425,16 +432,17 @@ p {
 }
 
 .location-label {
-    margin-top: 10px;
+    margin-top: 8px;
     background-color: white;
     color: var(--dark-color);
-    padding: 8px 15px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
     box-shadow: var(--shadow-light);
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 /* Container de Jogos */
@@ -493,7 +501,7 @@ p {
 }
 
 .game-controls {
-    padding: 15px;
+    padding: 15px 0;
     background-color: white;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -954,13 +962,14 @@ p {
     display: block;
     width: 100%;
     text-align: left;
-    padding: 12px 20px;
-    margin: 8px 0;
+    padding: 15px 12px;
+    margin: 10px 0;
     background-color: #f8f9fa;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    touch-action: manipulation;
 }
 
 .quiz-option:hover {
@@ -1149,10 +1158,10 @@ p {
         height: 80px;
     }
 
-    .location-marker .location-icon {
-        width: 60px;
-        height: 60px;
-        border-width: 2px;
+    .location-marker {
+        min-width: 80px;
+        min-height: 80px;
+        padding: 10px;
     }
     
     .location-alert {
@@ -1161,6 +1170,57 @@ p {
         font-size: 14px;
         top: -3px;
         right: -3px;
+    }
+
+    .location-marker.bathroom {
+        top: 10%;
+        left: 10%;
+    }
+
+    .location-marker.classroom {
+        top: 10%;
+        right: 10%;
+    }
+
+    .location-marker.cafeteria {
+        bottom: 10%;
+        left: 10%;
+    }
+
+    .location-marker.playground {
+        bottom: 10%;
+        right: 10%;
+    }
+    
+    .location-label {
+        margin-top: 8px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        white-space: nowrap;
+    }
+    
+    .btn, .btn-primary {
+        min-height: 44px;
+        font-size: 1rem;
+    }
+    
+    .game-controls {
+        padding: 15px 0;
+    }
+    
+    #game-action {
+        width: 80%;
+        max-width: 250px;
+    }
+
+    .quiz-option {
+        padding: 15px 12px;
+        min-height: 44px;
+        margin: 10px 0;
+    }
+    
+    .tooth, .memory-card, .catch-arena, .quiz-option {
+        touch-action: manipulation;
     }
 }
 
@@ -1795,5 +1855,356 @@ p {
     
     #hero-level {
         font-size: 1.3rem;
+    }
+}
+
+/* Estilos para o jogo de bolhas */
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -15px); }
+    50% { transform: translate(-5px, 10px); }
+    75% { transform: translate(-10px, -10px); }
+}
+
+/* Estilos específicos para o jogo de escovação de dentes */
+.toothbrush-game {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mouth-arena {
+    flex-grow: 1;
+    position: relative;
+    background-color: #f9aebc;
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 300px;
+    border: 8px solid #e57373;
+}
+
+.toothbrush {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    cursor: none;
+    z-index: 10;
+    pointer-events: none;
+    transform: rotate(45deg);
+    touch-action: none;
+}
+
+.teeth-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    background: rgba(255, 192, 203, 0.7);
+    border-radius: 40% 40% 60% 60%;
+    padding: 30px 20px 40px 20px;
+}
+
+.tooth {
+    aspect-ratio: 1;
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 50% 50% 35% 35%;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 -4px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    touch-action: manipulation;
+}
+
+.tooth::after {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    left: 25%;
+    width: 50%;
+    height: 15%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+}
+
+.tooth.dirty::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill="%23936639" opacity="0.6"><circle cx="30" cy="30" r="4"/><circle cx="60" cy="20" r="6"/><circle cx="80" cy="40" r="5"/><circle cx="20" cy="60" r="7"/><circle cx="40" cy="80" r="4"/><circle cx="70" cy="70" r="6"/></g></svg>');
+    background-size: cover;
+    border-radius: inherit;
+    opacity: calc(0.6 + var(--random-dirt) * 0.4);
+}
+
+.tooth.clean {
+    animation: clean 0.5s ease-out;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    box-shadow: 0 2px 10px rgba(0, 191, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.03);
+}
+
+@keyframes clean {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.1); filter: brightness(1.3); }
+    100% { transform: scale(1); filter: brightness(1.1); }
+}
+
+/* Estilos para o jogo de quiz */
+.quiz-game {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.quiz-question {
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    gap: 10px;
+}
+
+.quiz-option {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: all 0.2s;
+    border-left: 5px solid #c9c9c9;
+}
+
+.quiz-option:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-option:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.quiz-option.correct {
+    background-color: #4caf50;
+    color: white;
+    border-left-color: #2e7d32;
+    animation: pulse 0.5s;
+}
+
+.quiz-option.wrong {
+    background-color: #f44336;
+    color: white;
+    border-left-color: #c62828;
+    animation: shake 0.5s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 768px) {
+    /* Ajustes gerais para mobile */
+    body {
+        font-size: 16px;
+    }
+    
+    .game-container {
+        padding: 10px;
+        height: calc(100vh - 120px);
+    }
+    
+    .mission-header {
+        padding: 10px;
+    }
+    
+    .mission-title {
+        font-size: 1.3rem;
+    }
+    
+    /* Layout do mapa para mobile */
+    .map-container {
+        zoom: 1.2;
+        touch-action: manipulation;
+    }
+    
+    /* Aumentar tamanho dos marcadores para facilitar toque */
+    .location-marker {
+        min-width: 40px;
+        min-height: 40px;
+        transform: translate(-50%, -50%);
+        transition: transform 0.2s, filter 0.2s;
+    }
+    
+    .location-marker:active {
+        transform: translate(-50%, -50%) scale(1.2);
+        filter: brightness(1.2);
+    }
+    
+    /* Ajustes para o jogo de escovação de dentes em mobile */
+    .teeth-container {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 25px 15px 35px 15px;
+        width: 95%;
+    }
+    
+    .tooth {
+        min-width: 30px;
+        min-height: 30px;
+    }
+    
+    .tooth::after {
+        bottom: 8%;
+        height: 12%;
+    }
+    
+    /* Ajustes para o jogo de quiz em mobile */
+    .quiz-question {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .quiz-options {
+        gap: 8px;
+    }
+    
+    .quiz-option {
+        padding: 12px;
+        font-size: 0.95rem;
+        min-height: 48px; /* área mínima para toque */
+    }
+    
+    /* Estatísticas e instruções do jogo */
+    .game-stats {
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .game-instructions {
+        padding: 8px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* Tela de vitória para mobile */
+    .victory-screen {
+        padding: 15px;
+    }
+    
+    .stats-container {
+        padding: 12px;
+        margin: 10px 0;
+    }
+    
+    .game-stat-item {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    /* Botão principal mais fácil de tocar */
+    .btn-primary {
+        padding: 12px 20px;
+        font-size: 1rem;
+        min-height: 50px;
+        border-radius: 25px;
+    }
+}
+
+/* Estilos para dispositivos com tela muito pequena */
+@media (max-width: 480px) {
+    /* Ajustes para telas muito pequenas */
+    .game-container {
+        padding: 8px;
+        height: calc(100vh - 100px);
+    }
+    
+    .mission-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Garantir que os elementos do jogo fiquem visíveis */
+    .teeth-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    
+    /* Aumentar ainda mais os marcadores para telas pequenas */
+    .location-marker {
+        min-width: 50px;
+        min-height: 50px;
+    }
+    
+    /* Melhorar instrução de jogo para telas pequenas */
+    .game-instructions {
+        padding: 6px;
+        font-size: 0.85rem;
+    }
+    
+    /* Ajustes para tela de vitória */
+    .victory-screen h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Melhorias para toque em dispositivos móveis */
+@media (hover: none) {
+    .location-marker {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    
+    .quiz-option {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    
+    /* Feedback visual para toque */
+    .tooth:active, 
+    .bubble:active, 
+    .quiz-option:active {
+        opacity: 0.8;
+        transform: scale(0.98);
     }
 } 
