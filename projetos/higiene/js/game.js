@@ -1020,7 +1020,10 @@ function resetGame() {
 
 // Função para detectar se o dispositivo é móvel
 function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+           || window.innerWidth <= 768 
+           || ('ontouchstart' in window) 
+           || (navigator.maxTouchPoints > 0);
 }
 
 // Ajustar dificuldade com base no dispositivo
@@ -1045,151 +1048,244 @@ function initBubblePopGame() {
     const gameContent = document.getElementById('game-content');
     const isMobile = isMobileDevice();
     
+    console.log("Inicializando jogo de bolhas. Mobile: ", isMobile);
+    
     bubblesPopped = 0;
     totalBubbles = 0;
+    
+    // Limpar eventos anteriores
+    if (bubbleInterval) {
+        clearInterval(bubbleInterval);
+        bubbleInterval = null;
+    }
     
     gameContent.innerHTML = `
         <div class="bubble-game">
             <div class="score-counter">Germes Eliminados: <span>${bubblesPopped}</span>/${mission.targetBubbles}</div>
+            <div class="game-instructions">
+                <p>${isMobile ? 'Toque nas bolhas' : 'Clique nas bolhas'} para destruir os germes!</p>
+            </div>
             <div class="bubble-container"></div>
         </div>
     `;
     
     // Estilo para o jogo de bolhas
     const style = document.createElement('style');
+    style.id = 'bubble-game-style';
     style.innerHTML = `
         .bubble-game {
             width: 100%;
             height: 100%;
             position: relative;
             overflow: hidden;
+            touch-action: none;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
         }
         
         .score-counter {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            position: relative;
             background-color: rgba(255, 255, 255, 0.9);
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 20px;
             font-weight: bold;
             z-index: 100;
-            font-size: ${isMobile ? '1.1em' : '1em'};
+            font-size: ${isMobile ? '1.3em' : '1.1em'};
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .game-instructions {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
         }
         
         .bubble-container {
+            flex-grow: 1;
             width: 100%;
-            height: 100%;
+            min-height: 250px;
             position: relative;
-            background-color: rgba(240, 248, 255, 0.8);
+            background-color: rgba(240, 248, 255, 0.7);
             border-radius: 10px;
             overflow: hidden;
             touch-action: none;
         }
-        
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background-color: var(--danger-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            overflow: hidden;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-            animation: float 8s infinite alternate ease-in-out;
-            user-select: none;
-            touch-action: none;
-            min-width: ${isMobile ? '60px' : '40px'};
-            min-height: ${isMobile ? '60px' : '40px'};
-        }
-        
-        .bubble::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 30%;
-            height: 30%;
-            background-color: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-        }
-        
-        .bubble.clicked {
-            transform: scale(0);
-            opacity: 0;
-            transition: all 0.3s ease-out;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(10px, 10px); }
-        }
-
-        @media (max-width: 768px) {
-            .score-counter {
-                padding: 10px 20px;
-                font-size: 1.2em;
-            }
-            
-            .bubble {
-                min-width: 60px;
-                min-height: 60px;
-            }
-        }
     `;
+    
+    // Remover estilos antigos se existirem
+    const oldStyle = document.getElementById('bubble-game-style');
+    if (oldStyle) oldStyle.remove();
+    
     document.head.appendChild(style);
     
+    const container = document.querySelector('.bubble-container');
+    
+    // Eventos para contêiner que podem impedir interações
+    container.addEventListener('touchmove', function(e) {
+        e.preventDefault(); // Impedir scroll durante o jogo
+    }, { passive: false });
+    
+    // Função para criar uma nova bolha
     function createBubble() {
-        if (totalBubbles < mission.targetBubbles * 2) {
+        if (totalBubbles < mission.targetBubbles * 3) {
             const bubble = document.createElement('div');
             bubble.className = 'bubble';
             
             const size = isMobile ? 
-                        60 + Math.random() * 20 : // Tamanho maior para mobile
-                        40 + Math.random() * 20;  // Tamanho normal
+                        Math.floor(60 + Math.random() * 30) : // Maior para mobile
+                        Math.floor(40 + Math.random() * 20);  // Tamanho normal
             
             bubble.style.width = `${size}px`;
             bubble.style.height = `${size}px`;
             
-            const container = document.querySelector('.bubble-container');
+            // Posicionar aleatoriamente dentro do container
             const maxX = container.clientWidth - size;
             const maxY = container.clientHeight - size;
             
-            bubble.style.left = `${Math.random() * maxX}px`;
-            bubble.style.top = `${Math.random() * maxY}px`;
+            const posX = Math.max(0, Math.floor(Math.random() * maxX));
+            const posY = Math.max(0, Math.floor(Math.random() * maxY));
             
+            bubble.style.left = `${posX}px`;
+            bubble.style.top = `${posY}px`;
+            
+            // Variação na animação
+            const animDuration = 5 + Math.random() * 3;
+            bubble.style.animationDuration = `${animDuration}s`;
+            
+            // Adicionar estilos específicos para a bolha
+            bubble.style.position = 'absolute';
+            bubble.style.borderRadius = '50%';
+            bubble.style.backgroundColor = '#f44336';
+            bubble.style.display = 'flex';
+            bubble.style.justifyContent = 'center';
+            bubble.style.alignItems = 'center';
+            bubble.style.cursor = 'pointer';
+            bubble.style.overflow = 'hidden';
+            bubble.style.border = '3px solid white';
+            bubble.style.boxShadow = '0 3px 6px rgba(0, 0, 0, 0.3)';
+            bubble.style.transition = 'transform 0.2s, opacity 0.2s';
+            bubble.style.animation = `bubbleFloat ${animDuration}s infinite alternate ease-in-out`;
+            bubble.style.userSelect = 'none';
+            bubble.style.touchAction = 'none';
+            bubble.style.zIndex = '10';
+            
+            // Adicionar highlight interno
+            const highlight = document.createElement('div');
+            highlight.style.position = 'absolute';
+            highlight.style.top = '15%';
+            highlight.style.left = '15%';
+            highlight.style.width = '30%';
+            highlight.style.height = '30%';
+            highlight.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+            highlight.style.borderRadius = '50%';
+            bubble.appendChild(highlight);
+            
+            // Função para estourar a bolha
             function popBubble(e) {
-                e.preventDefault();
+                // Evitar comportamento padrão
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                // Verificar se a bolha já foi clicada
                 if (!bubble.classList.contains('clicked')) {
+                    // Marca como clicada
                     bubble.classList.add('clicked');
-                    bubblesPopped++;
-                    document.querySelector('.score-counter span').textContent = bubblesPopped;
+                    bubble.style.transform = 'scale(0)';
+                    bubble.style.opacity = '0';
                     
-                    if (bubblesPopped >= mission.targetBubbles) {
-                        clearInterval(bubbleInterval);
-                        missionCompleted();
+                    // Atualiza a pontuação
+                    bubblesPopped++;
+                    const counter = document.querySelector('.score-counter span');
+                    if (counter) counter.textContent = bubblesPopped;
+                    
+                    // Adiciona efeito visual de explosão
+                    const popEffect = document.createElement('div');
+                    popEffect.style.position = 'absolute';
+                    popEffect.style.width = `${size}px`;
+                    popEffect.style.height = `${size}px`;
+                    popEffect.style.left = bubble.style.left;
+                    popEffect.style.top = bubble.style.top;
+                    popEffect.style.borderRadius = '50%';
+                    popEffect.style.backgroundColor = 'transparent';
+                    popEffect.style.border = '3px solid #f44336';
+                    popEffect.style.zIndex = '5';
+                    popEffect.style.animation = 'popAnim 0.5s ease-out forwards';
+                    
+                    // Definir animação via keyframes no documento
+                    if (!document.getElementById('pop-animation')) {
+                        const popAnim = document.createElement('style');
+                        popAnim.id = 'pop-animation';
+                        popAnim.innerHTML = `
+                            @keyframes popAnim {
+                                0% { transform: scale(0.5); opacity: 1; }
+                                100% { transform: scale(2); opacity: 0; }
+                            }
+                            
+                            @keyframes bubbleFloat {
+                                0% { transform: translate(0, 0) rotate(0deg); }
+                                33% { transform: translate(10px, 10px) rotate(5deg); }
+                                66% { transform: translate(-5px, 15px) rotate(-5deg); }
+                                100% { transform: translate(5px, 5px) rotate(3deg); }
+                            }
+                        `;
+                        document.head.appendChild(popAnim);
                     }
                     
+                    container.appendChild(popEffect);
+                    
+                    // Remove o efeito após a animação
                     setTimeout(() => {
-                        if (bubble.parentNode) {
-                            bubble.parentNode.removeChild(bubble);
-                        }
+                        if (popEffect.parentNode) popEffect.remove();
+                    }, 500);
+                    
+                    // Verificar conclusão da missão
+                    if (bubblesPopped >= mission.targetBubbles) {
+                        clearInterval(bubbleInterval);
+                        bubbleInterval = null;
+                        setTimeout(() => missionCompleted(), 300);
+                    }
+                    
+                    // Remove a bolha após a animação
+                    setTimeout(() => {
+                        if (bubble.parentNode) bubble.remove();
                     }, 300);
                 }
+                
+                return false;
             }
             
-            bubble.addEventListener('click', popBubble);
+            // Adicionar eventos para desktop e mobile
+            bubble.addEventListener('mousedown', popBubble);
             bubble.addEventListener('touchstart', popBubble, { passive: false });
+            bubble.addEventListener('touchend', e => {
+                if (e) e.preventDefault();
+                return false;
+            }, { passive: false });
+            
+            // Melhorar acessibilidade
+            bubble.setAttribute('role', 'button');
+            bubble.setAttribute('tabindex', '0');
+            bubble.setAttribute('aria-label', 'Estourar bolha');
             
             container.appendChild(bubble);
             totalBubbles++;
         }
     }
     
-    createBubble();
+    // Criar algumas bolhas iniciais
+    for (let i = 0; i < (isMobile ? 3 : 5); i++) {
+        setTimeout(() => createBubble(), i * 400);
+    }
+    
+    // Continuar criando bolhas em intervalos - mais lento em mobile
     bubbleInterval = setInterval(createBubble, isMobile ? 2000 : 1500);
 }
 
@@ -1215,7 +1311,13 @@ function initToothbrushGame() {
     let score = 0;
     const toothbrush = document.getElementById('toothbrush');
     const teethContainer = document.querySelector('.teeth-container');
+    const mouthArena = document.querySelector('.mouth-arena');
     const isMobile = isMobileDevice();
+    
+    // Posicionar a escova inicialmente no centro
+    const arenaRect = mouthArena.getBoundingClientRect();
+    toothbrush.style.left = `${arenaRect.width / 2 - toothbrush.offsetWidth / 2}px`;
+    toothbrush.style.top = `${arenaRect.height / 2 - toothbrush.offsetHeight / 2}px`;
     
     // Criar dentes (15 dentes para corresponder ao targetScore)
     for (let i = 0; i < mission.targetScore; i++) {
@@ -1235,42 +1337,17 @@ function initToothbrushGame() {
         teethContainer.appendChild(tooth);
     }
 
-    // Remover evento anterior se existir
-    const oldMouseMove = window.gameMouseMove;
-    if (oldMouseMove) {
-        document.removeEventListener('mousemove', oldMouseMove);
+    // Limpar todos os eventos de movimento antigos
+    if (window.gameMouseMove) {
+        document.removeEventListener('mousemove', window.gameMouseMove);
+        window.gameMouseMove = null;
     }
-
-    // Criar novo evento de movimento da escova
-    window.gameMouseMove = (e) => {
-        e.preventDefault(); // Prevenir comportamento padrão
-        const rect = gameContent.getBoundingClientRect();
-        const x = e.clientX - rect.left - toothbrush.offsetWidth / 2;
-        const y = e.clientY - rect.top - toothbrush.offsetHeight / 2;
-        toothbrush.style.left = `${x}px`;
-        toothbrush.style.top = `${y}px`;
-    };
     
-    if (!isMobile) {
-        document.addEventListener('mousemove', window.gameMouseMove);
+    if (window.gameTouchMove) {
+        document.removeEventListener('touchmove', window.gameTouchMove);
+        document.removeEventListener('touchstart', window.gameTouchMove);
+        window.gameTouchMove = null;
     }
-
-    // Adicionar suporte para touch em dispositivos móveis
-    window.gameTouchMove = (e) => {
-        e.preventDefault();
-        const rect = gameContent.getBoundingClientRect();
-        const touch = e.touches[0];
-        const x = touch.clientX - rect.left - toothbrush.offsetWidth / 2;
-        const y = touch.clientY - rect.top - toothbrush.offsetHeight / 2;
-        toothbrush.style.left = `${x}px`;
-        toothbrush.style.top = `${y}px`;
-        
-        // Verificar se a escova está sobre algum dente
-        checkToothCollision(x, y);
-    };
-    
-    document.addEventListener('touchmove', window.gameTouchMove, { passive: false });
-    document.addEventListener('touchstart', window.gameTouchMove, { passive: false });
 
     // Função para verificar a colisão com dentes
     function checkToothCollision(x, y) {
@@ -1287,88 +1364,323 @@ function initToothbrushGame() {
                 tooth.classList.remove('dirty');
                 tooth.classList.add('clean');
                 score++;
-                document.querySelector('.score-counter span').textContent = score;
+                
+                // Atualizar contador
+                const counter = document.querySelector('.score-counter span');
+                if (counter) counter.textContent = score;
                 
                 // Efeito visual de limpeza
-                const rect = gameContent.getBoundingClientRect();
+                const rect = mouthArena.getBoundingClientRect();
                 const sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
                 sparkle.style.left = `${toothRect.left - rect.left + toothRect.width/2}px`;
                 sparkle.style.top = `${toothRect.top - rect.top + toothRect.height/2}px`;
-                gameContent.appendChild(sparkle);
+                mouthArena.appendChild(sparkle);
                 setTimeout(() => {
                     if (sparkle.parentNode) sparkle.remove();
                 }, 500);
                 
+                // Verificar conclusão da missão
                 if (score >= mission.targetScore) {
-                    // Remover os eventos ao completar
-                    document.removeEventListener('mousemove', window.gameMouseMove);
-                    document.removeEventListener('touchmove', window.gameTouchMove);
-                    document.removeEventListener('touchstart', window.gameTouchMove);
+                    // Limpar eventos ao completar a missão
+                    cleanupEvents();
                     missionCompleted();
                 }
             }
         });
     }
-
-    // Limpeza dos dentes para mouse
-    if (!isMobile) {
+    
+    // Função para limpar eventos
+    function cleanupEvents() {
+        if (window.gameMouseMove) {
+            document.removeEventListener('mousemove', window.gameMouseMove);
+            window.gameMouseMove = null;
+        }
+        
+        if (window.gameTouchMove) {
+            document.removeEventListener('touchmove', window.gameTouchMove);
+            document.removeEventListener('touchstart', window.gameTouchMove);
+            window.gameTouchMove = null;
+        }
+        
         document.querySelectorAll('.tooth').forEach(tooth => {
-            tooth.addEventListener('mouseover', function() {
-                if (this.classList.contains('dirty')) {
-                    this.classList.remove('dirty');
-                    this.classList.add('clean');
-                    score++;
-                    document.querySelector('.score-counter span').textContent = score;
-                    
-                    // Efeito visual de limpeza
-                    const rect = gameContent.getBoundingClientRect();
-                    const toothRect = this.getBoundingClientRect();
-                    
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.left = `${toothRect.left - rect.left + toothRect.width/2}px`;
-                    sparkle.style.top = `${toothRect.top - rect.top + toothRect.height/2}px`;
-                    gameContent.appendChild(sparkle);
-                    setTimeout(() => {
-                        if (sparkle.parentNode) sparkle.remove();
-                    }, 500);
-                    
-                    if (score >= mission.targetScore) {
-                        // Remover os eventos ao completar
-                        document.removeEventListener('mousemove', window.gameMouseMove);
-                        document.removeEventListener('touchmove', window.gameTouchMove);
-                        document.removeEventListener('touchstart', window.gameTouchMove);
-                        missionCompleted();
-                    }
-                }
-            });
+            tooth.removeEventListener('mouseover', window.toothMouseOver);
         });
     }
 
-    // Adicionar estilo para efeitos visuais da limpeza
-    const sparkleStyle = document.createElement('style');
-    sparkleStyle.textContent = `
-        .sparkle {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g fill="%2300d6ff" opacity="0.9"><circle cx="20" cy="20" r="2"/><path d="M20,0 L20,40 M0,20 L40,20 M5,5 L35,35 M5,35 L35,5" stroke="%2300d6ff" stroke-width="2"/></g></svg>');
-            background-size: cover;
-            animation: sparkleEffect 0.5s ease-out;
-            z-index: 20;
-        }
+    // Cria manipulador para mouse
+    window.gameMouseMove = (e) => {
+        if (!toothbrush || !mouthArena) return;
         
-        @keyframes sparkleEffect {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
+        const rect = mouthArena.getBoundingClientRect();
+        let x = e.clientX - rect.left - toothbrush.offsetWidth / 2;
+        let y = e.clientY - rect.top - toothbrush.offsetHeight / 2;
+        
+        // Limitar dentro da arena
+        x = Math.max(0, Math.min(x, rect.width - toothbrush.offsetWidth));
+        y = Math.max(0, Math.min(y, rect.height - toothbrush.offsetHeight));
+        
+        toothbrush.style.left = `${x}px`;
+        toothbrush.style.top = `${y}px`;
+        
+        checkToothCollision(x, y);
+    };
+
+    // Cria manipulador para toque
+    window.gameTouchMove = (e) => {
+        if (!toothbrush || !mouthArena) return;
+        
+        e.preventDefault();
+        if (e.touches && e.touches.length > 0) {
+            const rect = mouthArena.getBoundingClientRect();
+            const touch = e.touches[0];
+            
+            let x = touch.clientX - rect.left - toothbrush.offsetWidth / 2;
+            let y = touch.clientY - rect.top - toothbrush.offsetHeight / 2;
+            
+            // Limitar dentro da arena
+            x = Math.max(0, Math.min(x, rect.width - toothbrush.offsetWidth));
+            y = Math.max(0, Math.min(y, rect.height - toothbrush.offsetHeight));
+            
+            toothbrush.style.left = `${x}px`;
+            toothbrush.style.top = `${y}px`;
+            
+            checkToothCollision(x, y);
         }
-    `;
-    document.head.appendChild(sparkleStyle);
+    };
     
+    // Manipulador para verificação de mouseover nos dentes
+    window.toothMouseOver = function() {
+        if (this.classList.contains('dirty')) {
+            this.classList.remove('dirty');
+            this.classList.add('clean');
+            score++;
+            
+            // Atualizar contador
+            const counter = document.querySelector('.score-counter span');
+            if (counter) counter.textContent = score;
+            
+            // Efeito visual
+            const rect = mouthArena.getBoundingClientRect();
+            const toothRect = this.getBoundingClientRect();
+            
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = `${toothRect.left - rect.left + toothRect.width/2}px`;
+            sparkle.style.top = `${toothRect.top - rect.top + toothRect.height/2}px`;
+            mouthArena.appendChild(sparkle);
+            setTimeout(() => {
+                if (sparkle.parentNode) sparkle.remove();
+            }, 500);
+            
+            // Verificar conclusão
+            if (score >= mission.targetScore) {
+                cleanupEvents();
+                missionCompleted();
+            }
+        }
+    };
+
+    // Adicionar eventos conforme o dispositivo
+    if (!isMobile) {
+        document.addEventListener('mousemove', window.gameMouseMove);
+        
+        // Adicionar evento de hover nos dentes para desktop
+        document.querySelectorAll('.tooth').forEach(tooth => {
+            tooth.addEventListener('mouseover', window.toothMouseOver);
+        });
+    } else {
+        // Em dispositivos móveis, apenas os eventos de toque
+        document.addEventListener('touchmove', window.gameTouchMove, { passive: false });
+        document.addEventListener('touchstart', window.gameTouchMove, { passive: false });
+    }
+
+    // Garantir que os eventos sejam limpos quando a missão acabar
+    const originalMissionCompleted = window.missionCompleted || missionCompleted;
+    window.missionCompleted = function() {
+        cleanupEvents();
+        if (typeof originalMissionCompleted === 'function') {
+            originalMissionCompleted();
+        }
+    };
+
+    const originalMissionFailed = window.missionFailed || missionFailed;
+    window.missionFailed = function() {
+        cleanupEvents();
+        if (typeof originalMissionFailed === 'function') {
+            originalMissionFailed();
+        }
+    };
+
     // Adicionar estilos específicos
     addToothbrushGameStyle();
+}
+
+function addToothbrushGameStyle() {
+    if (!document.getElementById('toothbrush-game-style')) {
+        const style = document.createElement('style');
+        style.id = 'toothbrush-game-style';
+        style.textContent = `
+            .toothbrush-game {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                touch-action: none;
+            }
+            
+            .game-stats {
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 10px 15px;
+                border-radius: 15px;
+                margin-bottom: 10px;
+                text-align: center;
+                font-size: 1.2em;
+                font-weight: bold;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .game-instructions {
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 10px 15px;
+                border-radius: 15px;
+                margin-bottom: 10px;
+                text-align: center;
+                font-weight: bold;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .mouth-arena {
+                flex-grow: 1;
+                position: relative;
+                background-color: #ffebee;
+                border-radius: 15px;
+                overflow: hidden;
+                min-height: 300px;
+                touch-action: none;
+                user-select: none;
+            }
+            
+            .toothbrush {
+                position: absolute;
+                width: 60px;
+                height: 60px;
+                transform: rotate(45deg);
+                z-index: 10;
+                cursor: move;
+                user-select: none;
+                touch-action: none;
+                filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+                will-change: transform, left, top;
+            }
+            
+            .teeth-container {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 10px;
+                padding: 20px;
+                width: 90%;
+                height: 100%;
+                margin: 0 auto;
+            }
+            
+            .tooth {
+                position: relative;
+                background-color: white;
+                border-radius: 6px;
+                box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+            }
+            
+            .tooth::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: inherit;
+                box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+                pointer-events: none;
+            }
+            
+            .tooth.dirty::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(139, 69, 19, 0.4);
+                background-image: radial-gradient(
+                    circle at calc(40% + var(--random-dirt) * 30%) calc(30% + var(--random-dirt) * 40%), 
+                    rgba(139, 69, 19, 0.8), 
+                    rgba(139, 69, 19, 0.4)
+                );
+                border-radius: inherit;
+                z-index: 2;
+            }
+            
+            .tooth.clean {
+                background-color: white;
+                animation: clean 0.5s ease;
+            }
+            
+            @keyframes clean {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            
+            .sparkle {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                pointer-events: none;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g fill="%2300d6ff" opacity="0.9"><circle cx="20" cy="20" r="2"/><path d="M20,0 L20,40 M0,20 L40,20 M5,5 L35,35 M5,35 L35,5" stroke="%2300d6ff" stroke-width="2"/></g></svg>');
+                background-size: cover;
+                animation: sparkleEffect 0.5s ease-out;
+                z-index: 20;
+            }
+            
+            @keyframes sparkleEffect {
+                0% { transform: scale(0.5); opacity: 1; }
+                100% { transform: scale(2); opacity: 0; }
+            }
+            
+            @media (max-width: 768px) {
+                .teeth-container {
+                    grid-template-columns: repeat(4, 1fr);
+                    grid-template-rows: repeat(4, 1fr);
+                }
+                
+                .toothbrush {
+                    width: 50px;
+                    height: 50px;
+                }
+                
+                .game-stats, .game-instructions {
+                    padding: 8px 10px;
+                    font-size: 1em;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .teeth-container {
+                    gap: 5px;
+                    padding: 10px;
+                }
+                
+                .toothbrush {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 function initCatchItemsGame() {
@@ -1404,37 +1716,120 @@ function initCatchItemsGame() {
     addCatchGameStyle();
     
     const player = document.querySelector('.player');
+    const catchArena = document.querySelector('.catch-arena');
     let score = 0;
     let playerX = 50;
+    let isMoving = false;
+
+    // Posicionar o jogador inicialmente no centro
+    player.style.left = `${playerX}%`;
+    
+    // Limpar eventos anteriores
+    if (window.handleMouseMove) {
+        document.removeEventListener('mousemove', window.handleMouseMove);
+        window.handleMouseMove = null;
+    }
+    
+    if (window.handleTouchMove) {
+        document.removeEventListener('touchmove', window.handleTouchMove);
+        document.removeEventListener('touchstart', window.handleTouchMove);
+        window.handleTouchMove = null;
+    }
 
     // Função para atualizar a posição do jogador
-    function updatePlayerPosition(x) {
-        playerX = Math.max(0, Math.min(x, 95));
+    function updatePlayerPosition(clientX) {
+        if (!catchArena || !player) return;
+        
+        const rect = catchArena.getBoundingClientRect();
+        const x = ((clientX - rect.left) / rect.width) * 100;
+        
+        // Limitar dentro da arena (5% a 95%)
+        playerX = Math.max(5, Math.min(x, 95));
         player.style.left = `${playerX}%`;
     }
 
-    // Suporte para mouse e touch
-    function handleMove(e) {
-        e.preventDefault(); // Prevenir comportamento padrão
-        const arena = document.querySelector('.catch-arena');
-        if (!arena) return;
-        
-        const rect = arena.getBoundingClientRect();
-        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        const x = ((clientX - rect.left) / rect.width) * 100;
-        updatePlayerPosition(x);
+    // Função para iniciar o movimento
+    function startMoving(clientX) {
+        isMoving = true;
+        updatePlayerPosition(clientX);
     }
 
-    // Adicionar eventos de mouse e touch com otimizações para mobile
+    // Função para parar o movimento
+    function stopMoving() {
+        isMoving = false;
+    }
+
+    // Manipuladores de eventos para mouse
+    window.handleMouseMove = function(e) {
+        e.preventDefault();
+        updatePlayerPosition(e.clientX);
+    };
+    
+    window.handleMouseDown = function(e) {
+        e.preventDefault();
+        startMoving(e.clientX);
+    };
+    
+    window.handleMouseUp = function(e) {
+        e.preventDefault();
+        stopMoving();
+    };
+
+    // Manipuladores de eventos para touch
+    window.handleTouchMove = function(e) {
+        e.preventDefault();
+        if (e.touches && e.touches.length > 0) {
+            updatePlayerPosition(e.touches[0].clientX);
+        }
+    };
+    
+    window.handleTouchStart = function(e) {
+        e.preventDefault();
+        if (e.touches && e.touches.length > 0) {
+            startMoving(e.touches[0].clientX);
+        }
+    };
+    
+    window.handleTouchEnd = function(e) {
+        e.preventDefault();
+        stopMoving();
+    };
+
+    // Adicionar evento conforme o dispositivo
     if (!isMobile) {
-        document.addEventListener('mousemove', handleMove);
+        // Eventos para desktop
+        document.addEventListener('mousemove', window.handleMouseMove);
+        catchArena.addEventListener('mousedown', window.handleMouseDown);
+        document.addEventListener('mouseup', window.handleMouseUp);
+    } else {
+        // Eventos para dispositivos móveis
+        document.addEventListener('touchmove', window.handleTouchMove, { passive: false });
+        catchArena.addEventListener('touchstart', window.handleTouchStart, { passive: false });
+        document.addEventListener('touchend', window.handleTouchEnd, { passive: false });
     }
-    document.addEventListener('touchmove', handleMove, { passive: false });
-    document.addEventListener('touchstart', handleMove, { passive: false });
 
+    // Limpar eventos quando a missão terminar
+    function cleanupEvents() {
+        if (window.handleMouseMove) {
+            document.removeEventListener('mousemove', window.handleMouseMove);
+            catchArena.removeEventListener('mousedown', window.handleMouseDown);
+            document.removeEventListener('mouseup', window.handleMouseUp);
+            window.handleMouseMove = null;
+        }
+        
+        if (window.handleTouchMove) {
+            document.removeEventListener('touchmove', window.handleTouchMove);
+            catchArena.removeEventListener('touchstart', window.handleTouchStart);
+            document.removeEventListener('touchend', window.handleTouchEnd);
+            window.handleTouchMove = null;
+        }
+        
+        clearInterval(itemInterval);
+    }
+
+    // Função para criar um item
     function createItem() {
-        const arena = document.querySelector('.catch-arena');
-        if (!arena) return;
+        if (!catchArena) return;
         
         const item = document.createElement('img');
         const isGood = Math.random() > 0.3;
@@ -1443,11 +1838,11 @@ function initCatchItemsGame() {
         
         // Variar a posição horizontal para evitar frustração em mobile
         const randomPosition = isMobile ?
-            5 + Math.random() * 85 : // Evitar os cantos em celulares
-            Math.random() * 95;     // Posição normal
+            10 + Math.random() * 80 : // Evitar os cantos em celulares
+            5 + Math.random() * 90;     // Posição normal
             
         item.style.left = `${randomPosition}%`;
-        arena.appendChild(item);
+        catchArena.appendChild(item);
 
         // Velocidade mais lenta para mobile
         const fallSpeed = isMobile ? 
@@ -1469,6 +1864,7 @@ function initCatchItemsGame() {
                 if (itemRect.bottom >= playerRect.top &&
                     itemRect.right >= playerRect.left &&
                     itemRect.left <= playerRect.right) {
+                    
                     if (item.classList.contains('good')) {
                         score++;
                         const counter = document.querySelector('.catch-counter span');
@@ -1479,15 +1875,13 @@ function initCatchItemsGame() {
                         scoreEffect.className = 'score-effect';
                         scoreEffect.textContent = '+1';
                         scoreEffect.style.left = `${playerX}%`;
-                        arena.appendChild(scoreEffect);
+                        catchArena.appendChild(scoreEffect);
                         setTimeout(() => {
                             if (scoreEffect.parentNode) scoreEffect.remove();
                         }, 1000);
 
                         if (score >= mission.targetScore) {
-                            document.removeEventListener('mousemove', handleMove);
-                            document.removeEventListener('touchmove', handleMove);
-                            document.removeEventListener('touchstart', handleMove);
+                            cleanupEvents();
                             missionCompleted();
                             return;
                         }
@@ -1501,60 +1895,44 @@ function initCatchItemsGame() {
                         scoreEffect.className = 'score-effect negative';
                         scoreEffect.textContent = '-1';
                         scoreEffect.style.left = `${playerX}%`;
-                        arena.appendChild(scoreEffect);
+                        catchArena.appendChild(scoreEffect);
                         setTimeout(() => {
                             if (scoreEffect.parentNode) scoreEffect.remove();
                         }, 1000);
                     }
+                    
                     item.remove();
                     return;
                 }
 
                 requestAnimationFrame(fall);
             } else {
-                item.remove();
+                if (item.parentNode) item.remove();
             }
         }
 
         requestAnimationFrame(fall);
     }
 
-    // Intervalo mais longo para mobile
-    const itemInterval = setInterval(createItem, isMobile ? 2500 : 2000);
+    // Criar itens em intervalos
+    const itemInterval = setInterval(createItem, isMobile ? 2000 : 1500);
     
-    const originalMissionCompleted = window.missionCompleted;
+    // Sobrescrever as funções de missão completada/falha para limpar eventos
+    const originalMissionCompleted = window.missionCompleted || missionCompleted;
     window.missionCompleted = function() {
-        clearInterval(itemInterval);
-        document.removeEventListener('mousemove', handleMove);
-        document.removeEventListener('touchmove', handleMove);
-        document.removeEventListener('touchstart', handleMove);
-        originalMissionCompleted();
+        cleanupEvents();
+        if (typeof originalMissionCompleted === 'function') {
+            originalMissionCompleted();
+        }
     };
 
-    // Adicionar estilos para os efeitos visuais
-    const effectStyle = document.createElement('style');
-    effectStyle.textContent = `
-        .score-effect {
-            position: absolute;
-            bottom: 70px;
-            transform: translateX(-50%);
-            color: #4CAF50;
-            font-weight: bold;
-            font-size: 1.2em;
-            animation: floatUp 1s ease-out;
-            pointer-events: none;
+    const originalMissionFailed = window.missionFailed || missionFailed;
+    window.missionFailed = function() {
+        cleanupEvents();
+        if (typeof originalMissionFailed === 'function') {
+            originalMissionFailed();
         }
-        
-        .score-effect.negative {
-            color: #F44336;
-        }
-        
-        @keyframes floatUp {
-            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-            100% { transform: translateX(-50%) translateY(-30px); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(effectStyle);
+    };
 }
 
 // Inicializar o jogo de perguntas
@@ -1847,6 +2225,7 @@ function addCatchGameStyle() {
                 box-sizing: border-box;
                 position: relative;
                 z-index: 1;
+                touch-action: none;
             }
             
             .game-stats {
@@ -1857,6 +2236,7 @@ function addCatchGameStyle() {
                 text-align: center;
                 font-size: 1.2em;
                 font-weight: bold;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
             
             .game-instructions {
@@ -1865,6 +2245,7 @@ function addCatchGameStyle() {
                 padding: 12px;
                 margin-bottom: 10px;
                 text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
             
             .game-instructions p {
@@ -1910,23 +2291,47 @@ function addCatchGameStyle() {
                 overflow: hidden;
                 min-height: 300px;
                 touch-action: none;
+                user-select: none;
             }
             
             .player {
                 position: absolute;
                 bottom: 20px;
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
                 transform: translateX(-50%);
                 z-index: 2;
+                will-change: left;
             }
             
             .falling-item {
                 position: absolute;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 object-fit: contain;
                 z-index: 1;
+                will-change: top;
+            }
+            
+            .score-effect {
+                position: absolute;
+                bottom: 70px;
+                transform: translateX(-50%);
+                color: #4CAF50;
+                font-weight: bold;
+                font-size: 1.2em;
+                animation: floatUp 1s ease-out;
+                pointer-events: none;
+                z-index: 3;
+            }
+            
+            .score-effect.negative {
+                color: #F44336;
+            }
+            
+            @keyframes floatUp {
+                0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+                100% { transform: translateX(-50%) translateY(-30px); opacity: 0; }
             }
             
             /* Garantir que o cabeçalho fique visível */
@@ -1972,8 +2377,8 @@ function addCatchGameStyle() {
                 }
 
                 .player {
-                    width: 45px;
-                    height: 45px;
+                    width: 50px;
+                    height: 50px;
                 }
 
                 .falling-item {
@@ -2010,17 +2415,14 @@ function addCatchGameStyle() {
                 }
 
                 .player {
-                    width: 40px;
-                    height: 40px;
+                    width: 45px;
+                    height: 45px;
+                    bottom: 15px;
                 }
 
                 .falling-item {
-                    width: 25px;
-                    height: 25px;
-                }
-
-                .catch-arena {
-                    min-height: 300px;
+                    width: 28px;
+                    height: 28px;
                 }
             }
         `;
