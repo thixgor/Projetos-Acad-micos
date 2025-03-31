@@ -398,7 +398,9 @@ p {
 
 .location-marker.playground .location-icon {
     background-color: #4caf50;
-    background-image: url('https://i.imgur.com/IdNZFeO.jpeg');
+    background-image: url('https://i.imgur.com/HOrZybl.jpeg');
+    background-size: cover;
+    background-position: center;
 }
 
 .location-alert {
@@ -497,6 +499,8 @@ p {
     justify-content: center;
     position: relative;
     background-color: var(--light-color);
+    overflow: hidden;
+    min-height: 300px;
 }
 
 .game-controls {
@@ -2211,5 +2215,82 @@ p {
     .quiz-option:active {
         opacity: 0.8;
         transform: scale(0.98);
+    }
+}
+
+.bubble-game {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.bubble-container {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 300px;
+    position: relative;
+    background-color: rgba(240, 248, 255, 0.7);
+    border-radius: 10px;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #f44336;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    border: 3px solid white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, opacity 0.2s;
+    animation: bubbleFloat 5s infinite alternate ease-in-out;
+    user-select: none;
+    touch-action: none;
+    z-index: 100;
+}
+
+@keyframes bubbleFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(10px, 10px) rotate(5deg); }
+    66% { transform: translate(-5px, 15px) rotate(-5deg); }
+    100% { transform: translate(5px, 5px) rotate(3deg); }
+}
+
+.location-marker.playground .location-icon {
+    background-color: #4caf50;
+    background-image: url('https://i.imgur.com/HOrZybl.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .bubble-game, .bubble-container {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 300px;
+    }
+    
+    .bubble {
+        width: 70px !important;
+        height: 70px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .bubble-game, .bubble-container {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 250px;
+    }
+    
+    .bubble {
+        width: 60px !important;
+        height: 60px !important;
     }
 } 
