@@ -213,16 +213,14 @@ p {
 }
 
 .hub-header {
-    background: linear-gradient(to right, #00b0ff, #2979ff);
-    color: white;
-    padding: 15px 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    box-shadow: var(--shadow-light);
-    position: relative;
-    z-index: 2;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-medium);
 }
 
 .player-info {
@@ -259,10 +257,10 @@ p {
 }
 
 #player-name {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.2em;
+    font-weight: bold;
     margin-bottom: 5px;
-    color: white;
+    color: #000000;
 }
 
 .power-bar {
@@ -272,9 +270,10 @@ p {
 }
 
 .power-label {
-    font-size: 0.8rem;
-    margin-right: 8px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 3px;
+    color: #000000;
 }
 
 .power-track {
@@ -1038,39 +1037,45 @@ p {
     }
 
     .player-info {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        text-align: center;
+        justify-content: center;
+        width: 100%;
+        gap: 15px;
     }
 
     #player-avatar {
-        margin-right: 0;
-        margin-bottom: 10px;
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+    }
+
+    .player-stats {
+        flex: 1;
+        max-width: 200px;
     }
 
     .power-bar {
-        width: 120px;
+        width: 100%;
     }
 
     .hub-mission {
-        margin-top: 10px;
+        width: 100%;
+        text-align: center;
     }
 
-    .location-marker .location-icon {
-        width: 80px;
-        height: 80px;
+    .location-marker {
+        transform: scale(0.85);
+        margin: 10px;
     }
 
-    .badge-icon {
-        width: 60px;
-        height: 60px;
-        min-width: 60px;
-        margin-right: 15px;
+    .location-icon {
+        width: 70px;
+        height: 70px;
     }
 
-    .hero-victory {
-        width: 100px;
-        height: 100px;
+    .location-label {
+        font-size: 0.9em;
     }
 }
 
@@ -1194,7 +1199,7 @@ p {
     
     .location-label {
         margin-top: 8px;
-        font-size: 0.8rem;
+        font-size: 0.9em;
         padding: 6px 12px;
         white-space: nowrap;
     }
