@@ -466,6 +466,71 @@ const quizQuestions = [
 // ===== INICIALIZAÇÃO DO JOGO =====
 document.addEventListener('DOMContentLoaded', function() {
     initializeGame();
+    
+    // Ajustar dificuldade para dispositivos móveis
+    adjustDifficultyForDevice();
+    
+    // Adicionar evento para tela cheia em dispositivos móveis
+    if (isMobileDevice()) {
+        const fullscreenButton = document.createElement('button');
+        fullscreenButton.className = 'fullscreen-button';
+        fullscreenButton.innerHTML = '<span>📱</span>';
+        fullscreenButton.title = 'Tela Cheia';
+        
+        fullscreenButton.addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+        
+        document.body.appendChild(fullscreenButton);
+        
+        // Adicionar estilo para o botão de tela cheia
+        const style = document.createElement('style');
+        style.textContent = `
+            .fullscreen-button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: white;
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                font-size: 24px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s;
+            }
+            
+            .fullscreen-button:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+                transform: scale(1.1);
+            }
+            
+            .fullscreen-button span {
+                display: inline-block;
+                transform: rotate(0deg);
+                transition: transform 0.3s;
+            }
+            
+            .fullscreen-button:active span {
+                transform: rotate(90deg);
+            }
+        `;
+        document.head.appendChild(style);
+    }
 });
 
 function initializeGame() {
@@ -953,199 +1018,226 @@ function resetGame() {
 
 // ===== IMPLEMENTAÇÃO DOS MINIJOGOS =====
 
-// Jogo de Estourar Bolhas (Banheiro)
+// Função para detectar se o dispositivo é móvel
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+
+// Ajustar dificuldade com base no dispositivo
+function adjustDifficultyForDevice() {
+    const isMobile = isMobileDevice();
+    
+    // Ajustar missões para mobile
+    if (isMobile) {
+        // Reduzir a velocidade no jogo de bubble pop
+        bubbleSpeed = 2500;
+        
+        // Aumentar o tempo limite para todos os jogos em 30%
+        for (const location in missions) {
+            missions[location].timeLimit = Math.ceil(missions[location].timeLimit * 1.3);
+        }
+    }
+}
+
+// Inicializar o jogo de bolhas
 function initBubblePopGame() {
     const mission = missions[currentMission];
     const gameContent = document.getElementById('game-content');
     
-    // Configurar área do jogo
+    // Número de bolhas já existentes
+    bubblesPopped = 0;
+    totalBubbles = 0;
+    
     gameContent.innerHTML = `
         <div class="bubble-game">
-            <div class="game-stats">
-                <div class="bubble-counter">Germes eliminados: <span>0</span>/${mission.targetBubbles}</div>
-            </div>
-            <div class="bubble-arena"></div>
+            <div class="score-counter">Germes Eliminados: <span>${bubblesPopped}</span>/${mission.targetBubbles}</div>
+            <div class="bubble-container"></div>
         </div>
     `;
     
-    // Inicializar variáveis do jogo
-    bubblesPopped = 0;
-    totalBubbles = mission.targetBubbles;
-    bubbleSpeed = 2000 - (mission.difficulty * 300); // Ajuste de velocidade com base na dificuldade
-    
-    // Adicionar estilo específico para o jogo
-    addGameStyle();
-    
-    // Iniciar geração de bolhas
-    const bubbleArena = document.querySelector('.bubble-arena');
-    
-    // Limpar intervalo anterior se existir
-    if (bubbleInterval) {
-        clearInterval(bubbleInterval);
-    }
-    
-    // Criar bolhas iniciais
-    for (let i = 0; i < 3; i++) {
-        createBubble(bubbleArena);
-    }
-    
-    // Continuar criando bolhas durante o jogo
-    bubbleInterval = setInterval(() => {
-        if (document.querySelectorAll('.bubble').length < 8) { // Limitar o número máximo de bolhas na tela
-            createBubble(bubbleArena);
+    // Estilo para o jogo de bolhas
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .bubble-game {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
         }
-    }, bubbleSpeed);
-}
+        
+        .score-counter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 100;
+        }
+        
+        .bubble-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            animation-name: float;
+            animation-duration: 8s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            animation-direction: alternate;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        
+        .bubble:before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 30%;
+            height: 30%;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+        
+        .bubble.clicked {
+            transform: scale(0);
+            opacity: 0;
+        }
 
-// Criar uma bolha de germe
-function createBubble(arena) {
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    
-    // Tamanho aleatório
-    const size = Math.floor(Math.random() * 40) + 40; // 40-80px
-    bubble.style.width = `${size}px`;
-    bubble.style.height = `${size}px`;
-    
-    // Posição aleatória
-    const maxX = arena.clientWidth - size;
-    const maxY = arena.clientHeight - size;
-    bubble.style.left = `${Math.floor(Math.random() * maxX)}px`;
-    bubble.style.top = `${Math.floor(Math.random() * maxY)}px`;
-    
-    // Cor aleatória
-    const colors = ['#8e44ad', '#1abc9c', '#3498db', '#e74c3c', '#f39c12'];
-    const colorIndex = Math.floor(Math.random() * colors.length);
-    bubble.style.backgroundColor = colors[colorIndex];
-    
-    // Tempo de vida da bolha
-    const lifespan = Math.floor(Math.random() * 2000) + 4000; // 4-6 segundos
-    
-    // Adicionar evento de clique
-    bubble.addEventListener('click', function() {
-        // Animação de pop
-        this.style.transform = 'scale(1.5)';
-        this.style.opacity = '0';
-        
-        // Som de pop (opcional)
-        // const popSound = new Audio('pop.mp3');
-        // popSound.play();
-        
-        // Incrementar contagem
-        bubblesPopped++;
-        document.querySelector('.bubble-counter span').textContent = bubblesPopped;
-        
-        // Remover a bolha
-        setTimeout(() => {
-            if (this.parentNode) {
-                this.parentNode.removeChild(this);
-            }
-        }, 300);
-        
-        // Verificar se o jogador venceu
-        if (bubblesPopped >= totalBubbles) {
-            missionCompleted();
-        }
-    });
-    
-    // Animar a bolha flutuando
-    const animationDuration = Math.floor(Math.random() * 4) + 3; // 3-7 segundos
-    bubble.style.animation = `float ${animationDuration}s infinite ease-in-out`;
-    
-    // Adicionar a bolha à arena
-    arena.appendChild(bubble);
-    
-    // Remover a bolha após o tempo de vida se ela ainda existir
-    setTimeout(() => {
-        if (bubble.parentNode) {
-            bubble.style.transform = 'scale(0)';
-            bubble.style.opacity = '0';
-            
-            setTimeout(() => {
-                if (bubble.parentNode) {
-                    bubble.parentNode.removeChild(bubble);
-                }
-            }, 300);
-        }
-    }, lifespan);
-}
-
-// Adicionar estilos específicos do jogo
-function addGameStyle() {
-    // Verificar se o estilo já existe
-    if (!document.getElementById('game-style')) {
-        const style = document.createElement('style');
-        style.id = 'game-style';
-        style.innerHTML = `
-            .bubble-game {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .game-stats {
-                padding: 10px;
-                background-color: rgba(255, 255, 255, 0.3);
-                border-radius: 10px;
-                margin-bottom: 15px;
-                font-weight: bold;
-                font-size: 1.1rem;
-            }
-            
-            .bubble-arena {
-                flex-grow: 1;
-                position: relative;
-                background-color: rgba(0, 176, 255, 0.1);
-                border-radius: 15px;
-                overflow: hidden;
-                min-height: 300px;
-            }
-            
+        /* Aumentar o tamanho das bolhas em dispositivos móveis */
+        @media (max-width: 768px) {
             .bubble {
-                position: absolute;
-                border-radius: 50%;
-                cursor: pointer;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-size: 16px;
-                font-weight: bold;
-                transition: transform 0.3s, opacity 0.3s;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='25' cy='25' r='8' fill='rgba(0,0,0,0.3)'/%3E%3Ccircle cx='30' cy='60' r='12' fill='rgba(0,0,0,0.2)'/%3E%3Ccircle cx='70' cy='40' r='10' fill='rgba(0,0,0,0.2)'/%3E%3C/svg%3E");
-                background-size: cover;
+                min-width: 50px !important;
+                min-height: 50px !important;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Criar bolhas com intervalos
+    function createBubble() {
+        if (totalBubbles < mission.targetBubbles * 2) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            
+            // Determinar tamanho com base no dispositivo
+            const isMobile = isMobileDevice();
+            const size = isMobile ? 
+                        40 + Math.random() * 30 : // Tamanho maior para mobile
+                        30 + Math.random() * 20;  // Tamanho normal
+            
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            
+            // Posicionar a bolha
+            const container = document.querySelector('.bubble-container');
+            const maxX = container.clientWidth - size;
+            const maxY = container.clientHeight - size;
+            
+            bubble.style.left = `${Math.random() * maxX}px`;
+            bubble.style.top = `${Math.random() * maxY}px`;
+            
+            // Adicionar animação aleatória
+            bubble.style.animationDuration = `${5 + Math.random() * 5}s`;
+            
+            // Estourar a bolha ao clicar/tocar
+            function popBubble(e) {
+                e.preventDefault(); // Prevenir comportamento padrão do toque
+                if (!bubble.classList.contains('clicked')) {
+                    bubble.classList.add('clicked');
+                    
+                    // Adicionar efeito pop
+                    const pop = document.createElement('div');
+                    pop.className = 'pop-effect';
+                    pop.style.left = bubble.style.left;
+                    pop.style.top = bubble.style.top;
+                    container.appendChild(pop);
+                    
+                    // Remover o efeito após a animação
+                    setTimeout(() => {
+                        if (pop.parentNode) {
+                            pop.parentNode.removeChild(pop);
+                        }
+                    }, 1000);
+                    
+                    bubblesPopped++;
+                    document.querySelector('.score-counter span').textContent = bubblesPopped;
+                    
+                    // Verificar se a missão foi concluída
+                    if (bubblesPopped >= mission.targetBubbles) {
+                        clearInterval(bubbleInterval);
+                        missionCompleted();
+                    }
+                    
+                    // Remover a bolha após a animação
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, 300);
+                }
             }
             
-            .bubble:before {
-                content: '';
-                position: absolute;
-                top: 20%;
-                left: 20%;
-                width: 20%;
-                height: 20%;
-                background-color: rgba(255, 255, 255, 0.6);
-                border-radius: 50%;
-            }
+            bubble.addEventListener('click', popBubble);
+            bubble.addEventListener('touchstart', popBubble, {passive: false});
             
-            @keyframes float {
-                0%, 100% { transform: translate(0, 0); }
-                25% { transform: translate(10px, -15px); }
-                50% { transform: translate(-5px, 10px); }
-                75% { transform: translate(-10px, -10px); }
-            }
-            
-            .difficulty { margin: 15px 0; }
-            .difficulty-stars { display: flex; justify-content: center; }
-            .star { font-size: 24px; color: #ccc; margin: 0 5px; }
-            .star.active { color: #ffb300; }
-        `;
-        document.head.appendChild(style);
+            container.appendChild(bubble);
+            totalBubbles++;
+        }
     }
+    
+    // Adicionar estilo para o efeito de pop
+    const popStyle = document.createElement('style');
+    popStyle.innerHTML = `
+        .pop-effect {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            border-radius: 50%;
+            z-index: 50;
+            animation: pop 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes pop {
+            0% {
+                transform: scale(0.5);
+                box-shadow: 0 0 0 0px rgba(244, 67, 54, 0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                box-shadow: 0 0 0 20px rgba(244, 67, 54, 0);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(popStyle);
+    
+    // Começar a criar bolhas
+    createBubble();
+    bubbleInterval = setInterval(createBubble, isMobileDevice() ? 1500 : 1000);
 }
 
-// Adicionar as novas funções dos jogos
 function initToothbrushGame() {
     const mission = missions[currentMission];
     const gameContent = document.getElementById('game-content');
@@ -1156,7 +1248,7 @@ function initToothbrushGame() {
                 <div class="score-counter">Dentes Limpos: <span>0</span>/${mission.targetScore}</div>
             </div>
             <div class="game-instructions">
-                <p>Mova a escova com o mouse para limpar todos os dentes!</p>
+                <p>${isMobileDevice() ? 'Toque e arraste' : 'Mova a escova com o mouse'} para limpar todos os dentes!</p>
             </div>
             <div class="mouth-arena">
                 <img src="https://i.imgur.com/X0uiJ6Y.png" class="toothbrush" id="toothbrush">
@@ -1168,6 +1260,7 @@ function initToothbrushGame() {
     let score = 0;
     const toothbrush = document.getElementById('toothbrush');
     const teethContainer = document.querySelector('.teeth-container');
+    const isMobile = isMobileDevice();
     
     // Criar dentes (15 dentes para corresponder ao targetScore)
     for (let i = 0; i < mission.targetScore; i++) {
@@ -1195,13 +1288,17 @@ function initToothbrushGame() {
 
     // Criar novo evento de movimento da escova
     window.gameMouseMove = (e) => {
+        e.preventDefault(); // Prevenir comportamento padrão
         const rect = gameContent.getBoundingClientRect();
         const x = e.clientX - rect.left - toothbrush.offsetWidth / 2;
         const y = e.clientY - rect.top - toothbrush.offsetHeight / 2;
         toothbrush.style.left = `${x}px`;
         toothbrush.style.top = `${y}px`;
     };
-    document.addEventListener('mousemove', window.gameMouseMove);
+    
+    if (!isMobile) {
+        document.addEventListener('mousemove', window.gameMouseMove);
+    }
 
     // Adicionar suporte para touch em dispositivos móveis
     window.gameTouchMove = (e) => {
@@ -1214,9 +1311,18 @@ function initToothbrushGame() {
         toothbrush.style.top = `${y}px`;
         
         // Verificar se a escova está sobre algum dente
+        checkToothCollision(x, y);
+    };
+    
+    document.addEventListener('touchmove', window.gameTouchMove, { passive: false });
+    document.addEventListener('touchstart', window.gameTouchMove, { passive: false });
+
+    // Função para verificar a colisão com dentes
+    function checkToothCollision(x, y) {
+        const brushRect = toothbrush.getBoundingClientRect();
+        
         document.querySelectorAll('.tooth.dirty').forEach(tooth => {
             const toothRect = tooth.getBoundingClientRect();
-            const brushRect = toothbrush.getBoundingClientRect();
             
             if (brushRect.right >= toothRect.left && 
                 brushRect.left <= toothRect.right && 
@@ -1229,45 +1335,15 @@ function initToothbrushGame() {
                 document.querySelector('.score-counter span').textContent = score;
                 
                 // Efeito visual de limpeza
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = `${brushRect.left - rect.left + brushRect.width/2}px`;
-                sparkle.style.top = `${brushRect.top - rect.top + brushRect.height/2}px`;
-                gameContent.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 500);
-                
-                if (score >= mission.targetScore) {
-                    document.removeEventListener('mousemove', window.gameMouseMove);
-                    document.removeEventListener('touchmove', window.gameTouchMove);
-                    document.removeEventListener('touchstart', window.gameTouchMove);
-                    missionCompleted();
-                }
-            }
-        });
-    };
-    
-    document.addEventListener('touchmove', window.gameTouchMove, { passive: false });
-    document.addEventListener('touchstart', window.gameTouchMove, { passive: false });
-
-    // Limpeza dos dentes para mouse
-    document.querySelectorAll('.tooth').forEach(tooth => {
-        tooth.addEventListener('mouseover', function() {
-            if (this.classList.contains('dirty')) {
-                this.classList.remove('dirty');
-                this.classList.add('clean');
-                score++;
-                document.querySelector('.score-counter span').textContent = score;
-                
-                // Efeito visual de limpeza
                 const rect = gameContent.getBoundingClientRect();
-                const toothRect = this.getBoundingClientRect();
-                
                 const sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
                 sparkle.style.left = `${toothRect.left - rect.left + toothRect.width/2}px`;
                 sparkle.style.top = `${toothRect.top - rect.top + toothRect.height/2}px`;
                 gameContent.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 500);
+                setTimeout(() => {
+                    if (sparkle.parentNode) sparkle.remove();
+                }, 500);
                 
                 if (score >= mission.targetScore) {
                     // Remover os eventos ao completar
@@ -1278,7 +1354,42 @@ function initToothbrushGame() {
                 }
             }
         });
-    });
+    }
+
+    // Limpeza dos dentes para mouse
+    if (!isMobile) {
+        document.querySelectorAll('.tooth').forEach(tooth => {
+            tooth.addEventListener('mouseover', function() {
+                if (this.classList.contains('dirty')) {
+                    this.classList.remove('dirty');
+                    this.classList.add('clean');
+                    score++;
+                    document.querySelector('.score-counter span').textContent = score;
+                    
+                    // Efeito visual de limpeza
+                    const rect = gameContent.getBoundingClientRect();
+                    const toothRect = this.getBoundingClientRect();
+                    
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = `${toothRect.left - rect.left + toothRect.width/2}px`;
+                    sparkle.style.top = `${toothRect.top - rect.top + toothRect.height/2}px`;
+                    gameContent.appendChild(sparkle);
+                    setTimeout(() => {
+                        if (sparkle.parentNode) sparkle.remove();
+                    }, 500);
+                    
+                    if (score >= mission.targetScore) {
+                        // Remover os eventos ao completar
+                        document.removeEventListener('mousemove', window.gameMouseMove);
+                        document.removeEventListener('touchmove', window.gameTouchMove);
+                        document.removeEventListener('touchstart', window.gameTouchMove);
+                        missionCompleted();
+                    }
+                }
+            });
+        });
+    }
 
     // Adicionar estilo para efeitos visuais da limpeza
     const sparkleStyle = document.createElement('style');
@@ -1305,210 +1416,18 @@ function initToothbrushGame() {
     addToothbrushGameStyle();
 }
 
-function addToothbrushGameStyle() {
-    if (!document.getElementById('toothbrush-game-style')) {
-        const style = document.createElement('style');
-        style.id = 'toothbrush-game-style';
-        style.innerHTML = `
-            .toothbrush-game {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .mouth-arena {
-                flex-grow: 1;
-                position: relative;
-                background-color: #f9aebc;
-                border-radius: 15px;
-                overflow: hidden;
-                min-height: 300px;
-                border: 8px solid #e57373;
-            }
-            
-            .toothbrush {
-                position: absolute;
-                width: 60px;
-                height: auto;
-                cursor: none;
-                z-index: 10;
-                pointer-events: none;
-                transform: rotate(45deg);
-            }
-            
-            .teeth-container {
-                display: grid;
-                grid-template-columns: repeat(5, 1fr);
-                gap: 10px;
-                padding: 20px;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 90%;
-                background: rgba(255, 192, 203, 0.7);
-                border-radius: 40% 40% 60% 60%;
-                padding: 30px 20px 40px 20px;
-            }
-            
-            .tooth {
-                aspect-ratio: 1;
-                background: linear-gradient(145deg, #ffffff, #f0f0f0);
-                border-radius: 50% 50% 35% 35%;
-                position: relative;
-                cursor: pointer;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 -4px 4px rgba(0, 0, 0, 0.05);
-                border: 1px solid #e0e0e0;
-            }
-            
-            .tooth::after {
-                content: '';
-                position: absolute;
-                bottom: 10%;
-                left: 25%;
-                width: 50%;
-                height: 15%;
-                background-color: rgba(255, 255, 255, 0.8);
-                border-radius: 50%;
-            }
-            
-            .tooth.dirty::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill="%23936639" opacity="0.6"><circle cx="30" cy="30" r="4"/><circle cx="60" cy="20" r="6"/><circle cx="80" cy="40" r="5"/><circle cx="20" cy="60" r="7"/><circle cx="40" cy="80" r="4"/><circle cx="70" cy="70" r="6"/></g></svg>');
-                background-size: cover;
-                border-radius: inherit;
-                opacity: calc(0.6 + var(--random-dirt) * 0.4);
-            }
-            
-            .tooth.clean {
-                animation: clean 0.5s ease-out;
-                background: linear-gradient(145deg, #ffffff, #f5f5f5);
-                box-shadow: 0 2px 10px rgba(0, 191, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.03);
-            }
-            
-            @keyframes clean {
-                0% { transform: scale(1); filter: brightness(1); }
-                50% { transform: scale(1.1); filter: brightness(1.3); }
-                100% { transform: scale(1); filter: brightness(1.1); }
-            }
-            
-            /* Estilos responsivos para dispositivos móveis */
-            @media (max-width: 768px) {
-                .teeth-container {
-                    grid-template-columns: repeat(5, 1fr);
-                    gap: 8px;
-                    padding: 25px 15px 35px 15px;
-                }
-                
-                .tooth::after {
-                    bottom: 8%;
-                    height: 12%;
-                }
-            }
-            
-            @media (max-width: 480px) {
-                .teeth-container {
-                    grid-template-columns: repeat(5, 1fr);
-                    gap: 6px;
-                    padding: 20px 12px 30px 12px;
-                }
-                
-                .tooth::after {
-                    bottom: 5%;
-                    height: 10%;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-}
-
-function initQuizGame() {
-    const mission = missions[currentMission];
-    const gameContent = document.getElementById('game-content');
-    
-    // Embaralhar as questões
-    const shuffledQuestions = [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, mission.targetScore);
-    quizTotalQuestions = mission.targetScore;
-    let currentQuestion = 0;
-    let score = 0;
-    
-    function showQuestion() {
-        const question = shuffledQuestions[currentQuestion];
-        gameContent.innerHTML = `
-            <div class="quiz-game">
-                <div class="game-stats">
-                    <div class="quiz-counter">Questão ${currentQuestion + 1}/${mission.targetScore}</div>
-                    <div class="quiz-score">Pontos: ${score}/${mission.targetScore}</div>
-                </div>
-                <div class="quiz-container">
-                    <h3 class="quiz-question">${question.question}</h3>
-                    <div class="quiz-options">
-                        ${question.options.map((option, index) => `
-                            <button class="quiz-option" data-index="${index}">${option}</button>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        // Adicionar eventos aos botões
-        document.querySelectorAll('.quiz-option').forEach(button => {
-            button.addEventListener('click', function() {
-                const selectedIndex = parseInt(this.getAttribute('data-index'));
-                if (selectedIndex === question.correct) {
-                    this.classList.add('correct');
-                    score++;
-                    quizCorrectAnswers++; // Incrementar contador global de respostas corretas
-                } else {
-                    this.classList.add('wrong');
-                    document.querySelector(`.quiz-option[data-index="${question.correct}"]`).classList.add('correct');
-                }
-                
-                // Desabilitar todos os botões
-                document.querySelectorAll('.quiz-option').forEach(btn => {
-                    btn.disabled = true;
-                });
-                
-                // Próxima questão após 1.5 segundos
-                setTimeout(() => {
-                    currentQuestion++;
-                    if (currentQuestion < mission.targetScore) {
-                        showQuestion();
-                    } else {
-                        if (score >= Math.ceil(mission.targetScore * 0.6)) { // 60% para passar
-                            missionCompleted();
-                        } else {
-                            missionFailed();
-                        }
-                    }
-                }, 1500);
-            });
-        });
-    }
-    
-    showQuestion();
-    addQuizGameStyle();
-}
-
 function initCatchItemsGame() {
     const mission = missions[currentMission];
     const gameContent = document.getElementById('game-content');
+    const isMobile = isMobileDevice();
     
-    // Garantir que apenas o conteúdo do jogo seja substituído, não afetando o cabeçalho
     gameContent.innerHTML = `
         <div class="catch-game">
             <div class="game-stats">
                 <div class="catch-counter">Itens Coletados: <span>0</span>/${mission.targetScore}</div>
             </div>
             <div class="game-instructions">
-                <p>Arraste a lixeira para coletar os itens!</p>
+                <p>${isMobile ? 'Arraste a lixeira' : 'Use o mouse'} para coletar os itens!</p>
                 <div class="instruction-items">
                     <div class="instruction-item">
                         <img src="https://i.imgur.com/8omcfRr.png" class="instruction-icon">
@@ -1526,7 +1445,7 @@ function initCatchItemsGame() {
         </div>
     `;
 
-    // Ajustar estilos para não interferir com o cabeçalho (z-index)
+    // Ajustar estilos para melhor experiência em celulares
     addCatchGameStyle();
     
     const player = document.querySelector('.player');
@@ -1541,8 +1460,9 @@ function initCatchItemsGame() {
 
     // Suporte para mouse e touch
     function handleMove(e) {
+        e.preventDefault(); // Prevenir comportamento padrão
         const arena = document.querySelector('.catch-arena');
-        if (!arena) return; // Verificar se o arena ainda existe
+        if (!arena) return;
         
         const rect = arena.getBoundingClientRect();
         const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
@@ -1550,27 +1470,39 @@ function initCatchItemsGame() {
         updatePlayerPosition(x);
     }
 
-    // Adicionar eventos de mouse e touch
-    document.addEventListener('mousemove', handleMove);
-    document.addEventListener('touchmove', handleMove, { passive: true });
-    document.addEventListener('touchstart', handleMove, { passive: true });
+    // Adicionar eventos de mouse e touch com otimizações para mobile
+    if (!isMobile) {
+        document.addEventListener('mousemove', handleMove);
+    }
+    document.addEventListener('touchmove', handleMove, { passive: false });
+    document.addEventListener('touchstart', handleMove, { passive: false });
 
     function createItem() {
         const arena = document.querySelector('.catch-arena');
-        if (!arena) return; // Verificar se o arena ainda existe
+        if (!arena) return;
         
         const item = document.createElement('img');
         const isGood = Math.random() > 0.3;
         item.src = isGood ? 'https://i.imgur.com/8omcfRr.png' : 'https://i.imgur.com/IgCzNYb.png';
         item.className = isGood ? 'falling-item good' : 'falling-item bad';
-        item.style.left = `${Math.random() * 95}%`;
+        
+        // Variar a posição horizontal para evitar frustração em mobile
+        const randomPosition = isMobile ?
+            5 + Math.random() * 85 : // Evitar os cantos em celulares
+            Math.random() * 95;     // Posição normal
+            
+        item.style.left = `${randomPosition}%`;
         arena.appendChild(item);
 
-        const fallSpeed = Math.random() * 0.5 + 0.5;
+        // Velocidade mais lenta para mobile
+        const fallSpeed = isMobile ? 
+                        Math.random() * 0.3 + 0.3 : // Mais lento para mobile
+                        Math.random() * 0.5 + 0.5;  // Velocidade normal
+                        
         let posY = 0;
 
         function fall() {
-            if (!item.parentNode) return; // Parar se o item foi removido
+            if (!item.parentNode) return;
             
             posY += fallSpeed;
             item.style.top = `${posY}%`;
@@ -1632,7 +1564,8 @@ function initCatchItemsGame() {
         requestAnimationFrame(fall);
     }
 
-    const itemInterval = setInterval(createItem, 2000);
+    // Intervalo mais longo para mobile
+    const itemInterval = setInterval(createItem, isMobile ? 2500 : 2000);
     
     const originalMissionCompleted = window.missionCompleted;
     window.missionCompleted = function() {
@@ -1667,6 +1600,211 @@ function initCatchItemsGame() {
         }
     `;
     document.head.appendChild(effectStyle);
+}
+
+// Inicializar o jogo de perguntas
+function initQuizGame() {
+    const mission = missions[currentMission];
+    const gameContent = document.getElementById('game-content');
+    const isMobile = isMobileDevice();
+    
+    // Embaralhar as questões
+    const shuffledQuestions = [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, mission.targetScore);
+    quizTotalQuestions = mission.targetScore;
+    let currentQuestion = 0;
+    let score = 0;
+    
+    // Adicionar timer para o quiz
+    let timeLeft = mission.timeLimit;
+    let quizTimer;
+    
+    function showQuestion() {
+        const question = shuffledQuestions[currentQuestion];
+        gameContent.innerHTML = `
+            <div class="quiz-game">
+                <div class="game-stats">
+                    <div class="quiz-counter">Questão ${currentQuestion + 1}/${mission.targetScore}</div>
+                    <div class="quiz-score">Pontos: ${score}/${mission.targetScore}</div>
+                    <div class="quiz-timer">Tempo: <span>${formatTime(timeLeft)}</span></div>
+                </div>
+                <div class="quiz-container">
+                    <h3 class="quiz-question">${question.question}</h3>
+                    <div class="quiz-options">
+                        ${question.options.map((option, index) => `
+                            <button class="quiz-option" data-index="${index}">${option}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar eventos aos botões com suporte aprimorado para touch
+        document.querySelectorAll('.quiz-option').forEach(button => {
+            const handleSelection = function(e) {
+                e.preventDefault();
+                if (button.disabled) return; // Evitar cliques múltiplos
+                
+                const selectedIndex = parseInt(this.getAttribute('data-index'));
+                if (selectedIndex === question.correct) {
+                    this.classList.add('correct');
+                    score++;
+                    quizCorrectAnswers++; // Incrementar contador global de respostas corretas
+                    
+                    // Efeito visual de resposta correta
+                    showFeedback(true);
+                } else {
+                    this.classList.add('wrong');
+                    document.querySelector(`.quiz-option[data-index="${question.correct}"]`).classList.add('correct');
+                    
+                    // Efeito visual de resposta incorreta
+                    showFeedback(false);
+                }
+                
+                // Desabilitar todos os botões
+                document.querySelectorAll('.quiz-option').forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                // Próxima questão após 1.5 segundos
+                setTimeout(() => {
+                    currentQuestion++;
+                    if (currentQuestion < mission.targetScore) {
+                        showQuestion();
+                    } else {
+                        clearInterval(quizTimer);
+                        if (score >= Math.ceil(mission.targetScore * 0.6)) { // 60% para passar
+                            missionCompleted();
+                        } else {
+                            missionFailed();
+                        }
+                    }
+                }, 1500);
+            };
+            
+            // Adicionar eventos para mouse e touch
+            button.addEventListener('click', handleSelection);
+            button.addEventListener('touchstart', handleSelection, {passive: false});
+        });
+    }
+    
+    function showFeedback(isCorrect) {
+        const feedbackElement = document.createElement('div');
+        feedbackElement.className = `quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+        feedbackElement.innerHTML = isCorrect ? 
+            '<i class="feedback-icon">✓</i><span>Correto!</span>' : 
+            '<i class="feedback-icon">✗</i><span>Incorreto!</span>';
+        
+        document.querySelector('.quiz-container').appendChild(feedbackElement);
+        
+        // Remover o feedback após a animação
+        setTimeout(() => {
+            if (feedbackElement.parentNode) {
+                feedbackElement.parentNode.removeChild(feedbackElement);
+            }
+        }, 1400);
+    }
+    
+    function updateTimer() {
+        timeLeft--;
+        const timerElement = document.querySelector('.quiz-timer span');
+        if (timerElement) {
+            timerElement.textContent = formatTime(timeLeft);
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(quizTimer);
+            missionFailed();
+        }
+    }
+    
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    
+    // Adicionar estilos específicos para o quiz
+    const quizStyles = document.createElement('style');
+    quizStyles.innerHTML = `
+        .quiz-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInOut 1.5s ease-in-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .quiz-feedback.correct {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+        
+        .quiz-feedback.incorrect {
+            background-color: rgba(244, 67, 54, 0.9);
+            color: white;
+        }
+        
+        .feedback-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .quiz-timer {
+            background-color: ${timeLeft < 30 ? '#ff5252' : '#2196f3'};
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-left: auto;
+        }
+        
+        /* Melhoria para mobile */
+        @media (max-width: 768px) {
+            .quiz-question {
+                font-size: 1.1rem;
+                padding: 0 10px;
+            }
+            
+            .quiz-option {
+                min-height: 54px;
+                padding: 15px;
+                display: flex;
+                align-items: center;
+            }
+            
+            .quiz-feedback {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    `;
+    document.head.appendChild(quizStyles);
+    
+    // Iniciar o timer
+    quizTimer = setInterval(updateTimer, 1000);
+    
+    // Mostrar a primeira questão
+    showQuestion();
 }
 
 // Adicionar estilo para o jogo de quiz
@@ -1939,4 +2077,38 @@ function addCatchGameStyle() {
         `;
         document.head.appendChild(style);
     }
-} 
+}
+
+// Ajustar o jogo quando o jogador muda a orientação da tela
+function handleOrientationChange() {
+    // Recarregar o jogo atual se estiver no meio de uma missão
+    if (currentMission) {
+        // Salvar o estado atual
+        const savedMission = currentMission;
+        const savedScore = currentScore || 0;
+        
+        // Aguardar um momento para que a tela termine de rotacionar
+        setTimeout(() => {
+            // Reiniciar o jogo atual
+            startGameplay(savedMission);
+            
+            // Restaurar pontuação quando possível
+            if (currentMission === savedMission && savedScore > 0) {
+                if (document.querySelector('.catch-counter span')) {
+                    document.querySelector('.catch-counter span').textContent = savedScore;
+                }
+                if (document.querySelector('.score-counter span')) {
+                    document.querySelector('.score-counter span').textContent = savedScore;
+                }
+            }
+        }, 300);
+    }
+}
+
+// Adicionar ouvinte para evento de orientação
+window.addEventListener('resize', function() {
+    // Verificar se é mobile antes de processar o evento de redimensionamento
+    if (isMobileDevice()) {
+        handleOrientationChange();
+    }
+}); 
