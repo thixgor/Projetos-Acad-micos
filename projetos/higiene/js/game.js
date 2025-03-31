@@ -801,7 +801,7 @@ function startMission(locationId) {
             background-image: url('https://i.imgur.com/zRFJZjH.jpeg');
         }
         .mission-location-img.playground {
-            background-image: url('https://i.imgur.com/IdNZFeO.jpeg');
+            background-image: url('https://i.imgur.com/HOrZybl.jpeg');
         }
         @media (max-width: 768px) {
             .mission-location-img {
@@ -1043,8 +1043,8 @@ function adjustDifficultyForDevice() {
 function initBubblePopGame() {
     const mission = missions[currentMission];
     const gameContent = document.getElementById('game-content');
+    const isMobile = isMobileDevice();
     
-    // Número de bolhas já existentes
     bubblesPopped = 0;
     totalBubbles = 0;
     
@@ -1069,20 +1069,22 @@ function initBubblePopGame() {
             position: absolute;
             top: 10px;
             left: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: bold;
             z-index: 100;
+            font-size: ${isMobile ? '1.1em' : '1em'};
         }
         
         .bubble-container {
             width: 100%;
             height: 100%;
             position: relative;
-            background-color: #f0f8ff;
+            background-color: rgba(240, 248, 255, 0.8);
             border-radius: 10px;
             overflow: hidden;
+            touch-action: none;
         }
         
         .bubble {
@@ -1097,20 +1099,18 @@ function initBubblePopGame() {
             border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
-            animation-name: float;
-            animation-duration: 8s;
-            animation-iteration-count: infinite;
-            animation-timing-function: ease-in-out;
-            animation-direction: alternate;
+            animation: float 8s infinite alternate ease-in-out;
             user-select: none;
-            touch-action: manipulation;
+            touch-action: none;
+            min-width: ${isMobile ? '60px' : '40px'};
+            min-height: ${isMobile ? '60px' : '40px'};
         }
         
-        .bubble:before {
+        .bubble::before {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 20%;
+            left: 20%;
             width: 30%;
             height: 30%;
             background-color: rgba(255, 255, 255, 0.4);
@@ -1120,34 +1120,40 @@ function initBubblePopGame() {
         .bubble.clicked {
             transform: scale(0);
             opacity: 0;
+            transition: all 0.3s ease-out;
         }
 
-        /* Aumentar o tamanho das bolhas em dispositivos móveis */
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+
         @media (max-width: 768px) {
+            .score-counter {
+                padding: 10px 20px;
+                font-size: 1.2em;
+            }
+            
             .bubble {
-                min-width: 50px !important;
-                min-height: 50px !important;
+                min-width: 60px;
+                min-height: 60px;
             }
         }
     `;
     document.head.appendChild(style);
     
-    // Criar bolhas com intervalos
     function createBubble() {
         if (totalBubbles < mission.targetBubbles * 2) {
             const bubble = document.createElement('div');
             bubble.className = 'bubble';
             
-            // Determinar tamanho com base no dispositivo
-            const isMobile = isMobileDevice();
             const size = isMobile ? 
-                        40 + Math.random() * 30 : // Tamanho maior para mobile
-                        30 + Math.random() * 20;  // Tamanho normal
+                        60 + Math.random() * 20 : // Tamanho maior para mobile
+                        40 + Math.random() * 20;  // Tamanho normal
             
             bubble.style.width = `${size}px`;
             bubble.style.height = `${size}px`;
             
-            // Posicionar a bolha
             const container = document.querySelector('.bubble-container');
             const maxX = container.clientWidth - size;
             const maxY = container.clientHeight - size;
@@ -1155,39 +1161,18 @@ function initBubblePopGame() {
             bubble.style.left = `${Math.random() * maxX}px`;
             bubble.style.top = `${Math.random() * maxY}px`;
             
-            // Adicionar animação aleatória
-            bubble.style.animationDuration = `${5 + Math.random() * 5}s`;
-            
-            // Estourar a bolha ao clicar/tocar
             function popBubble(e) {
-                e.preventDefault(); // Prevenir comportamento padrão do toque
+                e.preventDefault();
                 if (!bubble.classList.contains('clicked')) {
                     bubble.classList.add('clicked');
-                    
-                    // Adicionar efeito pop
-                    const pop = document.createElement('div');
-                    pop.className = 'pop-effect';
-                    pop.style.left = bubble.style.left;
-                    pop.style.top = bubble.style.top;
-                    container.appendChild(pop);
-                    
-                    // Remover o efeito após a animação
-                    setTimeout(() => {
-                        if (pop.parentNode) {
-                            pop.parentNode.removeChild(pop);
-                        }
-                    }, 1000);
-                    
                     bubblesPopped++;
                     document.querySelector('.score-counter span').textContent = bubblesPopped;
                     
-                    // Verificar se a missão foi concluída
                     if (bubblesPopped >= mission.targetBubbles) {
                         clearInterval(bubbleInterval);
                         missionCompleted();
                     }
                     
-                    // Remover a bolha após a animação
                     setTimeout(() => {
                         if (bubble.parentNode) {
                             bubble.parentNode.removeChild(bubble);
@@ -1197,45 +1182,15 @@ function initBubblePopGame() {
             }
             
             bubble.addEventListener('click', popBubble);
-            bubble.addEventListener('touchstart', popBubble, {passive: false});
+            bubble.addEventListener('touchstart', popBubble, { passive: false });
             
             container.appendChild(bubble);
             totalBubbles++;
         }
     }
     
-    // Adicionar estilo para o efeito de pop
-    const popStyle = document.createElement('style');
-    popStyle.innerHTML = `
-        .pop-effect {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: transparent;
-            border-radius: 50%;
-            z-index: 50;
-            animation: pop 0.5s ease-out forwards;
-            pointer-events: none;
-        }
-        
-        @keyframes pop {
-            0% {
-                transform: scale(0.5);
-                box-shadow: 0 0 0 0px rgba(244, 67, 54, 0.5);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5);
-                box-shadow: 0 0 0 20px rgba(244, 67, 54, 0);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(popStyle);
-    
-    // Começar a criar bolhas
     createBubble();
-    bubbleInterval = setInterval(createBubble, isMobileDevice() ? 1500 : 1000);
+    bubbleInterval = setInterval(createBubble, isMobile ? 2000 : 1500);
 }
 
 function initToothbrushGame() {
@@ -1726,76 +1681,70 @@ function initQuizGame() {
     // Adicionar estilos específicos para o quiz
     const quizStyles = document.createElement('style');
     quizStyles.innerHTML = `
-        .quiz-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            border-radius: 10px;
-            padding: 15px 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .quiz-game {
+            width: 100%;
+            height: 100%;
             display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .quiz-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            animation: fadeInOut 1.5s ease-in-out;
-            pointer-events: none;
-            z-index: 1000;
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow-medium);
         }
         
-        .quiz-feedback.correct {
-            background-color: rgba(76, 175, 80, 0.9);
+        .quiz-question {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--color-primary);
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background-color: var(--color-primary);
             color: white;
         }
         
-        .quiz-feedback.incorrect {
-            background-color: rgba(244, 67, 54, 0.9);
+        .quiz-option.correct {
+            background-color: #4caf50;
             color: white;
+            border-color: #4caf50;
         }
         
-        .feedback-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-            font-weight: bold;
-            font-style: normal;
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            30% { transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        
-        .quiz-timer {
-            background-color: ${timeLeft < 30 ? '#ff5252' : '#2196f3'};
+        .quiz-option.wrong {
+            background-color: #f44336;
             color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-left: auto;
+            border-color: #f44336;
         }
         
-        /* Melhoria para mobile */
-        @media (max-width: 768px) {
-            .quiz-question {
-                font-size: 1.1rem;
-                padding: 0 10px;
-            }
-            
-            .quiz-option {
-                min-height: 54px;
-                padding: 15px;
-                display: flex;
-                align-items: center;
-            }
-            
-            .quiz-feedback {
-                padding: 12px 20px;
-                font-size: 0.9rem;
-            }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
         }
     `;
     document.head.appendChild(quizStyles);
