@@ -25,6 +25,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Add Tinos font for ABNT NR-37 -->
+  <link href="https://fonts.googleapis.com/css2?family=Tinos&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #4f46e5;
@@ -41,7 +43,7 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 0;
       min-height: 100vh;
@@ -591,6 +593,74 @@
     .btn-group .btn i {
       font-size: 1.1em;
     }
+    
+    /* Estilos para ABNT NR-37 */
+    .card-header.bg-primary {
+      background: linear-gradient(45deg, var(--primary), var(--secondary)) !important;
+      color: white;
+    }
+    
+    .accordion-button:not(.collapsed) {
+      background-color: rgba(79, 70, 229, 0.1);
+      color: var(--primary);
+    }
+    
+    .dark .accordion-button:not(.collapsed) {
+      background-color: rgba(79, 70, 229, 0.2);
+      color: var(--secondary);
+    }
+    
+    .accordion-button:focus {
+      box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+    }
+    
+    .fonte-item {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .fonte-item:hover {
+      background-color: rgba(79, 70, 229, 0.05);
+      border-radius: 8px;
+    }
+    
+    .fonte-texto {
+      resize: vertical;
+      min-height: 60px;
+    }
+    
+    .dark .fonte-texto {
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+      border-color: var(--border-dark);
+    }
+    
+    .dark .accordion-item {
+      background-color: rgba(15, 23, 42, 0.8);
+      color: var(--text-dark);
+      border-color: var(--border-dark);
+    }
+    
+    .dark .accordion-button {
+      background-color: rgba(15, 23, 42, 0.8);
+      color: var(--text-dark);
+    }
+    
+    .dark .card {
+      background-color: rgba(15, 23, 42, 0.8);
+      color: var(--text-dark);
+      border-color: var(--border-dark);
+    }
+    
+    .dark .card-body {
+      background-color: rgba(15, 23, 42, 0.8);
+      color: var(--text-dark);
+    }
+    
+    /* ABNT NR-37 style with Tinos font */
+    .modelo-abnt {
+      font-family: "Tinos", serif;
+    }
   </style>
 </head>
 <body class="light">
@@ -647,6 +717,134 @@
         <option value="DANIELLE CECATO DE ALMEIDA PASSOS">DANIELLE CECATO DE ALMEIDA PASSOS</option>
       </select>
 
+      <label for="semestre">Semestre:</label>
+      <select id="semestre" required>
+        <option value="">Selecione o Semestre</option>
+        <option value="1">1º Semestre</option>
+        <option value="2">2º Semestre</option>
+        <option value="3">3º Semestre</option>
+        <option value="4">4º Semestre</option>
+        <option value="5">5º Semestre</option>
+        <option value="6">6º Semestre</option>
+        <option value="7">7º Semestre</option>
+        <option value="8">8º Semestre</option>
+        <option value="9">9º Semestre</option>
+        <option value="10">10º Semestre</option>
+        <option value="11">11º Semestre</option>
+        <option value="12">12º Semestre</option>
+      </select>
+
+      <label for="modelo">Modelo:</label>
+      <select id="modelo" required>
+        <option value="Normal" selected>Normal</option>
+        <option value="ABNT NR-37">ABNT NR-37</option>
+      </select>
+
+      <!-- Seção de Bibliografia (visível apenas quando ABNT NR-37 for selecionado) -->
+      <div id="secaoBibliografia" class="hidden">
+        <div class="card mb-3">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Estrutura do Documento ABNT NR-37</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">Este formato inclui elementos adicionais conforme ABNT NBR 14724:2023:</p>
+            <ul>
+              <li>Fonte: Times New Roman ou Arial, tamanho 12</li>
+              <li>Espaçamento: 1,5 entre linhas</li>
+              <li>Alinhamento: Justificado</li>
+              <li>Citações e referências: Estilo ABNT (NBR 6023 e NBR 10520)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion mb-3" id="abntSections">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#objetivoSection">
+                Objetivo do estágio/atividade
+              </button>
+            </h2>
+            <div id="objetivoSection" class="accordion-collapse collapse" data-bs-parent="#abntSections">
+              <div class="accordion-body">
+                <textarea class="form-control" id="objetivo" rows="3" placeholder="Descreva o objetivo da atividade ou estágio..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#justificativaSection">
+                Justificativa
+              </button>
+            </h2>
+            <div id="justificativaSection" class="accordion-collapse collapse" data-bs-parent="#abntSections">
+              <div class="accordion-body">
+                <textarea class="form-control" id="justificativa" rows="3" placeholder="Explique a importância da atividade realizada..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contextoSection">
+                Contextualização
+              </button>
+            </h2>
+            <div id="contextoSection" class="accordion-collapse collapse" data-bs-parent="#abntSections">
+              <div class="accordion-body">
+                <textarea class="form-control" id="contextualizacao" rows="3" placeholder="Apresente o contexto em que a atividade foi realizada..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#metodologiaSection">
+                Metodologia
+              </button>
+            </h2>
+            <div id="metodologiaSection" class="accordion-collapse collapse" data-bs-parent="#abntSections">
+              <div class="accordion-body">
+                <textarea class="form-control" id="metodologia" rows="3" placeholder="Explique como foi realizada a atividade (carga horária, local, tipo de acompanhamento)..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#conclusaoSection">
+                Conclusão
+              </button>
+            </h2>
+            <div id="conclusaoSection" class="accordion-collapse collapse" data-bs-parent="#abntSections">
+              <div class="accordion-body">
+                <textarea class="form-control" id="conclusao" rows="3" placeholder="Apresente suas conclusões gerais e competências desenvolvidas..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label for="bibliografia">Referências Bibliográficas:</label>
+        <div id="fontesContainer">
+          <div class="fonte-item">
+            <div class="d-flex mb-2">
+              <textarea class="form-control fonte-texto" placeholder="Insira a referência bibliográfica no formato ABNT"></textarea>
+              <div class="ms-2 d-flex flex-column">
+                <button type="button" class="btn btn-sm btn-outline-danger mb-1 remover-fonte"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary mb-1 mover-cima" title="Mover para cima"><i class="fas fa-arrow-up"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary mover-baixo" title="Mover para baixo"><i class="fas fa-arrow-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="adicionarFonte">
+          <i class="fas fa-plus"></i> Adicionar Referência
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary mt-2 ms-2" id="ordenarFontes">
+          <i class="fas fa-sort-alpha-down"></i> Ordenar Alfabeticamente
+        </button>
+      </div>
+
       <label for="relatorio">Relatório de Campo:</label>
       <textarea id="relatorio" name="relatorio" required></textarea>
       <small class="text-muted d-block mt-1 mb-3">Dica: Para melhor formatação, use parágrafos curtos e evite espaçamentos excessivos. Você pode colar texto de outras fontes diretamente.</small>
@@ -694,11 +892,10 @@
 		  <div class="modal-body">
 			<div id="changelogContent">
 			  <!-- Conteúdo do changelog estático -->
-			  <h5>Atualizações (04/03/2025)</h5>
+			  <h5>Atualizações (09/04/2025)</h5>
 			  <ul>
-				<li>Melhorias na visibilidade das opções do select em modo escuro.</li>
-				<li>Melhorando o design do diário de campo.</li>
-				<li>Atualização das instruções para criação do diário, tornando-as mais instrutivas e formais.</li>
+				<li>Implementação do modelo ABNT NR-37.</li>
+				<li>Melhorias no sistema geral.</li>
 			  </ul>
 			</div>
 		  </div>
@@ -957,40 +1154,61 @@
 			  file,
 			  (canvas) => {
 				try {
-				  // Redimensionar a imagem para um tamanho razoável
-				  const maxWidth = 800;
-				  const maxHeight = 600;
+				  // Definir dimensões máximas para fotos no PDF
+				  const maxWidth = 600;
+				  const maxHeight = 450;
+				  
+				  // Obter dimensões originais
 				  let width = canvas.width;
 				  let height = canvas.height;
 				  
+				  // Calcular proporção para redimensionamento
+				  const aspectRatio = width / height;
+				  
+				  // Redimensionar mantendo proporção
 				  if (width > maxWidth) {
-					height = (maxWidth / width) * height;
 					width = maxWidth;
+					height = Math.round(width / aspectRatio);
 				  }
 				  
 				  if (height > maxHeight) {
-					width = (maxHeight / height) * width;
 					height = maxHeight;
+					width = Math.round(height * aspectRatio);
 				  }
 				  
-				  // Criar um novo canvas com as dimensões ajustadas
+				  // Criar canvas redimensionado
 				  const resizedCanvas = document.createElement('canvas');
 				  resizedCanvas.width = width;
 				  resizedCanvas.height = height;
+				  
+				  // Desenhar imagem redimensionada
 				  const ctx = resizedCanvas.getContext('2d');
+				  ctx.fillStyle = 'white'; // Fundo branco para imagens com transparência
+				  ctx.fillRect(0, 0, width, height);
 				  ctx.drawImage(canvas, 0, 0, width, height);
 				  
-				  // Converter para dataURL
+				  // Converter para dataURL com qualidade otimizada
+				  // Usar qualidade 0.8 (80%) para JPEG para equilibrar tamanho e qualidade
 				  const dataURL = resizedCanvas.toDataURL('image/jpeg', 0.8);
-				  resolve({ dataURL });
+				  
+				  // Adicionar informações de dimensão
+				  resolve({
+					dataURL: dataURL,
+					width: width,
+					height: height
+				  });
 				} catch (error) {
+				  console.error('Erro ao processar imagem:', error);
 				  reject(error);
 				}
 			  },
 			  {
-				orientation: true,
-				canvas: true,
-				meta: true
+				orientation: true, // Corrigir orientação da imagem
+				canvas: true,      // Retornar um canvas
+				maxWidth: 1200,    // Limitar dimensão máxima inicial
+				maxHeight: 1200,   // Limitar dimensão máxima inicial
+				crop: false,       // Não recortar
+				meta: true         // Preservar metadados
 			  }
 			);
 		  });
@@ -1071,61 +1289,169 @@
     document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
     async function gerarPDF() {
-      // Verificar se a biblioteca pdfmake está carregada
+        // Verificar se o pdfMake está carregado
       if (typeof pdfMake === 'undefined') {
-        alert("Erro: A biblioteca pdfMake não foi carregada corretamente. Verifique sua conexão com a internet e recarregue a página.");
+            alert('Erro: Biblioteca pdfMake não carregada. Por favor, recarregue a página.');
         return;
       }
 
-      // Capturar os valores dos campos
-      const nome = document.getElementById('nome').value.trim();
-      const matricula = document.getElementById('matricula').value.trim();
+        // Verificar quais fontes estão disponíveis no pdfMake
+        console.log("Fontes disponíveis no pdfMake:", pdfMake.fonts || "Nenhuma fonte personalizada definida");
+        
+        // Valores dos campos
+        const nome = document.getElementById('nome').value;
+        const matricula = document.getElementById('matricula').value;
       const data = document.getElementById('data').value;
-      const local = document.getElementById('local').value.trim();
+        const local = document.getElementById('local').value;
       const professor = document.getElementById('professor').value;
-      const relatorio = tinymce.get('relatorio').getContent({ format: 'text' });
-
-	// Ajustar o título do professor
-      const professorFormatado = professor.trim().toLowerCase() === "danielle cecato de almeida passes".toLowerCase() ? "Professora" : "Professor";
-
-      // Formatar data para DD/MM/AAAA
-      const [ano, mes, dia] = data.split('-');
-      const dataFormatada = `${dia}/${mes}/${ano}`;
-
-      // Formatar o texto do relatório
-      const relatorioFormatado = relatorio
-        .replace(/\n{3,}/g, '\n\n')
-        .replace(/\t/g, '    ')
-        .trim();
-
-      // Processar imagens para o PDF
-      const imagensProcessadas = [];
-      if (selectedImages.length > 0) {
-        try {
-          for (let file of selectedImages.slice(0, 6)) {
-            const processed = await processImageForPDF(file);
-            imagensProcessadas.push({
-              image: processed.dataURL,
-              width: 80,
-              height: 80
-            });
-          }
-      } catch (e) {
-          alert("Erro ao processar as imagens. Certifique-se de que são válidas.");
-          console.error(e);
-          return;
+      const semestre = document.getElementById('semestre').value;
+        const modelo = document.getElementById('modelo').value;
+        
+        // Obter o conteúdo do relatorio do TinyMCE
+        const editorContent = tinymce.get('relatorio').getContent();
+        
+        // Limpar o conteúdo HTML para ser compatível com o PDF
+        const relatorio = limparConteudoHTML(editorContent);
+        
+        // Verificar se todos os campos necessários estão preenchidos
+        if (!nome || !matricula || !data || !local || !professor || !semestre || !relatorio) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
         }
-      }
+        
+        // Mostrar indicador de carregamento
+        const loadingElement = document.createElement('div');
+        loadingElement.className = 'alert alert-info mt-3';
+        loadingElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF, por favor aguarde...';
+        document.getElementById('diarioForm').appendChild(loadingElement);
+        
+        try {
+            // Array para armazenar as fontes bibliográficas (se houver)
+            let fontesBibliograficas = [];
+            
+            // Variáveis para as seções ABNT
+            let objetivo = '';
+            let justificativa = '';
+            let contextualizacao = '';
+            let metodologia = '';
+            let conclusao = '';
+            
+            // Se o modelo for ABNT NR-37, obter os valores das seções específicas
+            if (modelo === 'ABNT NR-37') {
+                try {
+                    // Verificar se o elemento existe antes de obter seu valor
+                    const objetivoElement = document.getElementById('objetivo');
+                    if (objetivoElement) {
+                        objetivo = objetivoElement.value;
+                    }
+                    
+                    const justificativaElement = document.getElementById('justificativa');
+                    if (justificativaElement) {
+                        justificativa = justificativaElement.value;
+                    }
+                    
+                    const contextualizacaoElement = document.getElementById('contextualizacao');
+                    if (contextualizacaoElement) {
+                        contextualizacao = contextualizacaoElement.value;
+                    }
+                    
+                    const metodologiaElement = document.getElementById('metodologia');
+                    if (metodologiaElement) {
+                        metodologia = metodologiaElement.value;
+                    }
+                    
+                    const conclusaoElement = document.getElementById('conclusao');
+                    if (conclusaoElement) {
+                        conclusao = conclusaoElement.value;
+                    }
+                    
+                    // Obter as fontes bibliográficas
+                    const fontesContainer = document.getElementById('fontesContainer');
+                    if (fontesContainer) {
+                        const fonteTextareas = fontesContainer.querySelectorAll('.fonte-texto');
+                        fonteTextareas.forEach(textarea => {
+                            if (textarea.value.trim() !== '') {
+                                fontesBibliograficas.push(textarea.value.trim());
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao processar seções ABNT:', error);
+                }
+            }
+            
+            // Definir os estilos do documento
+            const estilos = {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 20]
+                },
+                subheader: {
+                    fontSize: 16,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 10, 0, 5]
+                },
+                normal: {
+                    fontSize: 12,
+                    margin: [0, 5, 0, 10]
+                },
+                sectionHeader: {
+                    fontSize: 14,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 10, 0, 5]
+                },
+                paragraph: {
+                    fontSize: 12,
+                    alignment: 'justify',
+                    lineHeight: 1.5
+                },
+                list: {
+                    fontSize: 12,
+                    margin: [20, 0, 0, 10]
+                },
+                footer: {
+                    fontSize: 10,
+                    italic: true,
+                    color: 'gray',
+                    alignment: 'right',
+                    margin: [0, 0, 20, 20]
+                }
+            };
+            
+            // Se o modelo for ABNT NR-37, adicionar estilos específicos
+            if (modelo === 'ABNT NR-37') {
+                estilos.abntTitle = {
+                    fontSize: 16,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 20, 0, 20]
+                };
+                estilos.abntSection = {
+                    fontSize: 14,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 15, 0, 10]
+                };
+                estilos.abntText = {
+                    fontSize: 12,
+                    margin: [0, 5, 0, 10],
+                    alignment: 'justify',
+                    lineHeight: 1.5
+                };
+                estilos.abntReference = {
+                    fontSize: 11,
+                    margin: [0, 3, 0, 3],
+                    alignment: 'left'
+                };
+            }
 
-      // Definir estrutura do documento
-      const docDefinition = {
-        pageSize: 'A4',
-        pageMargins: [40, 40, 40, 40],
-        defaultStyle: {
-          fontSize: 12
-        },
-        content: [
-          // Página 1
+            // Criar conteúdo base para o PDF
+            const conteudoPDF = [
+                // Página 1 - Capa
           {
             stack: [
               {
@@ -1141,18 +1467,18 @@
                 margin: [0, 0, 0, 20]
               },
               {
-                text: `Data: ${dataFormatada}`,
-                style: 'small',
+                            text: `Data: ${formatarData(data)}`,
+                            style: 'normal',
                 margin: [0, 0, 0, 10]
               },
               {
                 text: '1. Informações institucionais;',
-                style: 'small',
+                            style: 'normal',
                 margin: [0, 0, 0, 5]
               },
               {
                 text: '2. Identificação e detalhes.',
-                style: 'small',
+                            style: 'normal',
                 margin: [0, 0, 0, 10]
               },
               {
@@ -1166,12 +1492,12 @@
               },
               {
                 text: 'Universidade Unigranrio - Afya - Campus Barra da Tijuca',
-                style: 'small',
+                            style: 'normal',
                 margin: [0, 0, 0, 5]
               },
               {
                 text: 'Av. Ayrton Senna, 2.200 – Barra da Tijuca, Rio de Janeiro - RJ, 22775-003',
-                style: 'small',
+                            style: 'normal',
                 margin: [0, 0, 0, 20]
               },
               {
@@ -1185,25 +1511,19 @@
         `Matrícula: ${matricula}`,
                   'Curso: Medicina',
                   'Turno: Integral',
-                  'Semestre: 1° Semestre de 2025',
+                                `Semestre: ${semestre}º Semestre de ${data.split('-')[0]}`,
                   'Disciplina: IESC (Integração Ensino-Serviço-Comunidade)',
         `Local de Prática: ${local}`,
-        `${professorFormatado}: ${professor}`
+                                `Professor(a): ${professor}`
                 ],
                 style: 'list',
                 margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'Página 01 (um)',
-                style: 'footer',
-                alignment: 'center',
-                margin: [0, 20, 0, 0]
               }
             ],
             pageBreak: 'after'
           },
           
-          // Página 2 (relatório)
+                // Página 2 - Relatório
           {
             stack: [
               {
@@ -1213,8 +1533,8 @@
                 margin: [0, 0, 0, 10]
               },
               {
-                text: `Data: ${dataFormatada}`,
-                style: 'small',
+                            text: `Data: ${formatarData(data)}`,
+                            style: 'normal',
                 margin: [0, 0, 0, 10]
               },
               {
@@ -1224,88 +1544,224 @@
                 margin: [0, 0, 0, 10]
               },
               {
-                canvas: [
-                  {
-                    type: 'rect',
-                    x: 0,
-                    y: 0,
-                    w: 515,
-                    h: 600,
-                    lineWidth: 1,
-                    lineColor: '#000000'
-                  }
-                ],
+                            // Usar uma tabela para manter o texto dentro do retângulo e garantir que fiquem na mesma página
+                            table: {
+                                widths: ['*'],
+                                heights: [580],
+                                body: [
+                                    [{
+                                        text: relatorio,
+                                        style: 'paragraph',
+                                        margin: [5, 5, 5, 5]
+                                    }]
+                                ]
+                            },
+                            layout: {
+                                hLineWidth: function(i, node) { return 1; },
+                                vLineWidth: function(i, node) { return 1; },
+                                hLineColor: function(i, node) { return '#000000'; },
+                                vLineColor: function(i, node) { return '#000000'; },
+                            },
+                            margin: [0, 0, 0, 20]
+                        }
+                    ],
+                    pageBreak: selectedImages.length > 0 ? 'after' : undefined
+                }
+            ];
+            
+            // Adicionar páginas específicas para ABNT NR-37 se necessário
+            if (modelo === 'ABNT NR-37') {
+                // Vamos diretamente para objetivos e justificativa sem a página de elementos pré-textuais
+                if (objetivo || justificativa) {
+                    // Adicionar página para objetivos e justificativa
+                    const objetivoJustificativaStack = [
+                        {
+                            text: 'OBJETIVOS E JUSTIFICATIVA',
+                            style: 'abntTitle',
+                            alignment: 'center',
                 margin: [0, 0, 0, 20]
-              },
-              {
-                text: relatorioFormatado,
-                style: 'paragraph',
-                margin: [10, -580, 10, 0]
-              },
-              {
-                text: 'Página 02 (dois)',
-                style: 'footer',
-                alignment: 'center',
-                margin: [0, 20, 0, 0]
-              }
-            ],
-            pageBreak: imagensProcessadas.length > 0 ? 'after' : undefined
-          }
-        ],
-        styles: {
-          header: {
-            fontSize: 22,
-            bold: true,
+                        }
+                    ];
+                    
+                    if (objetivo) {
+                        objetivoJustificativaStack.push(
+                            {
+                                text: 'OBJETIVO DO ESTÁGIO/ATIVIDADE',
+                                style: 'abntSection',
+                                margin: [0, 0, 0, 10]
+                            },
+                            {
+                                text: objetivo,
+                                style: 'abntText',
+                                margin: [0, 0, 0, 20]
+                            }
+                        );
+                    }
+                    
+                    if (justificativa) {
+                        objetivoJustificativaStack.push(
+                            {
+                                text: 'JUSTIFICATIVA',
+                                style: 'abntSection',
+                                margin: [0, 0, 0, 10]
+                            },
+                            {
+                                text: justificativa,
+                                style: 'abntText',
+                                margin: [0, 0, 0, 20]
+                            }
+                        );
+                    }
+                    
+                    conteudoPDF.push({
+                        stack: objetivoJustificativaStack,
+                        pageBreak: 'after'
+                    });
+                }
+                
+                // Adicionar página para contextualização e metodologia
+                if (contextualizacao || metodologia) {
+                    const contextoMetodologiaStack = [
+                        {
+                            text: 'CONTEXTUALIZAÇÃO E METODOLOGIA',
+                            style: 'abntTitle',
+                            alignment: 'center',
+                            margin: [0, 0, 0, 20]
+                        }
+                    ];
+                    
+                    if (contextualizacao) {
+                        contextoMetodologiaStack.push(
+                            {
+                                text: 'CONTEXTUALIZAÇÃO',
+                                style: 'abntSection',
             margin: [0, 0, 0, 10]
           },
-          subheader: {
-            fontSize: 12,
-            margin: [0, 0, 0, 5]
-          },
-          sectionHeader: {
-            fontSize: 14,
-            bold: true,
+                            {
+                                text: contextualizacao,
+                                style: 'abntText',
+                                margin: [0, 0, 0, 20]
+                            }
+                        );
+                    }
+                    
+                    if (metodologia) {
+                        contextoMetodologiaStack.push(
+                            {
+                                text: 'METODOLOGIA',
+                                style: 'abntSection',
             margin: [0, 0, 0, 10]
           },
-          paragraph: {
-            fontSize: 12,
-            lineHeight: 1.5,
-            alignment: 'justify'
-          },
-          small: {
-            fontSize: 10
-          },
-          list: {
-            fontSize: 12,
-            lineHeight: 1.3
-          },
-          footer: {
-            fontSize: 10,
-            margin: [0, 20, 0, 0]
-          }
-        }
-      };
-
-      // Se houver imagens, adicionar uma terceira página
-      if (imagensProcessadas.length > 0) {
-        // Criar tabela para as imagens (até 3 por linha)
-        const rows = [];
+                            {
+                                text: metodologia,
+                                style: 'abntText',
+                                margin: [0, 0, 0, 20]
+                            }
+                        );
+                    }
+                    
+                    conteudoPDF.push({
+                        stack: contextoMetodologiaStack,
+                        pageBreak: 'after'
+                    });
+                }
+                
+                // Adicionar página para conclusão
+                if (conclusao) {
+                    conteudoPDF.push({
+                        stack: [
+                            {
+                                text: 'CONCLUSÃO',
+                                style: 'abntTitle',
+                                alignment: 'center',
+                                margin: [0, 0, 0, 20]
+                            },
+                            {
+                                text: conclusao,
+                                style: 'abntText',
+                                margin: [0, 0, 0, 20]
+                            }
+                        ],
+                        pageBreak: 'after'
+                    });
+                }
+                
+                // Adicionar página para referências bibliográficas
+                if (fontesBibliograficas.length > 0) {
+                    // Criar array com elementos para a página de bibliografia
+                    const refStack = [
+                        {
+                            text: 'BIBLIOGRAFIA FUNDAMENTAL & FUNDAMENTAÇÃO TEÓRICA',
+                            style: 'abntTitle',
+                            alignment: 'center',
+                            margin: [0, 0, 0, 20]
+                        },
+                        {
+                            text: 'REFERÊNCIAS BIBLIOGRÁFICAS',
+                            style: 'abntSection',
+                            margin: [0, 0, 0, 15]
+                        }
+                    ];
+                    
+                    // Adicionar cada referência bibliográfica individualmente
+                    for (let i = 0; i < fontesBibliograficas.length; i++) {
+                        refStack.push({
+                            text: `[${i+1}] ${fontesBibliograficas[i]}`,
+                            style: 'abntReference',
+                            alignment: 'left',
+                            margin: [0, 0, 0, 10]
+                        });
+                    }
+                    
+                    // Adicionar a página ao documento
+                    conteudoPDF.push({
+                        stack: refStack,
+                        pageBreak: selectedImages.length > 0 ? 'after' : undefined
+                    });
+                }
+            }
+            
+            // Processar imagens para o PDF
+            if (selectedImages.length > 0) {
+                // Criar tabela para as imagens
+                const imageRows = [];
         let currentRow = [];
         
-        for (let i = 0; i < imagensProcessadas.length; i++) {
-          currentRow.push(imagensProcessadas[i]);
-          
-          if (currentRow.length === 3 || i === imagensProcessadas.length - 1) {
+                // Processar cada imagem selecionada
+                for (let i = 0; i < selectedImages.length; i++) {
+                    try {
+                        // Processar a imagem para o formato adequado para o PDF
+                        const processedImage = await processImageForPDF(selectedImages[i]);
+                        
+                        // Adicionar a imagem processada ao array atual
+                        currentRow.push({
+                            image: processedImage.dataURL,
+                            width: Math.min(processedImage.width, 160),  // Limitar a largura máxima
+                            height: Math.min(processedImage.height, 160), // Limitar a altura máxima
+                            fit: [150, 150],                             // Ajustar dentro destes limites
+                            alignment: 'center',
+                            margin: [10, 10, 10, 10],
+                            border: [false, false, false, false]
+                        });
+                        
+                        // Completar a linha ou criar uma nova se necessário
+                        if (currentRow.length === 3 || i === selectedImages.length - 1) {
+                            // Preencher lacunas para manter o layout
             while (currentRow.length < 3) {
               currentRow.push({});
             }
-            rows.push(currentRow);
+                            
+                            // Adicionar a linha à tabela e resetar
+                            imageRows.push(currentRow);
             currentRow = [];
+                        }
+                    } catch (error) {
+                        console.error(`Erro ao processar imagem ${i}:`, error);
           }
         }
         
-        docDefinition.content.push(
-          {
+                // Adicionar página de imagens ao PDF
+                conteudoPDF.push({
             stack: [
               {
                 text: 'DIÁRIO DE CAMPO',
@@ -1314,8 +1770,8 @@
                 margin: [0, 0, 0, 10]
               },
               {
-                text: `Data: ${dataFormatada}`,
-                style: 'small',
+                            text: `Data: ${formatarData(data)}`,
+                            style: 'normal',
                 margin: [0, 0, 0, 10]
               },
               {
@@ -1327,120 +1783,233 @@
               {
                 table: {
                   widths: ['*', '*', '*'],
-                  body: rows
+                                body: imageRows
                 },
                 layout: 'noBorders',
                 margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'Página 03 (três)',
-                style: 'footer',
-                alignment: 'center',
-                margin: [0, 20, 0, 0]
               }
             ]
-          }
-        );
-      }
-
-      // Gerar o PDF
-      const dataFormatada2 = `${dia}-${mes}-${ano}`; // Usa '-' ao invés de '/'
-      const fileName = `Diário de Campo - ${dataFormatada2}.pdf`;
-      
-      try {
-        // Criar um indicador de carregamento
-        const loadingIndicator = document.createElement('div');
-        loadingIndicator.className = 'alert alert-info mt-3';
-        loadingIndicator.textContent = 'Gerando PDF... Por favor, aguarde.';
-        document.getElementById('diarioForm').appendChild(loadingIndicator);
-        
-        // Gerar o PDF
-        const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-        
-        // Criar container para os botões
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'btn-group mt-3 d-flex gap-2';
-        document.getElementById('diarioForm').appendChild(buttonContainer);
-        
-        // Botão para visualizar o PDF
-        const viewButton = document.createElement('button');
-        viewButton.className = 'btn btn-primary';
-        viewButton.innerHTML = '<i class="fas fa-eye"></i> Visualizar PDF';
-        viewButton.onclick = function() {
-          pdfDocGenerator.getBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-            // Limpar o URL após um tempo para liberar memória
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-          });
-        };
-        buttonContainer.appendChild(viewButton);
-        
-        // Botão para download direto
-        const downloadButton = document.createElement('button');
-        downloadButton.className = 'btn btn-success';
-        downloadButton.innerHTML = '<i class="fas fa-download"></i> Baixar PDF';
-        downloadButton.onclick = function() {
-          try {
-            pdfDocGenerator.download(fileName);
-          } catch (downloadError) {
-            console.error('Erro ao fazer download:', downloadError);
-            alert('Não foi possível fazer o download automático. O PDF será aberto em uma nova janela, você pode salvá-lo de lá.');
-            pdfDocGenerator.open({}, window);
-          }
-        };
-        buttonContainer.appendChild(downloadButton);
-        
-        // Remover o indicador de carregamento após um tempo
-        setTimeout(() => {
-          if (document.contains(loadingIndicator)) {
-            loadingIndicator.remove();
-          }
-          // Adicionar mensagem de sucesso
-          const successMessage = document.createElement('div');
-          successMessage.className = 'alert alert-success mt-3';
-          successMessage.textContent = 'PDF gerado com sucesso! Você pode visualizá-lo ou baixá-lo usando os botões acima.';
-          document.getElementById('diarioForm').appendChild(successMessage);
-          
-          // Remover mensagem de sucesso após 5 segundos
-          setTimeout(() => {
-            if (document.contains(successMessage)) {
-              successMessage.remove();
+                });
             }
-          }, 5000);
+
+            // Formatar a data para o nome do arquivo
+            const dataFormatada = formatarData(data, '-');
+            const fileName = `Diário de Campo - ${dataFormatada}.pdf`;
+            
+            // Definir o documento
+            const docDefinition = {
+                // Configurar margens de acordo com o modelo
+                pageMargins: modelo === 'ABNT NR-37' ? [72, 72, 72, 72] : [40, 40, 40, 40],
+                
+                // Estilo padrão
+                defaultStyle: {
+                    fontSize: modelo === 'ABNT NR-37' ? 11 : 12,
+                    lineHeight: modelo === 'ABNT NR-37' ? 1.5 : 1.2
+                },
+                
+                // Estilos definidos anteriormente
+                styles: estilos,
+                
+                // Conteúdo do PDF
+                content: conteudoPDF,
+                
+                // Adicionar função de rodapé para números de página
+                footer: function(currentPage, pageCount) {
+                    return {
+                        text: currentPage > 1 ? `${currentPage}` : '',
+                        alignment: 'right',
+                        margin: [0, 0, 40, 20],
+                        fontSize: 10,
+                        italic: true,
+                        color: 'gray'
+                    };
+                },
+                
+                // Formatação do conteúdo HTML
+                html: {
+                    // Remover formatação excessiva do conteúdo HTML
+                    preprocessors: [
+                        (html) => html.replace(/<p>\s*<\/p>/g, '')
+                    ]
+                }
+            };
+            
+            // Configurar a geração do PDF para garantir que os elementos fiquem centralizados
+            if (modelo === 'ABNT NR-37') {
+                // Ajustar margens para criar um layout mais equilibrado e formal
+                docDefinition.pageMargins = [80, 80, 80, 80];
+                
+                // Adicionar propriedade de alinhamento para centralizar todo o conteúdo das páginas ABNT
+                conteudoPDF.forEach(page => {
+                    if (page.stack && Array.isArray(page.stack)) {
+                        // Para cada elemento no stack, garantir que títulos e seções estão centralizados
+                        page.stack.forEach(item => {
+                            if (item.style === 'abntTitle' || item.style === 'abntSection') {
+                                item.alignment = 'center';
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Gerar o PDF
+            pdfMake.createPdf(docDefinition).download(fileName);
+            
+            // Mostrar feedback de sucesso
+            loadingElement.className = 'alert alert-success mt-3';
+            loadingElement.innerHTML = '<i class="fas fa-check-circle"></i> PDF gerado com sucesso!';
+            
+            // Remover o feedback após alguns segundos
+          setTimeout(() => {
+                if (loadingElement.parentNode) {
+                    loadingElement.parentNode.removeChild(loadingElement);
+            }
           
-          // Mostrar feedback
+                // Mostrar modal de feedback após gerar o PDF
 		showFeedbackWithDelay();
-        }, 2000);
+            }, 3000);
         
       } catch (error) {
-        console.error('Erro ao gerar o PDF:', error);
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'alert alert-danger mt-3';
-        errorMessage.innerHTML = `
-          <strong>Erro ao gerar o PDF</strong><br>
-          Por favor, tente novamente. Se o problema persistir:
-          <ul class="mb-0">
-            <li>Verifique sua conexão com a internet</li>
-            <li>Tente usar um navegador diferente</li>
-            <li>Certifique-se de que não há bloqueadores de pop-up ativos</li>
-          </ul>
-        `;
-        document.getElementById('diarioForm').appendChild(errorMessage);
+            console.error('Erro ao gerar PDF:', error);
+            
+            // Mostrar feedback de erro
+            loadingElement.className = 'alert alert-danger mt-3';
+            loadingElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro ao gerar o PDF. Por favor, tente novamente.';
+            
+            // Remover o feedback após alguns segundos
+        setTimeout(() => {
+                if (loadingElement.parentNode) {
+                    loadingElement.parentNode.removeChild(loadingElement);
+                }
+            }, 5000);
+        }
+    }
+
+    // Função auxiliar para formatar a data
+    function formatarData(dataISO, separator = '/') {
+        if (!dataISO) return '';
+        const partes = dataISO.split('-');
+        if (partes.length !== 3) return dataISO;
         
-        // Remover o indicador de carregamento em caso de erro
-        const loadingIndicator = document.querySelector('.alert-info');
-        if (loadingIndicator && document.contains(loadingIndicator)) {
-          loadingIndicator.remove();
+        // Formato DD/MM/AAAA ou DD-MM-AAAA dependendo do separador
+        return `${partes[2]}${separator}${partes[1]}${separator}${partes[0]}`;
+    }
+
+    // Função para limpar o conteúdo HTML do editor e torná-lo compatível com o PDF
+    function limparConteudoHTML(html) {
+        // Se não houver conteúdo, retornar string vazia
+        if (!html || html.trim() === '') {
+            return '';
         }
         
-        // Remover mensagem de erro após 10 segundos
-        setTimeout(() => {
-          if (document.contains(errorMessage)) {
-            errorMessage.remove();
-          }
-        }, 10000);
-      }
+        // Criar um elemento temporário
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        
+        // Processar parágrafos e outros elementos
+        const paragrafos = temp.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6');
+        paragrafos.forEach(p => {
+            // Remover estilos inline que possam conflitar com o PDF
+            p.removeAttribute('style');
+            p.removeAttribute('class');
+            p.removeAttribute('id');
+            
+            // Se for um parágrafo vazio, remover
+            if (p.textContent.trim() === '' && !p.querySelector('img, br')) {
+                p.remove();
+            }
+        });
+        
+        // Processar listas
+        const listas = temp.querySelectorAll('ul, ol');
+        listas.forEach(lista => {
+            lista.removeAttribute('style');
+            lista.removeAttribute('class');
+            lista.removeAttribute('id');
+        });
+        
+        // Processar itens de lista
+        const itensLista = temp.querySelectorAll('li');
+        itensLista.forEach(item => {
+            item.removeAttribute('style');
+            item.removeAttribute('class');
+            item.removeAttribute('id');
+        });
+        
+        // Remover elementos vazios que não sejam quebras de linha
+        const elementosVazios = temp.querySelectorAll('div:empty, p:empty, span:empty');
+        elementosVazios.forEach(el => {
+            if (el.tagName.toLowerCase() !== 'br') {
+                el.remove();
+            }
+        });
+        
+        // Converter o conteúdo de volta para string
+        let textoLimpo = temp.innerHTML;
+        
+        // Substituir entidades HTML por seus caracteres correspondentes
+        const entidadesHTML = {
+            '&nbsp;': ' ',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&amp;': '&',
+            '&quot;': '"',
+            '&apos;': "'",
+            '&cent;': '¢',
+            '&pound;': '£',
+            '&yen;': '¥',
+            '&euro;': '€',
+            '&copy;': '©',
+            '&reg;': '®',
+            '&trade;': '™'
+        };
+        
+        // Substituir todas as entidades HTML conhecidas
+        Object.entries(entidadesHTML).forEach(([entidade, caractere]) => {
+            const regex = new RegExp(entidade, 'g');
+            textoLimpo = textoLimpo.replace(regex, caractere);
+        });
+        
+        // Converter tags HTML para o formato do pdfMake
+        textoLimpo = textoLimpo
+            // Substituir quebras de linha
+            .replace(/<br\s*\/?>/gi, '\n')
+            // Substituir parágrafos
+            .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n')
+            // Substituir divs
+            .replace(/<div[^>]*>(.*?)<\/div>/gi, '$1\n')
+            // Substituir itens de lista
+            .replace(/<li[^>]*>(.*?)<\/li>/gi, '  • $1\n')
+            // Remover formatação de negrito, mas manter conteúdo
+            .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '$1')
+            .replace(/<b[^>]*>(.*?)<\/b>/gi, '$1')
+            // Remover formatação de itálico, mas manter conteúdo
+            .replace(/<em[^>]*>(.*?)<\/em>/gi, '$1')
+            .replace(/<i[^>]*>(.*?)<\/i>/gi, '$1')
+            // Remover formatação de sublinhado, mas manter conteúdo
+            .replace(/<u[^>]*>(.*?)<\/u>/gi, '$1')
+            // Substituir cabeçalhos
+            .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '$1\n')
+            .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '$1\n')
+            .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '$1\n')
+            .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '$1\n')
+            .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '$1\n')
+            .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '$1\n')
+            // Remover quaisquer outras tags
+            .replace(/<[^>]*>/g, '')
+            // Remover linhas em branco consecutivas
+            .replace(/\n\s*\n/g, '\n')
+            // Remover espaços em branco no início e fim
+            .trim();
+        
+        // Decodificar caracteres especiais ou entidades HTML restantes
+        try {
+            textoLimpo = decodeURIComponent(escape(textoLimpo));
+        } catch (e) {
+            console.warn('Erro ao decodificar texto:', e);
+        }
+        
+        return textoLimpo;
     }
 
     function readFileAsDataURL(file) {
@@ -1653,15 +2222,325 @@
       }
     }
 
+    // Função para salvar os dados no localStorage
+    function salvarDados() {
+        // Obter valores dos campos a serem salvos
+        const nome = document.getElementById('nome').value;
+        const matricula = document.getElementById('matricula').value;
+        const semestre = document.getElementById('semestre').value;
+        const professor = document.getElementById('professor').value;
+        const modelo = document.getElementById('modelo').value;
+
+        // Salvar os campos solicitados
+        localStorage.setItem('diarioCampo_nome', nome);
+        localStorage.setItem('diarioCampo_matricula', matricula);
+        localStorage.setItem('diarioCampo_semestre', semestre);
+        localStorage.setItem('diarioCampo_professor', professor);
+        localStorage.setItem('diarioCampo_modelo', modelo);
+    }
+
+    // Função para carregar os dados do localStorage
+    function carregarDados() {
+        // Carregar valores dos campos salvos
+        const nome = localStorage.getItem('diarioCampo_nome');
+        const matricula = localStorage.getItem('diarioCampo_matricula');
+        const semestre = localStorage.getItem('diarioCampo_semestre');
+        const professor = localStorage.getItem('diarioCampo_professor');
+        const modelo = localStorage.getItem('diarioCampo_modelo');
+
+        // Preencher os campos se os dados existirem
+        if (nome) document.getElementById('nome').value = nome;
+        if (matricula) document.getElementById('matricula').value = matricula;
+        if (semestre) document.getElementById('semestre').value = semestre;
+        if (professor) document.getElementById('professor').value = professor;
+        if (modelo) document.getElementById('modelo').value = modelo;
+        
+        // Aplicar o modelo carregado
+        if (modelo) {
+            mostrarCamposModelo(modelo);
+        }
+    }
+
+    // Limpar localStorage (exceto dados pessoais e preferências)
+    function limparLocalStorageExcetoDadosPessoais() {
+        // Obter valores antes de limpar
+        const nome = localStorage.getItem('diarioCampo_nome');
+        const matricula = localStorage.getItem('diarioCampo_matricula');
+        const semestre = localStorage.getItem('diarioCampo_semestre');
+        const professor = localStorage.getItem('diarioCampo_professor');
+        const modelo = localStorage.getItem('diarioCampo_modelo');
+        
+        // Remover todos os itens com prefixo diarioCampo_
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('diarioCampo_')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        // Restaurar apenas os campos que queremos manter
+        if (nome) localStorage.setItem('diarioCampo_nome', nome);
+        if (matricula) localStorage.setItem('diarioCampo_matricula', matricula);
+        if (semestre) localStorage.setItem('diarioCampo_semestre', semestre);
+        if (professor) localStorage.setItem('diarioCampo_professor', professor);
+        if (modelo) localStorage.setItem('diarioCampo_modelo', modelo);
+    }
+
+    // Limpar completamente o localStorage
+    function limparTodosOsDados() {
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('diarioCampo_')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        // Recarregar a página para limpar os campos
+        location.reload();
+    }
+
+    // Lidar com a seleção do modelo
+    document.getElementById('modelo').addEventListener('change', function() {
+      const secaoBibliografia = document.getElementById('secaoBibliografia');
+      if (this.value === 'ABNT NR-37') {
+        secaoBibliografia.classList.remove('hidden');
+      } else {
+        secaoBibliografia.classList.add('hidden');
+      }
+    });
+
+    // Adicionar nova fonte bibliográfica
+    document.getElementById('adicionarFonte').addEventListener('click', function() {
+      const fontesContainer = document.getElementById('fontesContainer');
+      const novaFonte = document.createElement('div');
+      novaFonte.className = 'fonte-item';
+      novaFonte.innerHTML = `
+        <div class="d-flex mb-2">
+          <textarea class="form-control fonte-texto" placeholder="Insira a referência bibliográfica no formato ABNT"></textarea>
+          <div class="ms-2 d-flex flex-column">
+            <button type="button" class="btn btn-sm btn-outline-danger mb-1 remover-fonte"><i class="fas fa-times"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mb-1 mover-cima" title="Mover para cima"><i class="fas fa-arrow-up"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mover-baixo" title="Mover para baixo"><i class="fas fa-arrow-down"></i></button>
+          </div>
+        </div>
+      `;
+      fontesContainer.appendChild(novaFonte);
+      configurarBotoesFonte();
+    });
+
+    // Configurar botões de cada fonte
+    function configurarBotoesFonte() {
+      // Botões para remover fontes
+      document.querySelectorAll('.remover-fonte').forEach(botao => {
+        botao.onclick = function() {
+          this.closest('.fonte-item').remove();
+        };
+      });
+
+      // Botões para mover a fonte para cima
+      document.querySelectorAll('.mover-cima').forEach(botao => {
+        botao.onclick = function() {
+          const fonteItem = this.closest('.fonte-item');
+          const anterior = fonteItem.previousElementSibling;
+          if (anterior) {
+            fonteItem.parentNode.insertBefore(fonteItem, anterior);
+          }
+        };
+      });
+
+      // Botões para mover a fonte para baixo
+      document.querySelectorAll('.mover-baixo').forEach(botao => {
+        botao.onclick = function() {
+          const fonteItem = this.closest('.fonte-item');
+          const proximo = fonteItem.nextElementSibling;
+          if (proximo) {
+            fonteItem.parentNode.insertBefore(proximo, fonteItem);
+          }
+        };
+      });
+    }
+
+    // Ordenar fontes alfabeticamente
+    document.getElementById('ordenarFontes').addEventListener('click', function() {
+      const fontesContainer = document.getElementById('fontesContainer');
+      const fontesItems = Array.from(fontesContainer.querySelectorAll('.fonte-item'));
+      
+      // Coletar o texto e elemento de cada fonte
+      const fontes = fontesItems.map(item => {
+        return {
+          elemento: item,
+          texto: item.querySelector('.fonte-texto').value.trim()
+        };
+      });
+      
+      // Ordenar alfabeticamente ignorando caracteres especiais iniciais como [ ] ou números
+      fontes.sort((a, b) => {
+        const textoA = a.texto.replace(/^\[[0-9]+\]\s*/, '').replace(/^[^a-zA-Z0-9]+/, '');
+        const textoB = b.texto.replace(/^\[[0-9]+\]\s*/, '').replace(/^[^a-zA-Z0-9]+/, '');
+        return textoA.localeCompare(textoB, 'pt-BR');
+      });
+      
+      // Remover todos os itens atuais
+      fontesItems.forEach(item => item.remove());
+      
+      // Adicionar de volta na nova ordem
+      fontes.forEach(fonte => {
+        fontesContainer.appendChild(fonte.elemento);
+      });
+    });
+
+    // Inicializar configuração dos botões de fonte
+    configurarBotoesFonte();
+    
+    // Configurar campos do formulário para salvar automaticamente
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        // Salvar campos específicos
+        if (el.id === 'nome' || el.id === 'matricula' || el.id === 'semestre' || 
+            el.id === 'professor' || el.id === 'modelo') {
+            el.addEventListener('change', salvarDados);
+            el.addEventListener('input', salvarDados);
+        }
+    });
+
+    // Inicializar após carregar o documento
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar o TinyMCE
+        initTinyMCE();
+        
+        // Inicializar seleção de imagens
+        inicializarSelecaoImagens();
+        
+        // Carregar dados salvos do localStorage
+        carregarDados();
+        
+        // Definir a data atual se não estiver preenchida
+        if (!document.getElementById('data').value) {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            document.getElementById('data').value = `${ano}-${mes}-${dia}`;
+        }
+        
+        // Configurar evento de mudança no campo de modelo
+        document.getElementById('modelo').addEventListener('change', function() {
+            mostrarCamposModelo(this.value);
+            salvarDados(); // Salvar quando o modelo mudar
+        });
+        
+        // Configurar evento de submissão do formulário
+        document.getElementById('diarioForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            gerarPDF();
+        });
+        
+        // Aplicar o modelo selecionado inicialmente
+        mostrarCamposModelo(document.getElementById('modelo').value);
+        
+        // Inicializar o tema baseado na preferência do usuário
+        initTheme();
+        
+        // Inicializar contador de palavras para o TinyMCE
+        initWordCounter();
+    });
+    
+    // Função para limpar formulário
+    function limparFormulario() {
+        if (confirm('Tem certeza que deseja limpar todos os campos? Esta ação não pode ser desfeita.')) {
+            document.getElementById('diarioForm').reset();
+            
+            // Limpar o editor TinyMCE
+            tinymce.get('relatorio').setContent('');
+            
+            // Limpar a lista de imagens
+            limparImagens();
+            
+            // Limpar os campos ABNT se existirem
+            const campos = ['objetivo', 'justificativa', 'contextualizacao', 'metodologia', 'conclusao'];
+            campos.forEach(campo => {
+                const elemento = document.getElementById(campo);
+                if (elemento) elemento.value = '';
+            });
+            
+            // Limpar as fontes bibliográficas
+            document.querySelectorAll('.fonte-texto').forEach(textarea => {
+                textarea.value = '';
+            });
+            
+            // Remover todas as fontes exceto a primeira
+            const fontesContainer = document.getElementById('fontesContainer');
+            if (fontesContainer) {
+                const fontes = fontesContainer.querySelectorAll('.fonte-item');
+                for (let i = 1; i < fontes.length; i++) {
+                    fontesContainer.removeChild(fontes[i]);
+                }
+            }
+            
+            // Manter apenas nome e matrícula no localStorage
+            limparLocalStorageExcetoDadosPessoais();
+            
+            // Redefinir a data para hoje
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            document.getElementById('data').value = `${ano}-${mes}-${dia}`;
+            
+            alert('Formulário limpo com sucesso!');
+        }
+    }
+
+    // Função para inicializar o TinyMCE
+    function initTinyMCE() {
+        tinymce.init({
+            selector: '#relatorio',
+            plugins: 'autolink link image lists table wordcount',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image | table',
+            height: 400,
+            setup: function(editor) {
+                // Atualizar o contador de palavras
+                editor.on('KeyUp', function(e) {
+                    updateWordCount();
+                });
+                editor.on('Change', function(e) {
+                    updateWordCount();
+                });
+            }
+        });
+        
+        // Adicionar contador de palavras
+        const contadorContainer = document.createElement('div');
+        contadorContainer.innerHTML = '<div id="wordCount" class="mt-2 text-muted">0 palavras</div>';
+        document.querySelector('.tox-tinymce').after(contadorContainer);
+    }
+    
+    // Remover antiga função de carregamento de dados
+    // Substitua pelo novo carregarDados() já definido acima
+    
+    // Configurar campos do formulário para salvar automaticamente
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        // Salvar apenas nome e matrícula
+        if (el.id === 'nome' || el.id === 'matricula') {
+            el.addEventListener('change', salvarDados);
+            el.addEventListener('input', salvarDados);
+        }
+    });
   </script>
   
-  
-
-
-
-  </script>
   <footer id="footer">
     <p>Última atualização: <span id="last-update">carregando...</span></p>
   </footer>
+
+  <!-- Scripts do pdfMake -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+  <!-- Configurar fontes disponíveis no pdfMake -->
+  <script>
+      // Verificar quais fontes estão disponíveis no pdfMake
+      document.addEventListener('DOMContentLoaded', function() {
+          if (typeof pdfMake !== 'undefined') {
+              console.log("Fontes disponíveis no pdfMake:", Object.keys(pdfMake.vfs));
+          }
+      });
+  </script>
 </body>
 </html>
