@@ -1037,6 +1037,10 @@
                         Importar Dados (JSON)
                     </label>
                     <input type="file" id="importJsonInput" accept=".json" style="display: none;">
+                    <label for="mergeJsonInput" class="btn-success" style="cursor: pointer; display: inline-block; margin: 0;">
+                        Juntar Dados (JSON)
+                    </label>
+                    <input type="file" id="mergeJsonInput" accept=".json" style="display: none;">
                     <button id="resetDataBtn" class="btn-danger">Resetar Dados</button>
                 </div>
                 <p style="margin-top: 10px; font-size: 12px; color: var(--light-text);">
@@ -1320,6 +1324,51 @@
                     alert("Erro ao importar dados: " + error.message);
                 }
                 importJsonInput.value = ''; // Reset input
+            };
+            reader.readAsText(file);
+        });
+        
+        // Merge data from JSON file
+        const mergeJsonInput = document.getElementById('mergeJsonInput');
+        mergeJsonInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (Array.isArray(importedData)) {
+                        if (confirm(`Juntar ${importedData.length} novos registros aos ${observers.length} existentes?`)) {
+                            // Criar um conjunto de IDs existentes para evitar duplicação
+                            const existingIds = new Set(observers.map(obs => obs.id));
+                            
+                            // Adicionar apenas registros com IDs únicos
+                            let countAdded = 0;
+                            importedData.forEach(newObserver => {
+                                // Se o ID já existe, gera um novo ID para evitar conflitos
+                                if (existingIds.has(newObserver.id)) {
+                                    newObserver.id = Date.now() + Math.floor(Math.random() * 1000) + countAdded;
+                                }
+                                observers.push(newObserver);
+                                countAdded++;
+                            });
+                            
+                            saveToLocalStorage();
+                            updateObserversList();
+                            updateDataAnalysis();
+                            if (observers.length > 0) {
+                                generatePdfBtn.style.display = 'block';
+                            }
+                            alert(`${countAdded} registros adicionados com sucesso.`);
+                        }
+                    } else {
+                        alert("Formato de arquivo inválido.");
+                    }
+                } catch (error) {
+                    alert("Erro ao juntar dados: " + error.message);
+                }
+                mergeJsonInput.value = ''; // Reset input
             };
             reader.readAsText(file);
         });
