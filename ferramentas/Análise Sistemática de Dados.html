@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Sistemática de Dados</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #f5f5f5;
+            --accent-color: #0066cc;
+            --text-color: #333;
+            --light-text: #555;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 20px;
+            margin: 20px 0 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 15px 0 10px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        /* Estilos para o loading spinner */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--accent-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .rating-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .rating-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 18%;
+        }
+        
+        .rating-option input {
+            margin-bottom: 5px;
+            width: auto;
+        }
+        
+        /* Novo estilo para os botões de rádio */
+        .rating-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+        }
+        
+        .rating-option input[type="radio"]:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+        }
+        
+        .rating-option input[type="radio"]:checked {
+            border-color: var(--accent-color);
+            background-color: white;
+        }
+        
+        .rating-option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+        }
+        
+        .rating-option span {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Adicionar cores diferentes para os níveis de avaliação */
+        .rating-option:nth-child(1) input[type="radio"]:checked {
+            border-color: #dc3545;
+        }
+        
+        .rating-option:nth-child(1) input[type="radio"]:checked::after {
+            background-color: #dc3545;
+        }
+        
+        .rating-option:nth-child(2) input[type="radio"]:checked {
+            border-color: #fd7e14;
+        }
+        
+        .rating-option:nth-child(2) input[type="radio"]:checked::after {
+            background-color: #fd7e14;
+        }
+        
+        .rating-option:nth-child(3) input[type="radio"]:checked {
+            border-color: #ffc107;
+        }
+        
+        .rating-option:nth-child(3) input[type="radio"]:checked::after {
+            background-color: #ffc107;
+        }
+        
+        .rating-option:nth-child(4) input[type="radio"]:checked {
+            border-color: #17a2b8;
+        }
+        
+        .rating-option:nth-child(4) input[type="radio"]:checked::after {
+            background-color: #17a2b8;
+        }
+        
+        .rating-option:nth-child(5) input[type="radio"]:checked {
+            border-color: #28a745;
+        }
+        
+        .rating-option:nth-child(5) input[type="radio"]:checked::after {
+            background-color: #28a745;
+        }
+        
+        .observers-list {
+            margin-bottom: 20px;
+        }
+        
+        .observer-item {
+            background-color: var(--secondary-color);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .observer-info {
+            flex-grow: 1;
+        }
+        
+        .observer-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-wrapper {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+        
+        .qualitative-data {
+            margin-top: 30px;
+        }
+        
+        .qualitative-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .qualitative-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        .qualitative-content {
+            white-space: pre-line;
+        }
+        
+        /* PDF Styles */
+        .pdf-container {
+            display: none;
+            box-sizing: border-box;
+            margin: 0 auto;
+            padding: 0;
+            width: 210mm; /* Exatamente A4 */
+            background-color: #fff;
+        }
+        
+        .pdf-page {
+            width: 210mm; /* Largura A4 */
+            min-height: 297mm; /* Altura A4 */
+            margin: 0 auto;
+            padding: 20mm;
+            box-sizing: border-box;
+            background-color: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .pdf-cover, .pdf-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .pdf-content {
+            page-break-before: always;
+        }
+
+        .pdf-header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .pdf-logo {
+            display: block;
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto 15px;
+        }
+        
+        .pdf-institution {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            line-height: 1.3;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .pdf-title {
+            font-size: 20pt;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 30px 0 15px;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .pdf-subtitle {
+            font-size: 14pt;
+            font-weight: normal;
+            color: var(--light-text);
+            margin-bottom: 30px;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .pdf-qr-codes {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            width: 100%;
+        }
+        
+        .pdf-qr-code {
+            text-align: center;
+        }
+        
+        .pdf-qr-code img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 5px;
+        }
+        
+        .pdf-qr-code-label {
+            font-size: 9pt;
+            color: var(--light-text);
+        }
+        
+        .pdf-keywords {
+            margin: 30px 0;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            border-left: 4px solid var(--primary-color);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .pdf-keywords-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .pdf-keywords-content {
+            font-size: 9pt;
+            line-height: 1.4;
+            color: var(--light-text);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .pdf-authors {
+            margin: 30px 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .pdf-authors-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .pdf-authors-list {
+            columns: 2;
+            column-gap: 30px;
+            font-size: 10pt;
+            line-height: 1.6;
+            text-align: left;
+        }
+        
+        .pdf-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10pt;
+            color: var(--light-text);
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            width: 100%;
+            position: absolute;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+        }
+        
+        .pdf-content {
+            page-break-before: always;
+        }
+        
+        .pdf-section-title {
+            color: var(--primary-color);
+            font-size: 18pt;
+            margin: 0 auto 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            max-width: 80%;
+        }
+        
+        .pdf-section-subtitle {
+            color: var(--primary-color);
+            font-size: 16pt;
+            margin: 30px 0 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        
+        .pdf-summary {
+            margin-bottom: 30px;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+        
+        .pdf-chart-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        
+        .pdf-chart-title {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 12pt;
+        }
+        
+        .pdf-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px auto;
+            width: 100%;
+            max-width: 170mm;
+        }
+        
+        .pdf-competency-table {
+            margin: 20px auto 30px;
+            width: 100%;
+            max-width: 170mm;
+        }
+        
+        .pdf-table-title {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 12pt;
+            text-align: center;
+        }
+        
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        .pdf-table th, .pdf-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .pdf-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .pdf-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        .pdf-qualitative-section {
+            margin: 30px auto;
+            width: 100%;
+            max-width: 170mm;
+        }
+        
+        .pdf-qualitative-item {
+            margin-bottom: 25px;
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .pdf-qualitative-title {
+            color: var(--primary-color);
+            margin: 0 0 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            font-size: 12pt;
+        }
+        
+        .pdf-qualitative-content {
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+        
+        .pdf-qualitative-content p {
+            margin-bottom: 10px;
+        }
+        
+        .pdf-qualitative-content strong {
+            color: var(--primary-color);
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .pdf-container, .pdf-container * {
+                visibility: visible;
+                margin: 0 auto;
+            }
+            
+            .pdf-container {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                width: 100%;
+                max-width: 210mm;
+                display: block;
+                margin: 0 auto;
+            }
+            
+            .pdf-page {
+                margin: 0 auto;
+                box-shadow: none;
+                break-after: page;
+                left: 0;
+                right: 0;
+            }
+            
+            .pdf-content {
+                break-before: page;
+            }
+            
+            .pdf-charts-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                width: 100%;
+                max-width: 170mm;
+                margin: 20px auto;
+            }
+            
+            .pdf-chart-container {
+                width: 100%;
+                max-width: 80mm;
+                margin: 10px auto;
+            }
+            
+            .pdf-competency-table, 
+            .pdf-qualitative-section {
+                width: 100%;
+                max-width: 170mm;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Análise Sistemática de Dados</h1>
+            <p>Higiene Pessoal Infantil Como Aliada Na Prevenção De Doenças</p>
+        </header>
+        
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Gerando PDF... Por favor, aguarde.</div>
+        </div>
+        
+        <div class="card">
+            <h2>Adicionar Dados de Observador</h2>
+            <form id="observerForm">
+                <div class="form-group">
+                    <label for="observerName">Nome do Observador:</label>
+                    <select id="observerName" required>
+                        <option value="">Selecione um observador</option>
+                        <option value="RODRIGUES, T. F.">Thiago Ferreira Rodrigues</option>
+                        <option value="LEMOS, J. H. S. P.">João Henrique Silva Pimentel de Lemos</option>
+                        <option value="MONTEIRO, M. V. P. C.">Maria Victoria Pessanha Carvalho Monteiro</option>
+                        <option value="SILVA, M. J. R.">Maria Júlia Rodrigues da Silva</option>
+                        <option value="PONTES, L. M.">Lucas Mattos de Pontes</option>
+                        <option value="CAÚLA, G. M. G.">Gustavo Murillo Gonçalves Caúla</option>
+                        <option value="ALBUQUERQUE, J. H. S.">Joaquim Henrique Soares Albuquerque</option>
+                        <option value="ASSUNÇÃO, M. R. M.">Maria Rita Meyer Assuncao</option>
+                        <option value="SANCHES, L. B.">Larissa Bastos Sanches</option>
+                        <option value="PARADELLA, A. M.">Alesandra Martins Paradella</option>
+                        <option value="GUIMARÃES, A. C. C.">Anna Clara Correia Guimarães</option>
+                        <option value="MARTINS, E.">Emanoel Martins</option>
+                        <option value="JESUS, G. S.">Giovanna Santos de Jesus</option>
+                        <option value="ARAGÃO, M. F.">Maria Fernanda Aragão</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observationDate">Data da Observação:</label>
+                    <input type="date" id="observationDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="schoolName">Local de Realização:</label>
+                    <input type="text" id="schoolName" value="Escola Municipal Professora Margarida Glória de Faria. Endereço: Rua, Av. Prof Fausto Moreira, 250 – Barra da Tijuca, Rio de Janeiro – RJ, 22793-340" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="className">Turma/Série:</label>
+                    <input type="text" id="className" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentsCount">Número de Estudantes Presentes:</label>
+                    <input type="number" id="studentsCount" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="activityDescription">Atividade Realizada:</label>
+                    <textarea id="activityDescription" readonly>Promoção do autocuidado e prevenção de doenças em estudantes do 4º ao 6º ano por meio de atividades lúdicas e educativas sobre higiene pessoal.</textarea>
+                </div>
+                
+                <h3>Avaliação de Competências e Habilidades</h3>
+                
+                <div class="form-group">
+                    <label>C1-H1: Demonstra compreensão dos conceitos básicos de higiene pessoal</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c1h1" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h1" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h1" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h1" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h1" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C1-H4: Identifica situações de risco à saúde relacionadas à higiene inadequada</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c1h4" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h4" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h4" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h4" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c1h4" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C2-H1: Executa corretamente as técnicas de higienização demonstradas</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c2h1" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h1" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h1" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h1" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h1" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C2-H5: Utiliza o jogo digital com desenvoltura e compreensão</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c2h5" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h5" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h5" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h5" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c2h5" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C3-H3: Participa ativamente das atividades coletivas sobre higiene</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c3h3" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h3" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h3" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h3" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h3" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C3-H6: Demonstra intenção de aplicar os conhecimentos em seu cotidiano</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c3h6" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h6" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h6" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h6" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c3h6" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C4-H2: Formula perguntas relevantes que demonstram raciocínio crítico</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c4h2" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h2" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h2" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h2" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h2" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>C4-H3: Compartilha conhecimentos e experiências com os colegas</label>
+                    <div class="rating-group">
+                        <div class="rating-option">
+                            <input type="radio" name="c4h3" value="1" required>
+                            <span>1</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h3" value="2">
+                            <span>2</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h3" value="3">
+                            <span>3</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h3" value="4">
+                            <span>4</span>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="c4h3" value="5">
+                            <span>5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Observações Qualitativas</h3>
+                
+                <div class="form-group">
+                    <label for="qualitativeObservations">Observações Qualitativas:</label>
+                    <textarea id="qualitativeObservations" placeholder="Registre comportamentos específicos, falas relevantes, dúvidas frequentes e outros aspectos qualitativos observados durante a atividade"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="identifiedDifficulties">Dificuldades Identificadas:</label>
+                    <textarea id="identifiedDifficulties"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observedStrengths">Pontos Fortes Observados:</label>
+                    <textarea id="observedStrengths"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="suggestionsNextInterventions">Sugestões para Próximas Intervenções:</label>
+                    <textarea id="suggestionsNextInterventions"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary">Adicionar Observador</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>Observadores Adicionados</h2>
+            <div id="observersList" class="observers-list">
+                <p>Nenhum observador adicionado ainda.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Análise de Dados</h2>
+            <div id="dataAnalysis">
+                <p>Adicione observadores para visualizar a análise de dados.</p>
+            </div>
+            
+            <div class="charts-container" id="chartsContainer" style="display: none;">
+                <div class="chart-wrapper">
+                    <h3>Média por Competência/Habilidade</h3>
+                    <canvas id="competencyChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>Distribuição de Frequências</h3>
+                    <canvas id="frequencyChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>Evolução por Escola</h3>
+                    <canvas id="schoolChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>Comparação por Competência</h3>
+                    <canvas id="competencyComparisonChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="qualitative-data" id="qualitativeData" style="display: none;">
+                <h3>Síntese das Observações Qualitativas</h3>
+                
+                <div class="qualitative-item">
+                    <h4>Observações Qualitativas</h4>
+                    <div id="qualitativeObservationsSummary" class="qualitative-content"></div>
+                </div>
+                
+                <div class="qualitative-item">
+                    <h4>Dificuldades Identificadas</h4>
+                    <div id="identifiedDifficultiesSummary" class="qualitative-content"></div>
+                </div>
+                
+                <div class="qualitative-item">
+                    <h4>Pontos Fortes Observados</h4>
+                    <div id="observedStrengthsSummary" class="qualitative-content"></div>
+                </div>
+                
+                <div class="qualitative-item">
+                    <h4>Sugestões para Próximas Intervenções</h4>
+                    <div id="suggestionsNextInterventionsSummary" class="qualitative-content"></div>
+                </div>
+            </div>
+            
+            <button id="generatePdfBtn" class="btn-success" style="margin-top: 20px; display: none;">Gerar Relatório PDF</button>
+            
+            <div class="data-management" style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <h3>Gerenciamento de Dados</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="exportJsonBtn" class="btn-primary">Exportar Dados (JSON)</button>
+                    <label for="importJsonInput" class="btn-secondary" style="cursor: pointer; display: inline-block; margin: 0;">
+                        Importar Dados (JSON)
+                    </label>
+                    <input type="file" id="importJsonInput" accept=".json" style="display: none;">
+                    <button id="resetDataBtn" class="btn-danger">Resetar Dados</button>
+                </div>
+                <p style="margin-top: 10px; font-size: 12px; color: var(--light-text);">
+                    Seus dados são salvos automaticamente no navegador. Use as opções acima para fazer backup ou restaurar dados.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PDF Template (Hidden) -->
+    <div class="pdf-container" id="pdfContainer">
+        <!-- PDF Cover Page -->
+        <div class="pdf-page pdf-cover">
+            <div class="pdf-header">
+                <img src="https://i.imgur.com/M9wPgo2.png" alt="Logo da Instituição" class="pdf-logo">
+                <div class="pdf-institution">
+                    UNIVERSIDADE DO GRANDE RIO PROFESSOR JOSÉ DE SOUZA HERDY<br>
+                    ESCOLA DE CIÊNCIAS DA SAÚDE<br>
+                    CURSO DE MEDICINA – CAMPUS BARRA DA TIJUCA
+                </div>
+            </div>
+            
+            <div class="pdf-title">
+                ANÁLISE SISTEMÁTICA DE DADOS OBSERVACIONAIS QUALI-QUANTITATIVOS
+            </div>
+            
+            <div class="pdf-subtitle">
+                Higiene Pessoal Infantil Como Aliada Na Prevenção De Doenças
+            </div>
+            
+            <div class="pdf-qr-codes">
+                <div class="pdf-qr-code">
+                    <img src="https://i.imgur.com/vF3jR4j.png" alt="QR Code do Projeto Completo">
+                    <div class="pdf-qr-code-label">Acesso ao Projeto Completo</div>
+                </div>
+                <div class="pdf-qr-code">
+                    <img src="https://i.imgur.com/tiRTAHP.png" alt="QR Code do Recurso Lúdico">
+                    <div class="pdf-qr-code-label">Acesso Direto ao Recurso Lúdico</div>
+                </div>
+                <div class="pdf-qr-code">
+                    <img src="https://i.imgur.com/SbR9XwK.png" alt="QR Code do Documento do Projeto">
+                    <div class="pdf-qr-code-label">Acesso Direto ao Documento do Projeto</div>
+                </div>
+            </div>
+            
+            <div class="pdf-keywords">
+                <div class="pdf-keywords-title">PALAVRAS-CHAVE</div>
+                <div class="pdf-keywords-content">
+                    higiene pessoal infantil; prevenção de doenças; saúde infantil; educação em saúde;
+                    autocuidado; higiene das mãos; saúde bucal; higiene corporal; higiene das unhas;
+                    saúde escolar; doenças infecciosas; doenças diarreicas; higiene pessoal; saúde pública;
+                    educação sanitária; promoção da saúde; higiene ambiental; saúde mental infantil;
+                    desenvolvimento infantil; autonomia infantil; educação lúdica; tecnologia
+                    educacional; jogos educativos; slides educacionais; metodologias interativas; ensino
+                    fundamental; ensino fundamental ii; rio de janeiro; brasil.
+                </div>
+            </div>
+            
+            <div class="pdf-authors">
+                <div class="pdf-authors-title">AUTORIA</div>
+                <div class="pdf-authors-list">
+                    RODRIGUES, T. F. - Thiago Ferreira Rodrigues<br>
+                    LEMOS, J. H. S. P. - João Henrique Silva Pimentel de Lemos<br>
+                    MONTEIRO, M. V. P. C. - Maria Victoria Pessanha Carvalho Monteiro<br>
+                    SILVA, M. J. R. - Maria Júlia Rodrigues da Silva<br>
+                    PONTES, L. M. - Lucas Mattos de Pontes<br>
+                    CAÚLA, G. M. G. - Gustavo Murillo Gonçalves Caúla<br>
+                    ALBUQUERQUE, J. H. S. - Joaquim Henrique Soares Albuquerque<br>
+                    ASSUNÇÃO, M. R. M. - Maria Rita Meyer Assuncao<br>
+                    SANCHES, L. B. - Larissa Bastos Sanches<br>
+                    PARADELLA, A. M. - Alesandra Martins Paradella<br>
+                    GUIMARÃES, A. C. C. - Anna Clara Correia Guimarães<br>
+                    MARTINS, E. - Emanoel Martins<br>
+                    JESUS, G. S. - Giovanna Santos de Jesus<br>
+                    ARAGÃO, M. F. - Maria Fernanda Aragão
+                </div>
+            </div>
+            
+            <div class="pdf-footer">
+                © 2023 - Todos os direitos reservados
+            </div>
+        </div>
+        
+        <!-- PDF Content Page -->
+        <div class="pdf-page pdf-content">
+            <h2 class="pdf-section-title">Análise de Dados - Roteiro Estruturado de Observação</h2>
+            <div id="pdfSummary" class="pdf-summary"></div>
+            
+            <h3 class="pdf-section-subtitle">Resultados Quantitativos</h3>
+            <div class="pdf-competency-table">
+                <h4 class="pdf-table-title">Tabela de Avaliação por Competências e Habilidades</h4>
+                <table id="pdfCompetencyTable" class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th>Competência/Habilidade</th>
+                            <th>Descrição</th>
+                            <th>Média</th>
+                            <th>Escala (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="c1h1-row">
+                            <td>C1-H1</td>
+                            <td>Demonstra compreensão dos conceitos básicos de higiene pessoal</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c1h4-row">
+                            <td>C1-H4</td>
+                            <td>Identifica situações de risco à saúde relacionadas à higiene inadequada</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c2h1-row">
+                            <td>C2-H1</td>
+                            <td>Executa corretamente as técnicas de higienização demonstradas</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c2h5-row">
+                            <td>C2-H5</td>
+                            <td>Utiliza o jogo digital com desenvoltura e compreensão</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c3h3-row">
+                            <td>C3-H3</td>
+                            <td>Participa ativamente das atividades coletivas sobre higiene</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c3h6-row">
+                            <td>C3-H6</td>
+                            <td>Demonstra intenção de aplicar os conhecimentos em seu cotidiano</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c4h2-row">
+                            <td>C4-H2</td>
+                            <td>Formula perguntas relevantes que demonstram raciocínio crítico</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="c4h3-row">
+                            <td>C4-H3</td>
+                            <td>Compartilha conhecimentos e experiências com os colegas</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pdf-charts-grid">
+                <div class="pdf-chart-container">
+                    <h4 class="pdf-chart-title">Média por Competência/Habilidade</h4>
+                    <canvas id="pdfCompetencyChart" width="300" height="200"></canvas>
+                </div>
+                <div class="pdf-chart-container">
+                    <h4 class="pdf-chart-title">Distribuição de Frequências</h4>
+                    <canvas id="pdfFrequencyChart" width="300" height="200"></canvas>
+                </div>
+                <div class="pdf-chart-container">
+                    <h4 class="pdf-chart-title">Evolução por Escola</h4>
+                    <canvas id="pdfSchoolChart" width="300" height="200"></canvas>
+                </div>
+                <div class="pdf-chart-container">
+                    <h4 class="pdf-chart-title">Comparação por Competência</h4>
+                    <canvas id="pdfCompetencyComparisonChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+            
+            <h3 class="pdf-section-subtitle">Síntese das Observações Qualitativas</h3>
+            <div id="pdfQualitativeData" class="pdf-qualitative-section">
+                <div class="pdf-qualitative-item">
+                    <h4 class="pdf-qualitative-title">Observações Qualitativas</h4>
+                    <div id="pdfQualitativeObservations" class="pdf-qualitative-content"></div>
+                </div>
+                
+                <div class="pdf-qualitative-item">
+                    <h4 class="pdf-qualitative-title">Dificuldades Identificadas</h4>
+                    <div id="pdfIdentifiedDifficulties" class="pdf-qualitative-content"></div>
+                </div>
+                
+                <div class="pdf-qualitative-item">
+                    <h4 class="pdf-qualitative-title">Pontos Fortes Observados</h4>
+                    <div id="pdfObservedStrengths" class="pdf-qualitative-content"></div>
+                </div>
+                
+                <div class="pdf-qualitative-item">
+                    <h4 class="pdf-qualitative-title">Sugestões para Próximas Intervenções</h4>
+                    <div id="pdfSuggestionsNextInterventions" class="pdf-qualitative-content"></div>
+                </div>
+            </div>
+            
+            <div class="pdf-footer">
+                Análise Sistemática de Dados - Higiene Pessoal Infantil Como Aliada Na Prevenção De Doenças
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data storage
+        let observers = [];
+        
+        // DOM Elements
+        const observerForm = document.getElementById('observerForm');
+        const observersList = document.getElementById('observersList');
+        const dataAnalysis = document.getElementById('dataAnalysis');
+        const chartsContainer = document.getElementById('chartsContainer');
+        const qualitativeData = document.getElementById('qualitativeData');
+        const generatePdfBtn = document.getElementById('generatePdfBtn');
+        const exportJsonBtn = document.getElementById('exportJsonBtn');
+        const importJsonInput = document.getElementById('importJsonInput');
+        const resetDataBtn = document.getElementById('resetDataBtn');
+        
+        // Initialize charts
+        let competencyChart, frequencyChart, schoolChart, competencyComparisonChart;
+        
+        // Load data from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+        });
+        
+        // Save data to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('analysisObservers', JSON.stringify(observers));
+        }
+        
+        // Load data from localStorage
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('analysisObservers');
+            if (savedData) {
+                observers = JSON.parse(savedData);
+                updateObserversList();
+                updateDataAnalysis();
+                if (observers.length > 0) {
+                    generatePdfBtn.style.display = 'block';
+                }
+            }
+        }
+        
+        // Export data to JSON file
+        exportJsonBtn.addEventListener('click', function() {
+            const dataStr = JSON.stringify(observers, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.download = 'analise-sistematica-dados.json';
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
+        // Import data from JSON file
+        importJsonInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (Array.isArray(importedData)) {
+                        if (confirm("Esta ação substituirá todos os dados existentes. Deseja continuar?")) {
+                            observers = importedData;
+                            saveToLocalStorage();
+                            updateObserversList();
+                            updateDataAnalysis();
+                            if (observers.length > 0) {
+                                generatePdfBtn.style.display = 'block';
+                            }
+                            alert("Dados importados com sucesso.");
+                        }
+                    } else {
+                        alert("Formato de arquivo inválido.");
+                    }
+                } catch (error) {
+                    alert("Erro ao importar dados: " + error.message);
+                }
+                importJsonInput.value = ''; // Reset input
+            };
+            reader.readAsText(file);
+        });
+        
+        // Reset data
+        resetDataBtn.addEventListener('click', function() {
+            if (confirm("Tem certeza que deseja excluir TODOS os dados? Esta ação não pode ser desfeita.")) {
+                observers = [];
+                saveToLocalStorage();
+                updateObserversList();
+                updateDataAnalysis();
+                generatePdfBtn.style.display = 'none';
+                alert("Todos os dados foram excluídos.");
+            }
+        });
+        
+        // Form submission
+        observerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const observer = {
+                id: Date.now(),
+                name: document.getElementById('observerName').value,
+                date: document.getElementById('observationDate').value,
+                school: document.getElementById('schoolName').value,
+                class: document.getElementById('className').value,
+                studentsCount: document.getElementById('studentsCount').value,
+                activity: document.getElementById('activityDescription').value,
+                ratings: {
+                    c1h1: document.querySelector('input[name="c1h1"]:checked').value,
+                    c1h4: document.querySelector('input[name="c1h4"]:checked').value,
+                    c2h1: document.querySelector('input[name="c2h1"]:checked').value,
+                    c2h5: document.querySelector('input[name="c2h5"]:checked').value,
+                    c3h3: document.querySelector('input[name="c3h3"]:checked').value,
+                    c3h6: document.querySelector('input[name="c3h6"]:checked').value,
+                    c4h2: document.querySelector('input[name="c4h2"]:checked').value,
+                    c4h3: document.querySelector('input[name="c4h3"]:checked').value
+                },
+                qualitative: {
+                    observations: document.getElementById('qualitativeObservations').value,
+                    difficulties: document.getElementById('identifiedDifficulties').value,
+                    strengths: document.getElementById('observedStrengths').value,
+                    suggestions: document.getElementById('suggestionsNextInterventions').value
+                }
+            };
+            
+            // Add to observers array
+            observers.push(observer);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+            
+            // Update UI
+            updateObserversList();
+            updateDataAnalysis();
+            
+            // Reset form
+            observerForm.reset();
+            
+            // Show generate PDF button if we have data
+            if (observers.length > 0) {
+                generatePdfBtn.style.display = 'block';
+            }
+        });
+        
+        // Update observers list
+        function updateObserversList() {
+            if (observers.length === 0) {
+                observersList.innerHTML = '<p>Nenhum observador adicionado ainda.</p>';
+                return;
+            }
+            
+            let html = '';
+            observers.forEach(observer => {
+                const formattedDate = new Date(observer.date).toLocaleDateString('pt-BR');
+                html += `
+                    <div class="observer-item">
+                        <div class="observer-info">
+                            <strong>${observer.name}</strong> - ${formattedDate}<br>
+                            Escola: ${observer.school} | Turma: ${observer.class} | Estudantes: ${observer.studentsCount}
+                        </div>
+                        <div class="observer-actions">
+                            <button class="btn-secondary" onclick="viewObserver(${observer.id})">Visualizar</button>
+                            <button class="btn-danger" onclick="removeObserver(${observer.id})">Remover</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            observersList.innerHTML = html;
+        }
+        
+        // View observer details
+        function viewObserver(id) {
+            const observer = observers.find(obs => obs.id === id);
+            if (!observer) return;
+            
+            let ratingsHtml = '';
+            const competencies = {
+                'c1h1': 'C1-H1: Demonstra compreensão dos conceitos básicos de higiene pessoal',
+                'c1h4': 'C1-H4: Identifica situações de risco à saúde relacionadas à higiene inadequada',
+                'c2h1': 'C2-H1: Executa corretamente as técnicas de higienização demonstradas',
+                'c2h5': 'C2-H5: Utiliza o jogo digital com desenvoltura e compreensão',
+                'c3h3': 'C3-H3: Participa ativamente das atividades coletivas sobre higiene',
+                'c3h6': 'C3-H6: Demonstra intenção de aplicar os conhecimentos em seu cotidiano',
+                'c4h2': 'C4-H2: Formula perguntas relevantes que demonstram raciocínio crítico',
+                'c4h3': 'C4-H3: Compartilha conhecimentos e experiências com os colegas'
+            };
+            
+            for (const [key, value] of Object.entries(observer.ratings)) {
+                ratingsHtml += `<p><strong>${competencies[key]}</strong>: ${value}</p>`;
+            }
+            
+            const formattedDate = new Date(observer.date).toLocaleDateString('pt-BR');
+            
+            const detailsHtml = `
+                <div class="card">
+                    <h2>Detalhes do Observador: ${observer.name}</h2>
+                    <p><strong>Data:</strong> ${formattedDate}</p>
+                    <p><strong>Escola:</strong> ${observer.school}</p>
+                    <p><strong>Turma:</strong> ${observer.class}</p>
+                    <p><strong>Estudantes:</strong> ${observer.studentsCount}</p>
+                    <p><strong>Atividade:</strong> ${observer.activity}</p>
+                    
+                    <h3>Avaliações</h3>
+                    ${ratingsHtml}
+                    
+                    <h3>Observações Qualitativas</h3>
+                    <p><strong>Observações:</strong> ${observer.qualitative.observations || 'Nenhuma observação registrada.'}</p>
+                    <p><strong>Dificuldades:</strong> ${observer.qualitative.difficulties || 'Nenhuma dificuldade registrada.'}</p>
+                    <p><strong>Pontos Fortes:</strong> ${observer.qualitative.strengths || 'Nenhum ponto forte registrado.'}</p>
+                    <p><strong>Sugestões:</strong> ${observer.qualitative.suggestions || 'Nenhuma sugestão registrada.'}</p>
+                    
+                    <button class="btn-primary" onclick="closeDetails()">Fechar</button>
+                </div>
+            `;
+            
+            // Create modal or replace content
+            const modal = document.createElement('div');
+            modal.id = 'observerDetailsModal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.backgroundColor = 'white';
+            modalContent.style.padding = '20px';
+            modalContent.style.borderRadius = '8px';
+            modalContent.style.maxWidth = '800px';
+            modalContent.style.width = '90%';
+            modalContent.style.maxHeight = '90vh';
+            modalContent.style.overflow = 'auto';
+            modalContent.innerHTML = detailsHtml;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+        
+        // Close observer details
+        function closeDetails() {
+            const modal = document.getElementById('observerDetailsModal');
+            if (modal) {
+                document.body.removeChild(modal);
+            }
+        }
+        
+        // Remove observer
+        function removeObserver(id) {
+            if (confirm('Tem certeza que deseja remover este observador?')) {
+                observers = observers.filter(obs => obs.id !== id);
+                
+                // Save to localStorage
+                saveToLocalStorage();
+                
+                updateObserversList();
+                updateDataAnalysis();
+                
+                // Hide generate PDF button if no data
+                if (observers.length === 0) {
+                    generatePdfBtn.style.display = 'none';
+                    chartsContainer.style.display = 'none';
+                    qualitativeData.style.display = 'none';
+                    dataAnalysis.innerHTML = '<p>Adicione observadores para visualizar a análise de dados.</p>';
+                }
+            }
+        }
+        
+        // Update data analysis
+        function updateDataAnalysis() {
+            if (observers.length === 0) {
+                dataAnalysis.innerHTML = '<p>Adicione observadores para visualizar a análise de dados.</p>';
+                chartsContainer.style.display = 'none';
+                qualitativeData.style.display = 'none';
+                return;
+            }
+            
+            // Show charts container
+            chartsContainer.style.display = 'flex';
+            qualitativeData.style.display = 'block';
+            
+            // Clear previous analysis
+            dataAnalysis.innerHTML = `<p>Análise baseada em dados de ${observers.length} observador(es).</p>`;
+            
+            // Calculate averages for each competency
+            const competencyLabels = [
+                'C1-H1', 'C1-H4', 'C2-H1', 'C2-H5', 'C3-H3', 'C3-H6', 'C4-H2', 'C4-H3'
+            ];
+            
+            const competencyKeys = [
+                'c1h1', 'c1h4', 'c2h1', 'c2h5', 'c3h3', 'c3h6', 'c4h2', 'c4h3'
+            ];
+            
+            const averages = competencyKeys.map(key => {
+                const sum = observers.reduce((acc, obs) => acc + parseInt(obs.ratings[key]), 0);
+                return sum / observers.length;
+            });
+            
+            // Count frequency of each rating
+            const frequencies = [0, 0, 0, 0, 0];
+            competencyKeys.forEach(key => {
+                observers.forEach(obs => {
+                    const rating = parseInt(obs.ratings[key]) - 1; // Adjust for 0-based array
+                    frequencies[rating]++;
+                });
+            });
+            
+            // Group by school
+            const schools = [...new Set(observers.map(obs => obs.school))];
+            const schoolData = schools.map(school => {
+                const schoolObservers = observers.filter(obs => obs.school === school);
+                return {
+                    school,
+                    averages: competencyKeys.map(key => {
+                        const sum = schoolObservers.reduce((acc, obs) => acc + parseInt(obs.ratings[key]), 0);
+                        return sum / schoolObservers.length;
+                    })
+                };
+            });
+            
+            // Group by competency category (C1, C2, C3, C4)
+            const competencyCategories = ['C1', 'C2', 'C3', 'C4'];
+            const competencyCategoryAverages = competencyCategories.map(category => {
+                const keys = competencyKeys.filter(key => key.startsWith(category.toLowerCase()));
+                const sum = keys.reduce((acc, key) => {
+                    return acc + observers.reduce((sum, obs) => sum + parseInt(obs.ratings[key]), 0);
+                }, 0);
+                return sum / (keys.length * observers.length);
+            });
+            
+            // Update charts
+            updateCompetencyChart(competencyLabels, averages);
+            updateFrequencyChart(frequencies);
+            updateSchoolChart(schools, schoolData);
+            updateCompetencyComparisonChart(competencyCategories, competencyCategoryAverages);
+            
+            // Update qualitative data summaries
+            updateQualitativeDataSummaries();
+        }
+        
+        // Update competency chart
+        function updateCompetencyChart(labels, data) {
+            const ctx = document.getElementById('competencyChart').getContext('2d');
+            
+            if (competencyChart) {
+                competencyChart.destroy();
+            }
+            
+            competencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Média de Avaliação',
+                        data: data,
+                        backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                        borderColor: 'rgba(0, 102, 204, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Média por Competência/Habilidade'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update frequency chart
+        function updateFrequencyChart(data) {
+            const ctx = document.getElementById('frequencyChart').getContext('2d');
+            
+            if (frequencyChart) {
+                frequencyChart.destroy();
+            }
+            
+            frequencyChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Nunca (1)', 'Raramente (2)', 'Ocasionalmente (3)', 'Frequentemente (4)', 'Consistentemente (5)'],
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(108, 117, 125, 0.7)',
+                            'rgba(23, 162, 184, 0.7)',
+                            'rgba(40, 167, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(108, 117, 125, 1)',
+                            'rgba(23, 162, 184, 1)',
+                            'rgba(40, 167, 69, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Frequências'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update school chart
+        function updateSchoolChart(schools, schoolData) {
+            const ctx = document.getElementById('schoolChart').getContext('2d');
+            
+            if (schoolChart) {
+                schoolChart.destroy();
+            }
+            
+            const datasets = schoolData.map((data, index) => {
+                const colors = [
+                    'rgba(0, 102, 204, 0.7)',
+                    'rgba(40, 167, 69, 0.7)',
+                    'rgba(220, 53, 69, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(111, 66, 193, 0.7)'
+                ];
+                
+                return {
+                    label: data.school,
+                    data: data.averages,
+                    backgroundColor: colors[index % colors.length],
+                    borderColor: colors[index % colors.length].replace('0.7', '1'),
+                    borderWidth: 1
+                };
+            });
+            
+            schoolChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['C1-H1', 'C1-H4', 'C2-H1', 'C2-H5', 'C3-H3', 'C3-H6', 'C4-H2', 'C4-H3'],
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparação por Escola'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update competency comparison chart
+        function updateCompetencyComparisonChart(categories, data) {
+            const ctx = document.getElementById('competencyComparisonChart').getContext('2d');
+            
+            if (competencyComparisonChart) {
+                competencyComparisonChart.destroy();
+            }
+            
+            competencyComparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'Média por Categoria de Competência',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(0, 102, 204, 0.7)',
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 102, 204, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparação por Categoria de Competência'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const categoryMap = {
+                                        'C1': 'Cognitiva: compreensão dos conceitos de higiene',
+                                        'C2': 'Procedimental: execução correta das técnicas',
+                                        'C3': 'Atitudinal: valorização das práticas de autocuidado',
+                                        'C4': 'Comunicativa: expressão e compartilhamento de conceitos'
+                                    };
+                                    return categoryMap[context.label];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update qualitative data summaries
+        function updateQualitativeDataSummaries() {
+            // Observations
+            const observationsSummary = observers.map(obs => {
+                if (!obs.qualitative.observations) return null;
+                return `<p><strong>${obs.name} (${obs.school}):</strong> ${obs.qualitative.observations}</p>`;
+            }).filter(Boolean).join('') || '<p>Nenhuma observação qualitativa registrada.</p>';
+            
+            // Difficulties
+            const difficultiesSummary = observers.map(obs => {
+                if (!obs.qualitative.difficulties) return null;
+                return `<p><strong>${obs.name} (${obs.school}):</strong> ${obs.qualitative.difficulties}</p>`;
+            }).filter(Boolean).join('') || '<p>Nenhuma dificuldade registrada.</p>';
+            
+            // Strengths
+            const strengthsSummary = observers.map(obs => {
+                if (!obs.qualitative.strengths) return null;
+                return `<p><strong>${obs.name} (${obs.school}):</strong> ${obs.qualitative.strengths}</p>`;
+            }).filter(Boolean).join('') || '<p>Nenhum ponto forte registrado.</p>';
+            
+            // Suggestions
+            const suggestionsSummary = observers.map(obs => {
+                if (!obs.qualitative.suggestions) return null;
+                return `<p><strong>${obs.name} (${obs.school}):</strong> ${obs.qualitative.suggestions}</p>`;
+            }).filter(Boolean).join('') || '<p>Nenhuma sugestão registrada.</p>';
+            
+            // Update DOM
+            document.getElementById('qualitativeObservationsSummary').innerHTML = observationsSummary;
+            document.getElementById('identifiedDifficultiesSummary').innerHTML = difficultiesSummary;
+            document.getElementById('observedStrengthsSummary').innerHTML = strengthsSummary;
+            document.getElementById('suggestionsNextInterventionsSummary').innerHTML = suggestionsSummary;
+        }
+        
+        // Generate PDF
+        generatePdfBtn.addEventListener('click', function() {
+            try {
+                console.log("Iniciando geração do PDF...");
+                
+                // Mostrar overlay de carregamento
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                
+                // Verifica se a biblioteca está carregada
+                if (typeof html2pdf !== 'function') {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert("Erro: Biblioteca html2pdf não está carregada. Recarregue a página e tente novamente.");
+                    return;
+                }
+                
+                // Verifica se há dados para gerar o PDF
+                if (observers.length === 0) {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert("Adicione pelo menos um observador antes de gerar o PDF.");
+                    return;
+                }
+                
+                // Prepare PDF data
+                const pdfSummary = document.getElementById('pdfSummary');
+                pdfSummary.innerHTML = `
+                    <p>Este relatório apresenta a análise sistemática dos dados coletados através do Roteiro Estruturado de Observação Participante, 
+                    aplicado no contexto do projeto "Higiene Pessoal Infantil Como Aliada Na Prevenção De Doenças".</p>
+                    <p>Total de observadores: ${observers.length}</p>
+                    <p>Escolas participantes: ${[...new Set(observers.map(obs => obs.school))].join(', ')}</p>
+                    <p>Período de coleta: ${new Date(Math.min(...observers.map(obs => new Date(obs.date)))).toLocaleDateString('pt-BR')} a 
+                    ${new Date(Math.max(...observers.map(obs => new Date(obs.date)))).toLocaleDateString('pt-BR')}</p>
+                `;
+                
+                console.log("Preparando dados para o PDF...");
+                
+                // Preenche a tabela de competências
+                fillCompetencyTable();
+                
+                // Popula dados qualitativos
+                document.getElementById('pdfQualitativeObservations').innerHTML = document.getElementById('qualitativeObservationsSummary').innerHTML;
+                document.getElementById('pdfIdentifiedDifficulties').innerHTML = document.getElementById('identifiedDifficultiesSummary').innerHTML;
+                document.getElementById('pdfObservedStrengths').innerHTML = document.getElementById('observedStrengthsSummary').innerHTML;
+                document.getElementById('pdfSuggestionsNextInterventions').innerHTML = document.getElementById('suggestionsNextInterventionsSummary').innerHTML;
+                
+                // Garante que o container do PDF esteja visível
+                const pdfContainer = document.getElementById('pdfContainer');
+                pdfContainer.style.display = 'block';
+                
+                // Define as opções específicas para PDF A4 vertical
+                const options = {
+                    margin: [10, 10, 10, 10],
+                    filename: 'analise-sistematica-dados.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { 
+                        scale: 2,
+                        letterRendering: true,
+                        useCORS: true,
+                        logging: true 
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compress: true
+                    },
+                    pagebreak: { mode: 'avoid-all' }
+                };
+                
+                // Rola para o topo da página e espera um momento antes de iniciar a geração
+                window.scrollTo(0, 0);
+                
+                // Desenha os gráficos antes de gerar o PDF
+                setTimeout(() => {
+                    try {
+                        // Criação dos gráficos para PDF
+                        createPDFCharts();
+                        
+                        // Dá um tempo para renderizar os gráficos antes de gerar o PDF
+                        setTimeout(() => {
+                            // Usa o método mais direto para gerar o PDF
+                            html2pdf().from(pdfContainer).set(options).save()
+                                .then(() => {
+                                    console.log("PDF gerado com sucesso!");
+                                    setTimeout(() => {
+                                        // Oculta o container do PDF e o overlay
+                                        pdfContainer.style.display = 'none';
+                                        document.getElementById('loadingOverlay').style.display = 'none';
+                                    }, 500);
+                                })
+                                .catch((error) => {
+                                    console.error("Erro na geração do PDF:", error);
+                                    alert("Ocorreu um erro ao gerar o PDF.");
+                                    pdfContainer.style.display = 'none';
+                                    document.getElementById('loadingOverlay').style.display = 'none';
+                                });
+                        }, 1000); // Espera 1 segundo após a criação dos gráficos
+                    } catch (error) {
+                        console.error("Erro ao criar gráficos:", error);
+                        alert("Erro ao processar os gráficos para o PDF.");
+                        pdfContainer.style.display = 'none';
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                    }
+                }, 500); // Espera 0,5 segundo antes de iniciar a criação dos gráficos
+                
+            } catch (error) {
+                console.error("Erro ao processar geração do PDF:", error);
+                alert("Ocorreu um erro ao processar a geração do PDF. Verifique o console para mais detalhes.");
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        });
+        
+        // Fill competency table
+        function fillCompetencyTable() {
+            const competencyKeys = ['c1h1', 'c1h4', 'c2h1', 'c2h5', 'c3h3', 'c3h6', 'c4h2', 'c4h3'];
+            
+            competencyKeys.forEach(key => {
+                const sum = observers.reduce((acc, obs) => acc + parseInt(obs.ratings[key]), 0);
+                const avg = (sum / observers.length).toFixed(2);
+                
+                // Determine scale representation
+                let scaleRep = '';
+                const roundedAvg = Math.round(avg);
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= roundedAvg) {
+                        scaleRep += '★ ';
+                    } else {
+                        scaleRep += '☆ ';
+                    }
+                }
+                
+                // Update table cells
+                const row = document.getElementById(`${key}-row`);
+                row.querySelector('td:nth-child(3)').textContent = avg;
+                row.querySelector('td:nth-child(4)').textContent = scaleRep;
+            });
+        }
+        
+        // Create PDF charts
+        function createPDFCharts() {
+            // Limpar os canvas existentes para evitar sobreposição
+            document.getElementById('pdfCompetencyChart').getContext('2d').clearRect(0, 0, 
+                document.getElementById('pdfCompetencyChart').width, 
+                document.getElementById('pdfCompetencyChart').height);
+            document.getElementById('pdfFrequencyChart').getContext('2d').clearRect(0, 0, 
+                document.getElementById('pdfFrequencyChart').width, 
+                document.getElementById('pdfFrequencyChart').height);
+            document.getElementById('pdfSchoolChart').getContext('2d').clearRect(0, 0, 
+                document.getElementById('pdfSchoolChart').width, 
+                document.getElementById('pdfSchoolChart').height);
+            document.getElementById('pdfCompetencyComparisonChart').getContext('2d').clearRect(0, 0, 
+                document.getElementById('pdfCompetencyComparisonChart').width, 
+                document.getElementById('pdfCompetencyComparisonChart').height);
+                
+            // Definir opções comuns para todos os gráficos
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 10,
+                        bottom: 10
+                    }
+                }
+            };
+
+            // Competency chart for PDF
+            const competencyLabels = ['C1-H1', 'C1-H4', 'C2-H1', 'C2-H5', 'C3-H3', 'C3-H6', 'C4-H2', 'C4-H3'];
+            const competencyKeys = ['c1h1', 'c1h4', 'c2h1', 'c2h5', 'c3h3', 'c3h6', 'c4h2', 'c4h3'];
+            
+            const averages = competencyKeys.map(key => {
+                const sum = observers.reduce((acc, obs) => acc + parseInt(obs.ratings[key]), 0);
+                return sum / observers.length;
+            });
+            
+            const pdfCompetencyCtx = document.getElementById('pdfCompetencyChart').getContext('2d');
+            new Chart(pdfCompetencyCtx, {
+                type: 'bar',
+                data: {
+                    labels: competencyLabels,
+                    datasets: [{
+                        label: 'Média de Avaliação',
+                        data: averages,
+                        backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                        borderColor: 'rgba(0, 102, 204, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Frequency chart for PDF
+            const frequencies = [0, 0, 0, 0, 0];
+            competencyKeys.forEach(key => {
+                observers.forEach(obs => {
+                    const rating = parseInt(obs.ratings[key]) - 1; // Adjust for 0-based array
+                    frequencies[rating]++;
+                });
+            });
+            
+            const pdfFrequencyCtx = document.getElementById('pdfFrequencyChart').getContext('2d');
+            new Chart(pdfFrequencyCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Nunca (1)', 'Raramente (2)', 'Ocasionalmente (3)', 'Frequentemente (4)', 'Consistentemente (5)'],
+                    datasets: [{
+                        data: frequencies,
+                        backgroundColor: [
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(108, 117, 125, 0.7)',
+                            'rgba(23, 162, 184, 0.7)',
+                            'rgba(40, 167, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(108, 117, 125, 1)',
+                            'rgba(23, 162, 184, 1)',
+                            'rgba(40, 167, 69, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: commonOptions
+            });
+            
+            // School chart for PDF
+            const schools = [...new Set(observers.map(obs => obs.school))];
+            const schoolData = schools.map(school => {
+                const schoolObservers = observers.filter(obs => obs.school === school);
+                return {
+                    school,
+                    averages: competencyKeys.map(key => {
+                        const sum = schoolObservers.reduce((acc, obs) => acc + parseInt(obs.ratings[key]), 0);
+                        return sum / schoolObservers.length;
+                    })
+                };
+            });
+            
+            const pdfSchoolCtx = document.getElementById('pdfSchoolChart').getContext('2d');
+            const schoolDatasets = schoolData.map((data, index) => {
+                const colors = [
+                    'rgba(0, 102, 204, 0.7)',
+                    'rgba(40, 167, 69, 0.7)',
+                    'rgba(220, 53, 69, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(111, 66, 193, 0.7)'
+                ];
+                
+                return {
+                    label: data.school,
+                    data: data.averages,
+                    backgroundColor: colors[index % colors.length],
+                    borderColor: colors[index % colors.length].replace('0.7', '1'),
+                    borderWidth: 1
+                };
+            });
+            
+            new Chart(pdfSchoolCtx, {
+                type: 'radar',
+                data: {
+                    labels: competencyLabels,
+                    datasets: schoolDatasets
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Competency comparison chart for PDF
+            const competencyCategories = ['C1', 'C2', 'C3', 'C4'];
+            const competencyCategoryAverages = competencyCategories.map(category => {
+                const keys = competencyKeys.filter(key => key.startsWith(category.toLowerCase()));
+                const sum = keys.reduce((acc, key) => {
+                    return acc + observers.reduce((sum, obs) => sum + parseInt(obs.ratings[key]), 0);
+                }, 0);
+                return sum / (keys.length * observers.length);
+            });
+            
+            const pdfCompetencyComparisonCtx = document.getElementById('pdfCompetencyComparisonChart').getContext('2d');
+            new Chart(pdfCompetencyComparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: competencyCategories,
+                    datasets: [{
+                        label: 'Média por Categoria de Competência',
+                        data: competencyCategoryAverages,
+                        backgroundColor: [
+                            'rgba(0, 102, 204, 0.7)',
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 102, 204, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Make functions globally accessible
+        window.viewObserver = viewObserver;
+        window.closeDetails = closeDetails;
+        window.removeObserver = removeObserver;
+    </script>
+</body>
+</html>
