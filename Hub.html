@@ -228,6 +228,19 @@
         .project-link:hover {
             background: rgba(var(--bg-rgb), 0.2);
         }
+        
+        /* Estilo diferenciado para o botão de Ferramentas/Serviços */
+        .tools-btn {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .tools-btn:hover {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -318,15 +331,17 @@
                 <i class="fas fa-folder-open"></i>
                 Projetos Acadêmicos
             </button>
-            <!-- Novo botão para Avaliações -->
-	    <button onclick="window.location.href='https://thiago.med.br/ferramentas'">
-	        Ferramentas/Serviços
-	    </button>
+            <!-- Botão Ferramentas/Serviços com estilo diferenciado -->
+            <a href="https://thiago.med.br/ferramentas" class="btn tools-btn">
+                <i class="fas fa-tools"></i>
+                Ferramentas/Serviços
+            </a>
         </div>
 
         <div class="projects-container" id="projects">
-            <a href="/projetos/CIV.html" class="project-link">Projeto - Simulação Multissensorial da Fisiologia e Patologia Cardíaca: Análise do Comportamento Hemodinâmico e Eletrofisiológico do Coração com Ênfase em Sinais Acústicos (S1, S2 e S4) em Condições de CIV, Hipertrofia e Alterações do ECG</a>
-            <a href="/projetos/Censurado.html" class="project-link">Projeto - ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</a>
+            <a href="projetos/CIV.html" class="project-link">Projeto - Simulação Multissensorial da Fisiologia e Patologia Cardíaca: Análise do Comportamento Hemodinâmico e Eletrofisiológico do Coração com Ênfase em Sinais Acústicos (S1, S2 e S4) em Condições de CIV, Hipertrofia e Alterações do ECG</a>
+            <a href="projetos/higiene/index.html" class="project-link">Projeto - Higiene Pessoal Infantil como Aliada na Prevenção de Doenças: Estratégias Fundamentais para a Proteção e Bem-estar das Crianças desde a Primeira Infância</a>
+            <a href="projetos/Censurado.html" class="project-link">Projeto - ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</a>
         </div>
 		
 		<!-- Seção para Avaliações -->
